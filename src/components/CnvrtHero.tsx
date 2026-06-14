@@ -21,7 +21,7 @@ const services = [
     title: 'Paid Advertising',
     Icon: MousePointerClick,
     description:
-      'Profitable Google and Meta campaigns engineered around new customer acquisition. Full-funnel paid media structured around contribution margin, not vanity ROAS, so every pound compounds.',
+      'Google and Meta campaigns engineered around new customer acquisition. Full-funnel paid media structured around contribution margin, not vanity ROAS, so every pound compounds.',
     href: '#contact',
   },
   {
@@ -532,7 +532,7 @@ export default function CnvrtHero() {
             <div className="text-left lg:order-1">
               <div className="max-w-[56rem] text-left">
                 <div className="relative pt-6 pb-24 sm:pt-8 sm:pb-28 lg:hidden">
-                  <div className="relative w-full max-w-[22rem] sm:max-w-[26rem]">
+                  <div className="relative w-full max-w-[24rem] sm:max-w-[28rem]">
                     <motion.figure
                       initial={reducedMotion ? false : { opacity: 0, y: 18, rotate: -1.5 }}
                       animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, rotate: -1.5 }}
@@ -562,7 +562,10 @@ export default function CnvrtHero() {
                     textTransform: 'uppercase',
                   }}
                 >
-                  The manchester digital growth agency building brands properly
+                  The manchester digital growth agency{' '}
+                  <span className="italic text-white/72" style={{ fontWeight: 300 }}>
+                    building brands properly
+                  </span>
                 </h1>
 
                 <p
@@ -575,7 +578,7 @@ export default function CnvrtHero() {
                   Manchester-based growth and digital marketing for brands that need their websites, media and retention to work as one system.
                 </p>
 
-                <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
+                <div className="mt-8 flex flex-row flex-wrap items-start gap-3">
                   <a
                     href="mailto:hello@cnvrt.co.uk"
                     className="cta-sheen relative inline-flex min-h-[3.45rem] items-center justify-center overflow-hidden rounded-[4px] border px-6 outline-none transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
@@ -839,27 +842,14 @@ export default function CnvrtHero() {
               </div>
             </div>
 
-            <div className="mt-10 border-t border-white/12 sm:mt-12">
+            <div className="mt-10 border-t border-white/7 sm:mt-12">
               {services.map((service) => {
                 return (
-                  <motion.article
-                    key={service.title}
-                    initial={{ opacity: 0.42, y: 26 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.55 }}
-                    transition={{ duration: 0.8, ease: [0, 0, 0.2, 1] }}
-                    className="group relative border-b border-white/12"
-                  >
-                    <motion.div
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      viewport={{ once: true, amount: 0.55 }}
-                      transition={{ duration: 0.9, delay: 0.08, ease: [0, 0, 0.2, 1] }}
-                      className="absolute inset-x-0 top-0 h-px origin-left bg-[#c3b4d6]"
-                    />
+                  <article key={service.title} className="group relative border-b border-white/7">
+                    <div className="absolute inset-x-0 top-0 h-px bg-[#c3b4d6]/55" />
                     <a
                       href={service.href}
-                      className="grid gap-5 py-7 outline-none transition sm:grid-cols-[4.75rem_minmax(0,1fr)_auto] sm:items-center sm:gap-6 sm:py-8 lg:grid-cols-[5.5rem_minmax(0,1fr)_auto] lg:py-9 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
+                      className="grid gap-6 py-11 outline-none transition sm:grid-cols-[4.75rem_minmax(0,1fr)_auto] sm:items-center sm:gap-7 sm:py-12 lg:grid-cols-[5.5rem_minmax(0,1fr)_auto] lg:py-14 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
                     >
                       <div className="flex items-center self-center">
                         <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.03] text-white/58 transition-colors duration-500 group-hover:border-[#c3b4d6]/40 group-hover:bg-[#c3b4d6]/18 group-hover:text-white">
@@ -911,7 +901,7 @@ export default function CnvrtHero() {
                         <ArrowRight size={15} />
                       </span>
                     </a>
-                  </motion.article>
+                  </article>
                 );
               })}
             </div>

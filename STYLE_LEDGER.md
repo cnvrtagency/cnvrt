@@ -125,7 +125,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Max width: `22rem` base, `24rem` at `390px+`, `32rem` at `640px+`, `38rem` at `768px+`, `54rem` at `1024px+`, matching the other section heading measures.
 - Colour: `rgba(255,255,255,0.9)`.
 - Alignment: left.
-- H1 copy: `The manchester digital growth agency building brands properly`.
+- H1 copy: `The manchester digital growth agency building brands properly`, with `building brands properly` styled italic at lighter contrast (`rgba(255,255,255,0.72)`).
 
 ### Hero Paragraph
 
@@ -145,7 +145,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Hero media composition: two overlapping portrait images, using `/ya-omri.jpg` as the primary large frame and `/hair-made-easi.jpg` as the smaller overlapping detail frame.
 - Primary image frame: `4 / 5` aspect ratio, `10px` radius, subtle white border `rgba(255,255,255,0.10)`, shadow `0 24px 80px rgba(0,0,0,0.38)`.
 - Secondary image frame: `58%` width of the desktop media column, `4 / 5` aspect ratio, `10px` radius, offset to the lower-left with slight rotation for an editorial overlap.
-- Mobile hero media layout: primary frame expands to a wider `6 / 5` aspect ratio on smaller screens and `5 / 4` from small screens upward within a `22rem`-`26rem` max-width block, while the secondary frame becomes a smaller bottom-right inset at `46%` width with extra bottom padding on the container to fully contain the overlap.
+- Mobile hero media layout: primary frame expands to a wider `6 / 5` aspect ratio on smaller screens and `5 / 4` from small screens upward within a `24rem`-`28rem` max-width block, while the secondary frame becomes a smaller bottom-right inset at `46%` width with extra bottom padding on the container to fully contain the overlap.
 - Mobile hero media spacing: image composition gets additional top inset (`24px` mobile, `32px` from small screens) and larger bottom spacing before the H1 (`96px` mobile, `112px` from small screens).
 - Mobile hero media alignment: right-aligned within the text column so the overlapped stack clears the copy below.
 - Hero media motion: two staged fade-and-lift entrances with soft rotation, guarded by reduced-motion preferences.
@@ -173,6 +173,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Secondary background: `rgba(255,255,255,0.018)`.
 - Secondary hover border: `rgba(255,255,255,0.34)`.
 - Secondary hover background: `rgba(255,255,255,0.045)`.
+- Hero CTA layout: single-row flex layout on mobile and larger screens, wrapping only if space is genuinely exhausted.
 
 ### Services Section
 
@@ -229,12 +230,12 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Secondary services CTA: border `rgba(255,255,255,0.16)`, hover border `rgba(255,255,255,0.34)`, hover background `rgba(255,255,255,0.045)`, white text.
 - Services list area: clean editorial numbered list with no enclosing panel or cards.
 - Services list spacing: `40px` top margin base and `48px` from small screens.
-- Services list structure: top border on the full list and bottom borders on each item in low-opacity white, with a lilac active line drawing across the top edge of each item as it enters view.
-- Services list motion: each row fades up from lower opacity and `26px` lower on scroll, then settles into place with an active highlight treatment.
+- Services list structure: top border on the full list and bottom borders on each item in very low-opacity white (`0.07`), with a softened lilac rule (`55%` opacity) across the top edge of each item.
+- Services list motion: none. Rows render statically with standard hover transitions only.
 - Service entries: no visible numbers.
 - Service icons: Lucide icons in a circular badge with no adjacent numbering, `48px` square, low-opacity white border/background by default, shifting to lilac-accent treatment on hover.
 - Service icon mapping: `Code2` for Website Design & Development, `SearchCheck` for SEO/AEO, `MousePointerClick` for Paid Advertising, `MailCheck` for Email/Automation.
-- Service item layout: responsive three-part grid from small screens (`icon`, `content`, `CTA`), with `28px` vertical padding base, `32px` from small screens, `36px` from large screens; all three cells align vertically to the same horizontal row center.
+- Service item layout: responsive three-part grid from small screens (`icon`, `content`, `CTA`), with `44px` vertical padding base, `48px` from small screens, `56px` from large screens, plus slightly larger row gaps; all three cells align vertically to the same horizontal row center.
 - Service title: ITC Blair, weight `400`, uppercase, `0.025em` letter spacing, `0.98rem`, white at `0.72` opacity by default and bright white on hover.
 - Service description: Montserrat, weight `300`, `0.9rem`, line height `1.75rem`, white at `0.62` opacity by default and brighter on hover.
 - Service link label: matches the lilac `Book a call` CTA treatment with Montserrat, `0.72rem`, weight `500`, `0.2em` letter spacing, uppercase, `#c3b4d6` fill, `#06040a` text, `4px` radius, and lavender shadow.
