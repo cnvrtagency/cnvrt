@@ -160,8 +160,9 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Carousel layout: horizontally scrollable flex rail with snap points; cards show at roughly `88%` width on mobile, `48%` on medium screens, and `32.3%` on large screens so desktop shows 3 cards at once.
 - Carousel controls: right-aligned previous/next circular buttons above the rail.
 - Carousel controls: visible across breakpoints as simple arrow controls with no circular outline treatment.
+- Carousel loop: infinite loop behavior using a tripled track; the viewport starts on the middle copy and silently resets when reaching either edge.
 - Section spacing: additional bottom padding under the carousel (`40px` mobile, `48px` small screens, `64px` large screens).
-- Motion: no scroll-linked scene behavior; cards sit in normal flow with native horizontal scrolling, snap behavior, button-driven smooth scroll, and subtle hover scale on images.
+- Motion: no scroll-linked scene behavior; cards sit in normal flow with native horizontal scrolling, snap behavior, and button-driven smooth scroll only. No hover animation on cards or CTA overlays.
 
 ### Hero CTAs
 

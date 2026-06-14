@@ -85,6 +85,7 @@ const clientImages = [
 ];
 
 const caseStudyImages = clientImages.slice(0, 6);
+const loopedCaseStudyImages = [...caseStudyImages, ...caseStudyImages, ...caseStudyImages];
 const showClientCarousel = true;
 const servicesParagraphLines = [
   [
@@ -241,6 +242,8 @@ export default function CnvrtHero() {
   const delayedServicesParagraphProgress = Math.min(Math.max((servicesProgress - 0.22) / 0.78, 0), 1);
   const delayedWhyCnvrtParagraphProgress = Math.min(Math.max((whyCnvrtProgress - 0.22) / 1.08, 0), 1);
   const caseStudiesViewportRef = useRef<HTMLDivElement | null>(null);
+  const caseStudiesLoopWidthRef = useRef(0);
+  const caseStudiesNormalizingRef = useRef(false);
   const servicesIntroRef = useRef<HTMLDivElement | null>(null);
   const whyCnvrtSectionRef = useRef<HTMLElement | null>(null);
 
@@ -305,12 +308,61 @@ export default function CnvrtHero() {
     const viewport = caseStudiesViewportRef.current;
     if (!viewport) return;
 
-    const amount = viewport.clientWidth * 0.88 * (direction === 'next' ? 1 : -1);
+    const firstCard = viewport.firstElementChild as HTMLElement | null;
+    const gap = Number.parseFloat(window.getComputedStyle(viewport).columnGap || window.getComputedStyle(viewport).gap || '0');
+    const amount = (firstCard?.getBoundingClientRect().width ?? viewport.clientWidth * 0.88) + gap;
     viewport.scrollBy({
-      left: amount,
+      left: direction === 'next' ? amount : -amount,
       behavior: reducedMotion ? 'auto' : 'smooth',
     });
   };
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const viewport = caseStudiesViewportRef.current;
+    if (!viewport) return;
+
+    let resizeFrame = 0;
+
+    const setMiddlePosition = () => {
+      caseStudiesLoopWidthRef.current = viewport.scrollWidth / 3;
+      viewport.scrollLeft = caseStudiesLoopWidthRef.current;
+    };
+
+    const handleLoopScroll = () => {
+      if (caseStudiesNormalizingRef.current) return;
+
+      const loopWidth = caseStudiesLoopWidthRef.current;
+      if (!loopWidth) return;
+
+      const normalizedOffset = ((viewport.scrollLeft - loopWidth) % loopWidth + loopWidth) % loopWidth;
+      const normalizedLeft = loopWidth + normalizedOffset;
+
+      if (Math.abs(normalizedLeft - viewport.scrollLeft) > 1) {
+        caseStudiesNormalizingRef.current = true;
+        viewport.scrollLeft = normalizedLeft;
+        window.requestAnimationFrame(() => {
+          caseStudiesNormalizingRef.current = false;
+        });
+      }
+    };
+
+    const handleResize = () => {
+      if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
+      resizeFrame = window.requestAnimationFrame(setMiddlePosition);
+    };
+
+    setMiddlePosition();
+    viewport.addEventListener('scroll', handleLoopScroll, { passive: true });
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
+      viewport.removeEventListener('scroll', handleLoopScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined' || reducedMotion) {
@@ -596,12 +648,12 @@ export default function CnvrtHero() {
             ref={caseStudiesViewportRef}
             className="flex snap-x snap-mandatory gap-1 overflow-x-auto px-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           >
-            {caseStudyImages.map((clientImage) => (
+            {loopedCaseStudyImages.map((clientImage, index) => (
               <article
-                key={`${clientImage.id}-case-study-grid`}
+                key={`${clientImage.id}-case-study-grid-${index}`}
                 className="group relative aspect-[16/10] min-w-[88%] snap-start overflow-hidden bg-[#08050d] shadow-none md:min-w-[48%] lg:min-w-[32.3%] lg:shadow-[0_18px_50px_rgba(23,18,31,0.08)]"
               >
-                <img src={clientImage.src} alt={clientImage.alt} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]" loading="lazy" />
+                <img src={clientImage.src} alt={clientImage.alt} className="h-full w-full object-cover" loading="lazy" />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#06040a]/88 via-[#06040a]/32 to-transparent" />
                 <div className="absolute bottom-5 left-5 max-w-[14rem] drop-shadow-[0_10px_24px_rgba(0,0,0,0.42)] sm:bottom-6 sm:left-6">
                   <span
@@ -617,7 +669,7 @@ export default function CnvrtHero() {
                     {clientImage.wordmark}
                   </span>
                   <span
-                    className="mt-2 inline-flex items-center gap-2 text-white/78 transition group-hover:translate-x-1 group-hover:text-white"
+                    className="mt-2 inline-flex items-center gap-2 text-white/78"
                     style={{
                       fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
                       fontSize: '0.62rem',
