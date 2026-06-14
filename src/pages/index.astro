@@ -1,0 +1,26 @@
+---
+import '../styles/global.css';
+import CnvrtHero from '../components/CnvrtHero';
+
+const title = 'CNVRT | Digital Marketing Agency Manchester';
+const description = 'CNVRT is a Manchester-based growth and digital marketing agency designing, building and scaling brands through websites, Shopify, SEO, paid ads, email and retention systems.';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<title>{title}</title>
+	</head>
+	<body>
+		<CnvrtHero client:load />
+	</body>
+</html>
