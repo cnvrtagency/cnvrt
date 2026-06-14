@@ -27,7 +27,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Header scroll hide: Motion spring, stiffness `260`, damping `34`, translates to `-116px` after `window.scrollY > 110`.
 - Hero reveal: H1, paragraph and CTA row animate with opacity `0 -> 1` and vertical movement `10-12px -> 0`.
 - Hero reveal timing: base duration `620ms`, ease `[0, 0, 0.2, 1]`, delays `120ms`, `200ms`, `280ms`, `360ms`.
-- Hero background gradient is static.
+- Hero background gradient is static, with an extended bottom fade (`18rem` tall) from the purple-black hero into the flat black next section.
 - CTA sheen: primary CTA elements use a `520ms` diagonal sheen on hover only.
 - Scroll handoff: no JavaScript scroll progress, no Lenis instance, no transform/opacity mapping, and no section overlay handoff. The page uses normal native document flow.
 
@@ -150,6 +150,19 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Mobile hero media alignment: right-aligned within the text column so the overlapped stack clears the copy below.
 - Hero media motion: two staged fade-and-lift entrances with soft rotation, guarded by reduced-motion preferences.
 
+### Case Studies Section
+
+- Element: standalone section between the hero and services sections.
+- Background: black `#06040a` across breakpoints, matching the section below so the hero fade lands into a consistent dark field.
+- Purpose: dedicated case-study carousel section separating the purple hero from the black `What we do` section.
+- Presentation: horizontal case-study carousel with wordmarks and `View case study` CTA overlays.
+- Section label: `Brands we've worked with` across breakpoints; rendered in white.
+- Carousel layout: horizontally scrollable flex rail with snap points; cards show at roughly `88%` width on mobile, `48%` on medium screens, and `32.3%` on large screens so desktop shows 3 cards at once.
+- Carousel controls: right-aligned previous/next circular buttons above the rail.
+- Carousel controls: visible across breakpoints as simple arrow controls with no circular outline treatment.
+- Section spacing: additional bottom padding under the carousel (`40px` mobile, `48px` small screens, `64px` large screens).
+- Motion: no scroll-linked scene behavior; cards sit in normal flow with native horizontal scrolling, snap behavior, button-driven smooth scroll, and subtle hover scale on images.
+
 ### Hero CTAs
 
 - Elements: `BOOK A CALL`, `GET AN AUDIT`.
@@ -184,44 +197,37 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Stack level: `z-index: 20`, so it scrolls over the sticky hero and then continues in normal document flow.
 - Padding: `0 4px 80px` across breakpoints for the services section outer gutter, with bottom padding staying `80px` mobile, `96px` small screens, `112px` large screens.
 - Section-wide media max width: none; the client media strip now runs full width inside the section gutter.
-- Client case-study grid position: first element, flush to top of white services section and separated from the narrower services intro wrapper.
-- Client case-study presentation: split by breakpoint. Mobile uses a simple single-column image stack; tablet/desktop use the scroll-linked horizontal rail.
-- Client case-study carousel status: preserved in component code behind a local feature flag and removed from the live page for now, so it can be restored later without rebuilding it.
+- Client case-study grid position: moved out of the services section into its own standalone case studies section between the hero and services.
+- Client case-study presentation: horizontal snap carousel across breakpoints.
+- Client case-study carousel status: active again in the live page as a standalone section.
 - Client case-study carousel top padding: `4px`.
 - Client case-study grid items: `8` cards total, currently repeating the four loaded project images to fill the layout.
 - Client case-study mobile stack: visible below `768px`, one card per row with `4px` vertical gap and no scroll-linked or swipe carousel behavior.
 - Client case-study mobile card sizing: full available width inside the `4px` section gutter, `16 / 10` aspect ratio.
 - Client case-study mobile reveal: each stacked card animates in one by one on scroll, starting at opacity `0`, `28px` lower, and `0.985` scale, then easing to full opacity/position over `950ms` with `120ms` stagger and viewport trigger amount `0.55`.
-- Client case-study scroll-linked carousel wrapper: visible from `768px+`, dedicated scroll scene with dynamic height of `measured rail height + horizontal travel distance`, so the section reserves only the space needed for horizontal travel after the rail reaches the top.
-- Client case-study scroll-linked carousel viewport: `position: sticky`, `top: 0`, `overflow: hidden`, `padding-top: 4px`, with live inline height matching the measured scene height.
-- Client case-study scroll-linked carousel track: horizontal flex row with `4px` gap and transform-only `translate3d(...)` movement tied to section scroll progress.
-- Client case-study scroll-linked carousel motion: a requestAnimationFrame loop measures the section's vertical progress and maps it directly into horizontal movement from `0` to the measured negative overflow distance, so the rail starts flush to the top of the white section and scrolls horizontally until the scene ends.
-- Client case-study tablet travel tuning: from `768px` to `1023px`, horizontal travel is scaled to `62%` of full overflow distance.
-- Client case-study desktop travel tuning: from `1024px+`, horizontal travel is scaled to `72%` of full overflow distance so the services content arrives sooner after the rail.
-- Client case-study scroll-linked track height: `48svh` from `768px+`, `54svh` from `1024px+`, `58svh` from `1280px+`.
-- Client case-study scroll-linked card sizing: `30rem` from `768px+`, `34rem` from `1024px+`, `38rem` from `1280px+`, all at `16 / 10` aspect ratio.
-- Client case-study reduced-motion behavior: horizontal travel distance resolves to `0`, disabling the animated translation path.
+- Client case-study card sizing: `16 / 10` aspect ratio across the responsive carousel rail.
 - Client case-study image treatment: full tile image, `width: 100%`, `height: 100%`, `object-fit: cover`.
-- Client case-study card style: no border, no radius, dark base `#08050d`, shadow `0 18px 50px rgba(23,18,31,0.08)`.
+- Client case-study card style: no border, no radius, dark base `#08050d`, no shadow on mobile, and shadow `0 18px 50px rgba(23,18,31,0.08)` from large screens upward.
 - Client case-study card image hover: scale to `1.035` over `500ms`.
 - Client case-study card bottom treatment: dark gradient overlay from `rgba(6,4,10,0.85)` to transparent over `96px`.
 - Client case-study wordmark placement: absolute bottom-left over the image gradient, `20px` inset base and `24px` from small screens.
 - Client case-study wordmark typography: all brands use the same ITC Blair styling, weight `300`, `0.98rem` base, `1.18rem` from small screens, `0.12em` letter spacing, uppercase, line height `1`, white, drop shadow `0 10px 24px rgba(0,0,0,0.42)`.
 - Client case-study wordmarks: forced to a single line with `white-space: nowrap`; mobile base size trimmed to `0.9rem` before returning to `0.98rem`, and desktop base size trimmed to `1.02rem` / `1.08rem` before `1.18rem` on larger screens so longer names such as `Heatons Furniture` stay on one line.
 - Client case-study CTA: `View case study` under each wordmark, Montserrat, `0.62rem`, weight `500`, `0.16em` letter spacing, uppercase, white at `0.78` opacity, `8px` top margin, arrow `13px`, translates right `4px` on card hover.
-- Client case-study spacing before services intro wrapper: `40px` base, `48px` from small screens, `32px` from large screens.
-- Services intro top padding after carousel or section start: `40px` base, `56px` from small screens, `64px` from large screens.
-- Layout below carousel: one-column section at all breakpoints, with the intro text first and the service boxes below it.
+- Services intro top padding at section start: `40px` base, `56px` from small screens, `64px` from large screens.
+- Layout below carousel: two-part section with an editorial intro block first, then the service list below it. The intro block becomes a 2-column layout from large screens with one image on the left and the text content on the right.
 - Services section wrapper max width: `82rem`, matching the hero section wrapper exactly.
 - Services content wrapper side padding: `16px` on mobile, `24px` from small screens, `0` from large screens upward; this applies only to the services copy/card section, not the image carousel above it.
 - Content max width: `82rem`.
 - Intro alignment: left.
+- Services intro layout: `lg:grid-cols-[minmax(0,0.44fr)_minmax(0,1fr)]` with one editorial image on the left, `48px` gap at large screens and `64px` at extra-large screens.
+- Services intro image: single framed placeholder image using `/topdraw.jpg`, `6 / 5` aspect ratio on mobile, `5 / 4` from small screens, and `5 / 6` from large screens upward, with `10px` radius, subtle white border, and dark shadow.
 - Services eyebrow: `What we do`, Montserrat, `0.72rem`, weight `500`, `0.24em` letter spacing, uppercase, white.
 - H2: ITC Blair, weight `300`, uppercase, `0.025em` letter spacing.
-- H2 sizing and measure now match the `Why CNVRT` H2 exactly: `23px` base, `23px` at `390px+`, `32px` at `640px+`, `38px` at `768px+`, `56px` at `1024px+`, line height `1.08`, max width `22rem` base, `24rem` at `390px+`, `32rem` at `640px+`, `38rem` at `768px+`, `54rem` at `1024px+`.
+- H2 sizing and measure closely track the `Why CNVRT` H2 system: `23px` base, `23px` at `390px+`, `32px` at `640px+`, `38px` at `768px+`, `52px` at `1024px+`, line height `1.08`, max width `22rem` base, `24rem` at `390px+`, `32rem` at `640px+`, `38rem` at `768px+`, `50rem` at `1024px+`.
 - H2 text: `Everything your business needs to grow - one team`; `- one team` remains italic. The heading is a single semantic `h2` with no fill animation and solid white styling.
 - Services H2 optical alignment: nudged left by `0.04em` to counter the font's built-in left sidebearing and align visually with the eyebrow and paragraph.
-- Intro paragraph sizing and measure now match the `Why CNVRT` paragraph exactly: Montserrat, weight `300`, `0.9rem` base, `0.95rem` from small screens, line height `1.75rem`, max width `21rem` base, `30rem` from small screens, `38rem` from medium screens, `56rem` from large screens, rendered in white tones.
+- Intro paragraph sizing and measure now match the service text column width more closely: Montserrat, weight `300`, `0.9rem` base, `0.95rem` from small screens, line height `1.75rem`, max width `42rem` through medium screens and `56rem` from large screens, rendered in white tones.
 - Intro paragraph copy: one continuous paragraph covering strategy, design, development, SEO, paid media, email, retention and the full journey from first click to repeat customer.
 - Services paragraph fill: word-by-word white fill on scroll, shifting from muted white `rgba(255,255,255,0.3)` to bright white `rgba(255,255,255,0.92)` with the same delayed progress map used in `Why CNVRT`, so the paragraph starts later and completes more gradually than the heading.
 - Services text progress driver: requestAnimationFrame-backed section observer using the intro block's `getBoundingClientRect()`, beginning near `84%` of viewport height and completing near `22%`.
@@ -230,15 +236,15 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Secondary services CTA: border `rgba(255,255,255,0.16)`, hover border `rgba(255,255,255,0.34)`, hover background `rgba(255,255,255,0.045)`, white text.
 - Services list area: clean editorial numbered list with no enclosing panel or cards.
 - Services list spacing: `40px` top margin base and `48px` from small screens.
-- Services list structure: top border on the full list and bottom borders on each item in very low-opacity white (`0.07`), with a softened lilac rule (`55%` opacity) across the top edge of each item.
+- Services list structure: top border on the full list, bottom borders on each item, and top rules on each item all use the same very low-opacity white (`0.05`) for a consistent separation treatment.
 - Services list motion: none. Rows render statically with standard hover transitions only.
 - Service entries: no visible numbers.
 - Service icons: Lucide icons in a circular badge with no adjacent numbering, `48px` square, low-opacity white border/background by default, shifting to lilac-accent treatment on hover.
 - Service icon mapping: `Code2` for Website Design & Development, `SearchCheck` for SEO/AEO, `MousePointerClick` for Paid Advertising, `MailCheck` for Email/Automation.
 - Service item layout: responsive three-part grid from small screens (`icon`, `content`, `CTA`), with `44px` vertical padding base, `48px` from small screens, `56px` from large screens, plus slightly larger row gaps; all three cells align vertically to the same horizontal row center.
-- Service title: ITC Blair, weight `400`, uppercase, `0.025em` letter spacing, `0.98rem`, white at `0.72` opacity by default and bright white on hover.
+- Service title: ITC Blair, weight `400`, uppercase, `0.025em` letter spacing, `0.88rem` on mobile, white at `0.72` opacity by default and bright white on hover.
 - Service description: Montserrat, weight `300`, `0.9rem`, line height `1.75rem`, white at `0.62` opacity by default and brighter on hover.
-- Service link label: matches the lilac `Book a call` CTA treatment with Montserrat, `0.72rem`, weight `500`, `0.2em` letter spacing, uppercase, `#c3b4d6` fill, `#06040a` text, `4px` radius, and lavender shadow.
+- Service link label: matches the lilac `Book a call` CTA treatment with Montserrat, `0.72rem`, weight `500`, `0.2em` letter spacing, uppercase, `#c3b4d6` fill, `#06040a` text, and `4px` radius, with no glow shadow.
 - Services listed: Website Design & Development; SEO, AEO & Organic Growth; Paid Advertising; Email, Automation & Retention.
 
 ### Why CNVRT Section
@@ -246,6 +252,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Element: `<section aria-label="Why CNVRT">`.
 - Position: directly after the white services section in normal document flow.
 - Background: black `#06040a`.
+- Layout: single-column text section.
 - Text alignment: left, matching the services intro text block.
 - Horizontal padding: inherited from the inner content wrapper with `16px` mobile, `24px` from small screens, `0` from large screens, matching the services text block exactly.
 - Vertical padding: `96px` mobile, `112px` from small screens, `128px` from large screens.
