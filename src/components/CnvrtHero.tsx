@@ -531,7 +531,7 @@ export default function CnvrtHero() {
           <div className="grid w-full items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,30%)] lg:gap-10 xl:gap-14">
             <div className="text-left lg:order-1">
               <div className="max-w-[56rem] text-left">
-                <div className="relative pt-6 pb-14 sm:pt-8 sm:pb-16 lg:hidden">
+                <div className="relative pt-6 pb-24 sm:pt-8 sm:pb-28 lg:hidden">
                   <div className="relative w-full max-w-[22rem] sm:max-w-[26rem]">
                     <motion.figure
                       initial={reducedMotion ? false : { opacity: 0, y: 18, rotate: -1.5 }}
@@ -553,19 +553,6 @@ export default function CnvrtHero() {
                   </div>
                 </div>
 
-                <p
-                  className="mb-5 text-white/48"
-                  style={{
-                    fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
-                    fontSize: '0.72rem',
-                    fontWeight: 500,
-                    letterSpacing: '0.24em',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Manchester digital marketing agency
-                </p>
-
                 <h1
                   className="w-full max-w-[22rem] text-[26px] leading-[1.08] text-white min-[390px]:max-w-[24rem] min-[390px]:text-[28px] sm:max-w-[32rem] sm:text-[32px] md:max-w-[38rem] md:text-[38px] lg:max-w-[54rem] lg:text-[56px]"
                   style={{
@@ -575,7 +562,7 @@ export default function CnvrtHero() {
                     textTransform: 'uppercase',
                   }}
                 >
-                  The digital growth agency building brands properly
+                  The manchester digital growth agency building brands properly
                 </h1>
 
                 <p
@@ -650,10 +637,9 @@ export default function CnvrtHero() {
 
       <section
         id="services"
-        className="relative bg-white px-1 pb-20 pt-0 text-[#17121f] sm:px-1 sm:pb-24 lg:px-1 lg:pb-28"
+        className="relative bg-[#06040a] px-1 pb-20 pt-0 text-white sm:px-1 sm:pb-24 lg:px-1 lg:pb-28"
         aria-label="Services"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(195,180,214,0.18),transparent_23rem),linear-gradient(rgba(23,18,31,0.034)_1px,transparent_1px),linear-gradient(90deg,rgba(23,18,31,0.026)_1px,transparent_1px)] bg-[length:auto,64px_64px,64px_64px] [mask-image:linear-gradient(to_bottom,black,black_78%,transparent)]" />
         {showClientCarousel && (
           <>
             <div className="relative pt-1 md:hidden">
@@ -762,7 +748,7 @@ export default function CnvrtHero() {
           <div className="pt-10 sm:pt-14 lg:pt-16">
             <div ref={servicesIntroRef}>
               <p
-                className="mb-5 text-[#5c516a]"
+                className="mb-5 text-white"
                 style={{
                   fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
                   fontSize: '0.72rem',
@@ -780,7 +766,7 @@ export default function CnvrtHero() {
                   fontWeight: 300,
                   letterSpacing: '0.025em',
                   textTransform: 'uppercase',
-                  color: 'rgba(23,18,31,0.92)',
+                  color: 'rgba(255,255,255,0.92)',
                 }}
               >
                 Everything your business needs to grow <span style={{ fontStyle: 'italic' }}>- one team</span>
@@ -808,7 +794,7 @@ export default function CnvrtHero() {
                           <span
                             key={`${word}-${flatIndex}`}
                             className="transition-colors duration-500"
-                            style={{ color: isFilled ? 'rgba(23,18,31,0.92)' : 'rgba(23,18,31,0.3)' }}
+                            style={{ color: isFilled ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.3)' }}
                           >
                             {word}
                             {wordIndex < line.length - 1 ? ' ' : ''}
@@ -839,7 +825,7 @@ export default function CnvrtHero() {
                 </a>
                 <a
                   href="mailto:hello@cnvrt.co.uk"
-                  className="inline-flex min-h-[3.25rem] items-center justify-center rounded-[4px] border border-[#17121f]/15 px-6 text-[#17121f] outline-none transition hover:border-[#17121f]/35 hover:bg-[#17121f]/[0.035] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
+                  className="inline-flex min-h-[3.25rem] items-center justify-center rounded-[4px] border border-white/16 px-6 text-white outline-none transition hover:border-white/34 hover:bg-white/[0.045] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
                   style={{
                     fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
                     fontSize: '0.72rem',
@@ -853,7 +839,7 @@ export default function CnvrtHero() {
               </div>
             </div>
 
-            <div className="mt-10 border-t border-[#17121f]/12 sm:mt-12">
+            <div className="mt-10 border-t border-white/12 sm:mt-12">
               {services.map((service) => {
                 return (
                   <motion.article
@@ -862,7 +848,7 @@ export default function CnvrtHero() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.55 }}
                     transition={{ duration: 0.8, ease: [0, 0, 0.2, 1] }}
-                    className="group relative border-b border-[#17121f]/12"
+                    className="group relative border-b border-white/12"
                   >
                     <motion.div
                       initial={{ scaleX: 0 }}
@@ -876,14 +862,14 @@ export default function CnvrtHero() {
                       className="grid gap-5 py-7 outline-none transition sm:grid-cols-[4.75rem_minmax(0,1fr)_auto] sm:items-center sm:gap-6 sm:py-8 lg:grid-cols-[5.5rem_minmax(0,1fr)_auto] lg:py-9 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
                     >
                       <div className="flex items-center self-center">
-                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#17121f]/10 bg-[#17121f]/[0.02] text-[#17121f]/42 transition-colors duration-500 group-hover:border-[#c3b4d6]/40 group-hover:bg-[#c3b4d6]/18 group-hover:text-[#393056]">
+                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.03] text-white/58 transition-colors duration-500 group-hover:border-[#c3b4d6]/40 group-hover:bg-[#c3b4d6]/18 group-hover:text-white">
                           <service.Icon size={22} strokeWidth={1.7} />
                         </span>
                       </div>
 
                       <div className="max-w-[48rem] self-center">
                         <span
-                          className="block text-[#17121f]/62 transition-colors duration-500 group-hover:text-[#17121f]"
+                          className="block text-white/72 transition-colors duration-500 group-hover:text-white"
                           style={{
                             fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
                             fontSize: '0.98rem',
@@ -896,7 +882,7 @@ export default function CnvrtHero() {
                           {service.title}
                         </span>
                         <span
-                          className="mt-3 block max-w-[42rem] text-[#17121f]/58 transition-colors duration-500 group-hover:text-[#17121f]/86"
+                          className="mt-3 block max-w-[42rem] text-white/62 transition-colors duration-500 group-hover:text-white/92"
                           style={{
                             fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
                             fontSize: '0.9rem',

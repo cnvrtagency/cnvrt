@@ -25,7 +25,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 
 - Header entrance: starts `8px` higher with opacity `0` and `blur(7px)`, settles over `500ms` while retaining scroll-hide spring behavior.
 - Header scroll hide: Motion spring, stiffness `260`, damping `34`, translates to `-116px` after `window.scrollY > 110`.
-- Hero reveal: eyebrow, H1, paragraph and CTA row animate with opacity `0 -> 1` and vertical movement `10-12px -> 0`.
+- Hero reveal: H1, paragraph and CTA row animate with opacity `0 -> 1` and vertical movement `10-12px -> 0`.
 - Hero reveal timing: base duration `620ms`, ease `[0, 0, 0.2, 1]`, delays `120ms`, `200ms`, `280ms`, `360ms`.
 - Hero background gradient is static.
 - CTA sheen: primary CTA elements use a `520ms` diagonal sheen on hover only.
@@ -125,7 +125,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Max width: `22rem` base, `24rem` at `390px+`, `32rem` at `640px+`, `38rem` at `768px+`, `54rem` at `1024px+`, matching the other section heading measures.
 - Colour: `rgba(255,255,255,0.9)`.
 - Alignment: left.
-- H1 copy: `The digital growth agency building brands properly`.
+- H1 copy: `The manchester digital growth agency building brands properly`.
 
 ### Hero Paragraph
 
@@ -146,7 +146,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Primary image frame: `4 / 5` aspect ratio, `10px` radius, subtle white border `rgba(255,255,255,0.10)`, shadow `0 24px 80px rgba(0,0,0,0.38)`.
 - Secondary image frame: `58%` width of the desktop media column, `4 / 5` aspect ratio, `10px` radius, offset to the lower-left with slight rotation for an editorial overlap.
 - Mobile hero media layout: primary frame expands to a wider `6 / 5` aspect ratio on smaller screens and `5 / 4` from small screens upward within a `22rem`-`26rem` max-width block, while the secondary frame becomes a smaller bottom-right inset at `46%` width with extra bottom padding on the container to fully contain the overlap.
-- Mobile hero media spacing: image composition gets additional top inset (`24px` mobile, `32px` from small screens) to preserve more dark space above it.
+- Mobile hero media spacing: image composition gets additional top inset (`24px` mobile, `32px` from small screens) and larger bottom spacing before the H1 (`96px` mobile, `112px` from small screens).
 - Mobile hero media alignment: right-aligned within the text column so the overlapped stack clears the copy below.
 - Hero media motion: two staged fade-and-lift entrances with soft rotation, guarded by reduced-motion preferences.
 
@@ -178,8 +178,8 @@ Working record of CSS and visual styling applied to elements. Update this after 
 
 - Element: `<section id="services" aria-label="Services">`.
 - Position: relative.
-- Background: white `#ffffff`.
-- Background pattern: section-local absolute overlay with lavender radial wash `rgba(195,180,214,0.18)` and subtle 64px grid lines `rgba(23,18,31,0.034)`/`rgba(23,18,31,0.026)`, masked out toward the lower section.
+- Background: black `#06040a`.
+- Background pattern: none. The section is a flat black fill with no gradient, grid, or texture overlay.
 - Stack level: `z-index: 20`, so it scrolls over the sticky hero and then continues in normal document flow.
 - Padding: `0 4px 80px` across breakpoints for the services section outer gutter, with bottom padding staying `80px` mobile, `96px` small screens, `112px` large screens.
 - Section-wide media max width: none; the client media strip now runs full width inside the section gutter.
@@ -215,28 +215,28 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Services content wrapper side padding: `16px` on mobile, `24px` from small screens, `0` from large screens upward; this applies only to the services copy/card section, not the image carousel above it.
 - Content max width: `82rem`.
 - Intro alignment: left.
-- Services eyebrow: `What we do`, Montserrat, `0.72rem`, weight `500`, `0.24em` letter spacing, uppercase, colour `#5c516a`.
+- Services eyebrow: `What we do`, Montserrat, `0.72rem`, weight `500`, `0.24em` letter spacing, uppercase, white.
 - H2: ITC Blair, weight `300`, uppercase, `0.025em` letter spacing.
 - H2 sizing and measure now match the `Why CNVRT` H2 exactly: `23px` base, `23px` at `390px+`, `32px` at `640px+`, `38px` at `768px+`, `56px` at `1024px+`, line height `1.08`, max width `22rem` base, `24rem` at `390px+`, `32rem` at `640px+`, `38rem` at `768px+`, `54rem` at `1024px+`.
-- H2 text: `Everything your business needs to grow - one team`; `- one team` remains italic. The heading is a single semantic `h2` with no fill animation.
+- H2 text: `Everything your business needs to grow - one team`; `- one team` remains italic. The heading is a single semantic `h2` with no fill animation and solid white styling.
 - Services H2 optical alignment: nudged left by `0.04em` to counter the font's built-in left sidebearing and align visually with the eyebrow and paragraph.
-- Intro paragraph sizing and measure now match the `Why CNVRT` paragraph exactly: Montserrat, weight `300`, `0.9rem` base, `0.95rem` from small screens, line height `1.75rem`, max width `21rem` base, `30rem` from small screens, `38rem` from medium screens, `56rem` from large screens.
+- Intro paragraph sizing and measure now match the `Why CNVRT` paragraph exactly: Montserrat, weight `300`, `0.9rem` base, `0.95rem` from small screens, line height `1.75rem`, max width `21rem` base, `30rem` from small screens, `38rem` from medium screens, `56rem` from large screens, rendered in white tones.
 - Intro paragraph copy: one continuous paragraph covering strategy, design, development, SEO, paid media, email, retention and the full journey from first click to repeat customer.
-- Services paragraph fill: word-by-word dark fill on scroll, shifting from muted dark `rgba(23,18,31,0.3)` to near-black `rgba(23,18,31,0.92)` with the same delayed progress map used in `Why CNVRT`, so the paragraph starts later and completes more gradually than the heading.
+- Services paragraph fill: word-by-word white fill on scroll, shifting from muted white `rgba(255,255,255,0.3)` to bright white `rgba(255,255,255,0.92)` with the same delayed progress map used in `Why CNVRT`, so the paragraph starts later and completes more gradually than the heading.
 - Services text progress driver: requestAnimationFrame-backed section observer using the intro block's `getBoundingClientRect()`, beginning near `84%` of viewport height and completing near `22%`.
 - CTAs: left-aligned row from small screens, Montserrat, `0.72rem`, weight `500`, `0.2em` letter spacing, uppercase, `3.25rem` minimum height.
 - Primary services CTA: background and border `#c3b4d6`, text `#06040a`.
-- Secondary services CTA: border `rgba(23,18,31,0.15)`, hover border `rgba(23,18,31,0.35)`, hover background `rgba(23,18,31,0.035)`.
+- Secondary services CTA: border `rgba(255,255,255,0.16)`, hover border `rgba(255,255,255,0.34)`, hover background `rgba(255,255,255,0.045)`, white text.
 - Services list area: clean editorial numbered list with no enclosing panel or cards.
 - Services list spacing: `40px` top margin base and `48px` from small screens.
-- Services list structure: top border on the full list and bottom borders on each item, with a lilac active line drawing across the top edge of each item as it enters view.
+- Services list structure: top border on the full list and bottom borders on each item in low-opacity white, with a lilac active line drawing across the top edge of each item as it enters view.
 - Services list motion: each row fades up from lower opacity and `26px` lower on scroll, then settles into place with an active highlight treatment.
 - Service entries: no visible numbers.
-- Service icons: Lucide icons in a circular badge with no adjacent numbering, `48px` square, muted dark border/background by default, shifting to lilac-accent treatment on hover.
+- Service icons: Lucide icons in a circular badge with no adjacent numbering, `48px` square, low-opacity white border/background by default, shifting to lilac-accent treatment on hover.
 - Service icon mapping: `Code2` for Website Design & Development, `SearchCheck` for SEO/AEO, `MousePointerClick` for Paid Advertising, `MailCheck` for Email/Automation.
 - Service item layout: responsive three-part grid from small screens (`icon`, `content`, `CTA`), with `28px` vertical padding base, `32px` from small screens, `36px` from large screens; all three cells align vertically to the same horizontal row center.
-- Service title: ITC Blair, weight `400`, uppercase, `0.025em` letter spacing, `0.98rem`, muted dark `rgba(23,18,31,0.62)` by default and near-black on hover.
-- Service description: Montserrat, weight `300`, `0.9rem`, line height `1.75rem`, muted dark `rgba(23,18,31,0.58)` by default and deeper on hover.
+- Service title: ITC Blair, weight `400`, uppercase, `0.025em` letter spacing, `0.98rem`, white at `0.72` opacity by default and bright white on hover.
+- Service description: Montserrat, weight `300`, `0.9rem`, line height `1.75rem`, white at `0.62` opacity by default and brighter on hover.
 - Service link label: matches the lilac `Book a call` CTA treatment with Montserrat, `0.72rem`, weight `500`, `0.2em` letter spacing, uppercase, `#c3b4d6` fill, `#06040a` text, `4px` radius, and lavender shadow.
 - Services listed: Website Design & Development; SEO, AEO & Organic Growth; Paid Advertising; Email, Automation & Retention.
 
