@@ -98,7 +98,6 @@ export default function CnvrtHero() {
   const [clientScrollDistance, setClientScrollDistance] = useState(0);
   const [clientCarouselOffset, setClientCarouselOffset] = useState(0);
   const [clientCarouselSceneHeight, setClientCarouselSceneHeight] = useState(0);
-  const [isMobileCarousel, setIsMobileCarousel] = useState(false);
   const reducedMotion = useReducedMotion();
   const clientCarouselSectionRef = useRef<HTMLElement | null>(null);
   const clientCarouselViewportRef = useRef<HTMLDivElement | null>(null);
@@ -114,20 +113,6 @@ export default function CnvrtHero() {
 
     return () => {
       window.removeEventListener('scroll', onScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    const syncMobileCarousel = () => {
-      if (typeof window === 'undefined') return;
-      setIsMobileCarousel(window.innerWidth < 768);
-    };
-
-    syncMobileCarousel();
-    window.addEventListener('resize', syncMobileCarousel);
-
-    return () => {
-      window.removeEventListener('resize', syncMobileCarousel);
     };
   }, []);
 
@@ -154,7 +139,7 @@ export default function CnvrtHero() {
         return;
       }
 
-      const distanceMultiplier = window.innerWidth < 768 ? 0.42 : window.innerWidth < 1024 ? 0.62 : 1;
+      const distanceMultiplier = window.innerWidth < 1024 ? 0.62 : 0.72;
       const nextDistance = Math.max(0, (track.scrollWidth - viewport.clientWidth) * distanceMultiplier);
       const nextSceneHeight = track.clientHeight + 4;
       setClientScrollDistance(nextDistance);
@@ -199,7 +184,7 @@ export default function CnvrtHero() {
     const updateClientCarouselPosition = () => {
       const section = clientCarouselSectionRef.current;
 
-      if (!section || reducedMotion || clientScrollDistance <= 0) {
+      if (!section || window.innerWidth < 768 || reducedMotion || clientScrollDistance <= 0) {
         if (lastOffset !== 0) {
           lastOffset = 0;
           setClientCarouselOffset(0);
@@ -335,7 +320,7 @@ export default function CnvrtHero() {
               </p>
 
               <h1
-                className="mx-auto max-w-[58rem] text-center text-[23px] leading-[1.08] text-white min-[390px]:text-[23px] sm:text-[34px] md:text-[42px] lg:text-[56px]"
+                className="mx-auto max-w-[58rem] text-center text-[23px] leading-[1.08] text-white min-[390px]:text-[23px] sm:text-[32px] md:text-[38px] lg:text-[56px]"
                 style={{
                   fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
                   fontWeight: 300,
@@ -366,7 +351,7 @@ export default function CnvrtHero() {
               </h1>
 
               <p
-                className="mx-auto mt-6 max-w-[43rem] text-[0.9rem] leading-[1.75rem] text-white sm:text-[0.95rem]"
+                className="mx-auto mt-6 max-w-[20rem] text-[0.9rem] leading-[1.75rem] text-white sm:max-w-[30rem] sm:text-[0.95rem] lg:max-w-[43rem]"
                 style={{
                   fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
                   fontWeight: 300,
@@ -417,9 +402,53 @@ export default function CnvrtHero() {
         aria-label="Services"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(195,180,214,0.18),transparent_23rem),linear-gradient(rgba(23,18,31,0.034)_1px,transparent_1px),linear-gradient(90deg,rgba(23,18,31,0.026)_1px,transparent_1px)] bg-[length:auto,64px_64px,64px_64px] [mask-image:linear-gradient(to_bottom,black,black_78%,transparent)]" />
+        <div className="relative pt-1 md:hidden">
+          <div className="grid grid-cols-1 gap-1">
+            {mobileClientImages.map((clientImage, index) => (
+              <motion.article
+                key={`${clientImage.id}-mobile`}
+                initial={{ opacity: 0, y: 28, scale: 0.985 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.55 }}
+                transition={{ duration: 0.95, delay: index * 0.12, ease: [0, 0, 0.2, 1] }}
+                className="group relative aspect-[16/10] overflow-hidden bg-[#08050d] shadow-[0_18px_50px_rgba(23,18,31,0.08)]"
+              >
+                <img src={clientImage.src} alt={clientImage.alt} className="h-full w-full object-cover" loading="lazy" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#06040a]/88 via-[#06040a]/32 to-transparent" />
+                <div className="absolute bottom-5 left-5 max-w-[14rem] drop-shadow-[0_10px_24px_rgba(0,0,0,0.42)]">
+                  <span
+                    className="block whitespace-nowrap text-[0.9rem] text-white sm:text-[0.98rem]"
+                    style={{
+                      fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
+                      fontWeight: 300,
+                      letterSpacing: '0.12em',
+                      lineHeight: 1,
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {clientImage.wordmark}
+                  </span>
+                  <span
+                    className="mt-2 inline-flex items-center gap-2 text-white/78"
+                    style={{
+                      fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+                      fontSize: '0.62rem',
+                      fontWeight: 500,
+                      letterSpacing: '0.16em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    View case study
+                    <ArrowRight size={13} />
+                  </span>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </div>
         <section
           ref={clientCarouselSectionRef}
-          className="relative"
+          className="relative hidden md:block"
           style={{ height: clientScrollDistance > 0 ? `${clientCarouselSceneHeight + clientScrollDistance}px` : `${clientCarouselSceneHeight || 320}px` }}
           aria-label="Client case study carousel"
         >
@@ -430,19 +459,19 @@ export default function CnvrtHero() {
           >
             <div
               ref={clientCarouselTrackRef}
-              className="flex h-[40svh] items-stretch gap-1 will-change-transform sm:h-[44svh] md:h-[48svh] lg:h-[54svh] xl:h-[58svh]"
+              className="flex h-[48svh] items-stretch gap-1 will-change-transform lg:h-[54svh] xl:h-[58svh]"
               style={{ transform: `translate3d(${clientCarouselOffset}px, 0px, 0px)` }}
             >
-              {(isMobileCarousel ? mobileClientImages : clientImages).map((clientImage) => (
+              {clientImages.map((clientImage) => (
                 <article
                   key={`${clientImage.id}-desktop`}
-                  className="group relative aspect-[16/10] h-full min-w-0 flex-[0_0_calc(100vw-8px)] overflow-hidden bg-[#08050d] shadow-[0_18px_50px_rgba(23,18,31,0.08)] md:flex-[0_0_30rem] lg:flex-[0_0_34rem] xl:flex-[0_0_38rem]"
+                  className="group relative aspect-[16/10] h-full min-w-0 flex-[0_0_30rem] overflow-hidden bg-[#08050d] shadow-[0_18px_50px_rgba(23,18,31,0.08)] lg:flex-[0_0_34rem] xl:flex-[0_0_38rem]"
                 >
                   <img src={clientImage.src} alt={clientImage.alt} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]" loading="lazy" />
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#06040a]/88 via-[#06040a]/32 to-transparent" />
                   <div className="absolute bottom-7 left-7 max-w-[18rem] drop-shadow-[0_10px_24px_rgba(0,0,0,0.42)]">
                     <span
-                      className="block text-[1.18rem] text-white"
+                      className="block whitespace-nowrap text-[1.02rem] text-white lg:text-[1.08rem] xl:text-[1.18rem]"
                       style={{
                         fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
                         fontWeight: 300,
@@ -473,8 +502,8 @@ export default function CnvrtHero() {
           </div>
         </section>
 
-        <div className="relative mx-auto mt-10 max-w-[82rem] sm:mt-12 lg:mt-14">
-          <div className="grid gap-10 pt-4 sm:pt-8 lg:grid-cols-[0.6fr_0.4fr] lg:items-start lg:gap-8 lg:pt-12">
+        <div className="relative mx-auto mt-10 max-w-[82rem] px-4 sm:mt-12 sm:px-6 lg:mt-8 lg:px-0">
+          <div className="grid gap-10 pt-4 sm:pt-8 lg:grid-cols-[0.6fr_0.4fr] lg:items-start lg:gap-8 lg:pt-6">
             <div className="lg:sticky lg:top-28">
               <p
                 className="mb-5 text-[#5c516a]"

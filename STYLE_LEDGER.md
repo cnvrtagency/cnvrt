@@ -119,8 +119,8 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Desktop size: `56px`.
 - Mobile/base size under `390px`: `23px`.
 - `390px+` size: `23px`.
-- `640px+` size: `34px`.
-- `768px+` size: `42px`.
+- `640px+` size: `32px`.
+- `768px+` size: `38px`.
 - `1024px+` size: `56px`.
 - Line height: `1.18`.
 - Max width: `58rem`.
@@ -138,7 +138,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Font size: `0.9rem` mobile/base, `0.95rem` from small screens.
 - Line height: `1.75rem`.
 - Top margin: `28px`.
-- Max width: `43rem`.
+- Max width: `20rem` base, `30rem` from small screens, `43rem` from large screens.
 - Colour: white.
 - Rule: avoid muted grey paragraph copy on dark backgrounds.
 
@@ -177,17 +177,20 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Padding: `0 4px 80px` across breakpoints for the services section outer gutter, with bottom padding staying `80px` mobile, `96px` small screens, `112px` large screens.
 - Section-wide media max width: none; the client media strip now runs full width inside the section gutter.
 - Client case-study grid position: first element, flush to top of white services section and separated from the narrower services intro wrapper.
-- Client case-study presentation: one scroll-linked horizontal carousel across all breakpoints; mobile shows one card at a time while larger screens show a wider editorial rail.
+- Client case-study presentation: split by breakpoint. Mobile uses a simple single-column image stack; tablet/desktop use the scroll-linked horizontal rail.
 - Client case-study carousel top padding: `4px`.
 - Client case-study grid items: `8` cards total, currently repeating the four loaded project images to fill the layout.
-- Client case-study carousel wrapper: dedicated scroll scene with dynamic height of `measured rail height + horizontal travel distance`, so the section only reserves the space the shorter rail actually needs.
-- Client case-study carousel viewport: `position: sticky`, `top: 0`, `overflow: hidden`, `padding-top: 4px`, with live inline height matching the measured rail height instead of a full viewport.
-- Client case-study carousel track: horizontal flex row with `4px` gap and transform-only `translate3d(...)` movement tied to section scroll progress.
-- Client case-study carousel motion: a requestAnimationFrame scroll loop measures the section's vertical progress and maps it from `0 -> 1` into horizontal movement from `0` to the measured negative overflow distance, so downward scroll pushes the cards left until the rail completes.
-- Client case-study mobile travel tuning: under `768px`, the rail uses only the first `4` client cards and the measured horizontal travel is scaled to `42%` of the full overflow distance so the following content arrives sooner.
+- Client case-study mobile stack: visible below `768px`, one card per row with `4px` vertical gap and no scroll-linked or swipe carousel behavior.
+- Client case-study mobile card sizing: full available width inside the `4px` section gutter, `16 / 10` aspect ratio.
+- Client case-study mobile reveal: each stacked card animates in one by one on scroll, starting at opacity `0`, `28px` lower, and `0.985` scale, then easing to full opacity/position over `950ms` with `120ms` stagger and viewport trigger amount `0.55`.
+- Client case-study scroll-linked carousel wrapper: visible from `768px+`, dedicated scroll scene with dynamic height of `measured rail height + horizontal travel distance`, so the section only reserves the space the shorter rail actually needs.
+- Client case-study scroll-linked carousel viewport: `position: sticky`, `top: 0`, `overflow: hidden`, `padding-top: 4px`, with live inline height matching the measured rail height instead of a full viewport.
+- Client case-study scroll-linked carousel track: horizontal flex row with `4px` gap and transform-only `translate3d(...)` movement tied to section scroll progress.
+- Client case-study scroll-linked carousel motion: a requestAnimationFrame scroll loop measures the section's vertical progress and maps it from `0 -> 1` into horizontal movement from `0` to the measured negative overflow distance, so downward scroll pushes the cards left until the rail completes.
 - Client case-study tablet travel tuning: from `768px` to `1023px`, horizontal travel is scaled to `62%` of full overflow distance.
-- Client case-study carousel track height: `40svh` base, `44svh` from small screens, `48svh` from medium screens, `54svh` from `1024px+`, `58svh` from `1280px+`.
-- Client case-study carousel card sizing: `calc(100vw - 8px)` basis on mobile so one card sits in view at a time, `30rem` from medium screens, `34rem` from `1024px+`, `38rem` from `1280px+`, all at `16 / 10` aspect ratio.
+- Client case-study desktop travel tuning: from `1024px+`, horizontal travel is scaled to `72%` of full overflow distance so the services content arrives sooner after the rail.
+- Client case-study scroll-linked track height: `48svh` from `768px+`, `54svh` from `1024px+`, `58svh` from `1280px+`.
+- Client case-study scroll-linked card sizing: `30rem` from `768px+`, `34rem` from `1024px+`, `38rem` from `1280px+`, all at `16 / 10` aspect ratio.
 - Client case-study reduced-motion behavior: horizontal travel distance resolves to `0`, disabling the animated translation path.
 - Client case-study image treatment: full tile image, `width: 100%`, `height: 100%`, `object-fit: cover`.
 - Client case-study card style: no border, no radius, dark base `#08050d`, shadow `0 18px 50px rgba(23,18,31,0.08)`.
@@ -195,11 +198,13 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Client case-study card bottom treatment: dark gradient overlay from `rgba(6,4,10,0.85)` to transparent over `96px`.
 - Client case-study wordmark placement: absolute bottom-left over the image gradient, `20px` inset base and `24px` from small screens.
 - Client case-study wordmark typography: all brands use the same ITC Blair styling, weight `300`, `0.98rem` base, `1.18rem` from small screens, `0.12em` letter spacing, uppercase, line height `1`, white, drop shadow `0 10px 24px rgba(0,0,0,0.42)`.
+- Client case-study wordmarks: forced to a single line with `white-space: nowrap`; mobile base size trimmed to `0.9rem` before returning to `0.98rem`, and desktop base size trimmed to `1.02rem` / `1.08rem` before `1.18rem` on larger screens so longer names such as `Heatons Furniture` stay on one line.
 - Client case-study CTA: `View case study` under each wordmark, Montserrat, `0.62rem`, weight `500`, `0.16em` letter spacing, uppercase, white at `0.78` opacity, `8px` top margin, arrow `13px`, translates right `4px` on card hover.
-- Client case-study spacing before services intro wrapper: `40px` base, `48px` from small screens, `56px` from large screens.
-- Services intro top padding after carousel: `16px` base, `32px` from small screens, `48px` from large screens.
+- Client case-study spacing before services intro wrapper: `40px` base, `48px` from small screens, `32px` from large screens.
+- Services intro top padding after carousel: `16px` base, `32px` from small screens, `24px` from large screens.
 - Layout below carousel: two-column section from large screens, intro left and service boxes right.
 - Services section wrapper max width: `82rem`, matching the hero section wrapper exactly.
+- Services content wrapper side padding: `16px` on mobile, `24px` from small screens, `0` from large screens upward; this applies only to the services copy/card section, not the image carousel above it.
 - Two-column content max width: `82rem`.
 - Desktop grid: `0.6fr 0.4fr` (60% left, 40% right).
 - Desktop gap: `32px`.
