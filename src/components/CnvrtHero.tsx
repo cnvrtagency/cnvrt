@@ -98,10 +98,25 @@ export default function CnvrtHero() {
   const [clientScrollDistance, setClientScrollDistance] = useState(0);
   const [clientCarouselOffset, setClientCarouselOffset] = useState(0);
   const [clientCarouselSceneHeight, setClientCarouselSceneHeight] = useState(0);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const reducedMotion = useReducedMotion();
   const clientCarouselSectionRef = useRef<HTMLElement | null>(null);
   const clientCarouselViewportRef = useRef<HTMLDivElement | null>(null);
   const clientCarouselTrackRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const syncViewportFlags = () => {
+      if (typeof window === 'undefined') return;
+      setIsMobileViewport(window.innerWidth < 768);
+    };
+
+    syncViewportFlags();
+    window.addEventListener('resize', syncViewportFlags);
+
+    return () => {
+      window.removeEventListener('resize', syncViewportFlags);
+    };
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -351,7 +366,7 @@ export default function CnvrtHero() {
               </h1>
 
               <p
-                className="mx-auto mt-6 max-w-[20rem] text-[0.9rem] leading-[1.75rem] text-white sm:max-w-[30rem] sm:text-[0.95rem] lg:max-w-[43rem]"
+                className="mx-auto mt-6 max-w-[21rem] text-[0.9rem] leading-[1.75rem] text-white sm:max-w-[30rem] sm:text-[0.95rem] lg:max-w-[43rem]"
                 style={{
                   fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
                   fontWeight: 300,
@@ -585,15 +600,8 @@ export default function CnvrtHero() {
             </div>
 
             <div className="grid items-start gap-4">
-              {services.map((service, index) => (
-                <motion.article
-                  key={service.title}
-                  initial={{ opacity: 0, y: 28, scale: 0.98 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.32 }}
-                  transition={{ duration: 1.25, delay: Math.min(index * 0.12, 0.36), ease: [0, 0, 0.2, 1] }}
-                  className="group rounded-[7px] border border-[#c3b4d6]/[0.16] bg-[linear-gradient(145deg,rgba(18,12,28,0.96),rgba(6,4,10,0.98)),radial-gradient(circle_at_88%_0%,rgba(195,180,214,0.18),transparent_18rem)] p-6 shadow-[0_24px_70px_rgba(23,18,31,0.16),inset_0_1px_0_rgba(255,255,255,0.12)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c3b4d6]/45 hover:shadow-[0_30px_80px_rgba(23,18,31,0.22),inset_0_1px_0_rgba(255,255,255,0.14)]"
-                >
+              {services.map((service, index) => {
+                const cardContent = (
                   <a href={service.href} className="flex flex-col text-left outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]">
                     <span className="block">
                       <span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[5px] border border-[#c3b4d6]/25 bg-[#c3b4d6]/10 text-[#c3b4d6] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
@@ -634,8 +642,32 @@ export default function CnvrtHero() {
                       <ArrowRight size={15} />
                     </span>
                   </a>
-                </motion.article>
-              ))}
+                );
+
+                const cardClassName =
+                  'group rounded-[7px] border border-[#c3b4d6]/[0.16] bg-[linear-gradient(145deg,rgba(18,12,28,0.96),rgba(6,4,10,0.98)),radial-gradient(circle_at_88%_0%,rgba(195,180,214,0.18),transparent_18rem)] p-6 shadow-[0_24px_70px_rgba(23,18,31,0.16),inset_0_1px_0_rgba(255,255,255,0.12)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c3b4d6]/45 hover:shadow-[0_30px_80px_rgba(23,18,31,0.22),inset_0_1px_0_rgba(255,255,255,0.14)]';
+
+                if (isMobileViewport) {
+                  return (
+                    <article key={service.title} className={cardClassName}>
+                      {cardContent}
+                    </article>
+                  );
+                }
+
+                return (
+                  <motion.article
+                    key={service.title}
+                    initial={{ opacity: 0, y: 28, scale: 0.98 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, amount: 0.32 }}
+                    transition={{ duration: 1.25, delay: Math.min(index * 0.12, 0.36), ease: [0, 0, 0.2, 1] }}
+                    className={cardClassName}
+                  >
+                    {cardContent}
+                  </motion.article>
+                );
+              })}
             </div>
           </div>
         </div>

@@ -138,7 +138,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Font size: `0.9rem` mobile/base, `0.95rem` from small screens.
 - Line height: `1.75rem`.
 - Top margin: `28px`.
-- Max width: `20rem` base, `30rem` from small screens, `43rem` from large screens.
+- Max width: `21rem` base, `30rem` from small screens, `43rem` from large screens.
 - Colour: white.
 - Rule: avoid muted grey paragraph copy on dark backgrounds.
 
@@ -231,6 +231,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Service card scroll reveal: each card is a `motion.article`, initial opacity `0`, y `28px`, scale `0.98`; animates to opacity `1`, y `0`, scale `1`.
 - Service card reveal trigger: `whileInView`, once, viewport amount `0.32`.
 - Service card reveal timing: `1250ms`, ease `[0,0,0.2,1]`, staggered by `120ms` per card and capped at `360ms`.
+- Service card mobile motion rule: below `768px`, service cards render statically with no entrance animation so they do not flash during hydration or scroll.
 - Service entries: no visible numbers.
 - Service icons: Lucide icons above each title, `40px` square, `5px` radius, `16px` bottom margin, border `rgba(195,180,214,0.25)`, background `rgba(195,180,214,0.1)`, colour `#c3b4d6`.
 - Service icon mapping: `Code2` for Website Design & Development, `SearchCheck` for SEO/AEO, `MousePointerClick` for Paid Advertising, `MailCheck` for Email/Automation.
