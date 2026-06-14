@@ -14,7 +14,7 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Hero background is `#06040a` after previous purple bases proved too light in browser.
 - Removed fuzzy noise texture overlay from active hero use.
 - Kept subtle grid treatment for the hero background, tuned over `#06040a`.
-- Hero section is a simple sticky scene: `position: sticky`, `top: 0`, `height: 100vh`.
+- Hero section is in normal document flow with a relative container; no sticky scene behavior.
 - The following white section sits above the hero with `position: relative` and `z-index: 20`, so it scrolls up over the held hero.
 - Hero inner content max width: `82rem`, matching the services section measure.
 - Hero content structure: single centered content column with no secondary panel.
@@ -27,9 +27,9 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Header scroll hide: Motion spring, stiffness `260`, damping `34`, translates to `-116px` after `window.scrollY > 110`.
 - Hero reveal: eyebrow, H1, paragraph and CTA row animate with opacity `0 -> 1` and vertical movement `10-12px -> 0`.
 - Hero reveal timing: base duration `620ms`, ease `[0, 0, 0.2, 1]`, delays `120ms`, `200ms`, `280ms`, `360ms`.
-- Hero background gradient is static to keep the pinned hero calm while the next section scrolls over it.
+- Hero background gradient is static.
 - CTA sheen: primary CTA elements use a `520ms` diagonal sheen on hover only.
-- Scroll handoff: no JavaScript scroll progress, no Lenis instance, no transform/opacity mapping, and no white wipe layer. The page uses native scroll plus CSS stacking only.
+- Scroll handoff: no JavaScript scroll progress, no Lenis instance, no transform/opacity mapping, and no section overlay handoff. The page uses normal native document flow.
 
 ### Header
 
@@ -97,17 +97,16 @@ Working record of CSS and visual styling applied to elements. Update this after 
 
 ### Hero Layout
 
-- Element: sticky hero scene.
-- Section position: sticky.
-- Section height: `100vh`.
+- Element: hero section.
+- Section position: relative.
+- Section minimum height: `106svh` on mobile/tablet, `100svh` from large screens.
 - Section overflow: hidden.
-- Section stack level: `z-index: 0`.
-- Next section stack level: `z-index: 20`.
-- Next section minimum height: `100vh`, allowing the white section to fully cover the held hero during scroll.
-- Desktop top padding: `9.5rem`.
-- Horizontal padding: `20px` mobile, `32px` small screens, `40px` large screens.
-- Layout: single centered copy stack.
-- Hero copy alignment: center.
+- Vertical padding: `7rem` mobile, `8rem` from large screens.
+- Horizontal padding: `16px` mobile, `24px` from small screens, `0` from large screens, matching the other section wrappers.
+- Layout: editorial two-column split from large screens, with a left copy column and a right image column.
+- Hero copy alignment: left.
+- Desktop hero grid: `minmax(0,1fr) minmax(18rem,30%)`, with `40px` gap at large screens and `56px` gap at extra-large screens.
+- Mobile/tablet hero layout: single left-aligned copy column; image composition hidden below desktop.
 
 ### H1
 
@@ -117,18 +116,16 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Letter spacing: `0.035em`.
 - Text transform: uppercase.
 - Desktop size: `56px`.
-- Mobile/base size under `390px`: `23px`.
-- `390px+` size: `23px`.
+- Mobile/base size under `390px`: `26px`.
+- `390px+` size: `28px`.
 - `640px+` size: `32px`.
 - `768px+` size: `38px`.
 - `1024px+` size: `56px`.
 - Line height: `1.18`.
-- Max width: `58rem`.
+- Max width: `22rem` base, `24rem` at `390px+`, `32rem` at `640px+`, `38rem` at `768px+`, `54rem` at `1024px+`, matching the other section heading measures.
 - Colour: `rgba(255,255,255,0.9)`.
-- Alignment: centered.
-- H1 emphasis phrase: `designing`, `scaling`, and `building` cycle inside an inline italic span with weight `300` and colour `rgba(255,255,255,0.72)`.
-- H1 closing text: `brands properly.` so the sentence finishes cleanly after the animated verb.
-- H1 emphasis motion: the highlighted word swaps every `1350ms` with a `200ms` soft fade-and-lift transition, using its natural text width so no artificial gap appears around shorter words, while the full sentence remains in the DOM as one semantic `h1`.
+- Alignment: left.
+- H1 copy: `The digital growth agency building brands properly`.
 
 ### Hero Paragraph
 
@@ -141,6 +138,17 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Max width: `21rem` base, `30rem` from small screens, `43rem` from large screens.
 - Colour: white.
 - Rule: avoid muted grey paragraph copy on dark backgrounds.
+
+### Hero Images
+
+- Hero media: editorial image composition visible across breakpoints; on desktop it occupies roughly `30%` of the hero width in the right column, while on mobile/tablet it lives inside the left/text column and appears before the eyebrow and copy in a simplified stacked composition.
+- Hero media composition: two overlapping portrait images, using `/ya-omri.jpg` as the primary large frame and `/hair-made-easi.jpg` as the smaller overlapping detail frame.
+- Primary image frame: `4 / 5` aspect ratio, `10px` radius, subtle white border `rgba(255,255,255,0.10)`, shadow `0 24px 80px rgba(0,0,0,0.38)`.
+- Secondary image frame: `58%` width of the desktop media column, `4 / 5` aspect ratio, `10px` radius, offset to the lower-left with slight rotation for an editorial overlap.
+- Mobile hero media layout: primary frame expands to a wider `6 / 5` aspect ratio on smaller screens and `5 / 4` from small screens upward within a `22rem`-`26rem` max-width block, while the secondary frame becomes a smaller bottom-right inset at `46%` width with extra bottom padding on the container to fully contain the overlap.
+- Mobile hero media spacing: image composition gets additional top inset (`24px` mobile, `32px` from small screens) to preserve more dark space above it.
+- Mobile hero media alignment: right-aligned within the text column so the overlapped stack clears the copy below.
+- Hero media motion: two staged fade-and-lift entrances with soft rotation, guarded by reduced-motion preferences.
 
 ### Hero CTAs
 
@@ -170,7 +178,6 @@ Working record of CSS and visual styling applied to elements. Update this after 
 
 - Element: `<section id="services" aria-label="Services">`.
 - Position: relative.
-- Sticky/scroll-over animation removed from this section.
 - Background: white `#ffffff`.
 - Background pattern: section-local absolute overlay with lavender radial wash `rgba(195,180,214,0.18)` and subtle 64px grid lines `rgba(23,18,31,0.034)`/`rgba(23,18,31,0.026)`, masked out toward the lower section.
 - Stack level: `z-index: 20`, so it scrolls over the sticky hero and then continues in normal document flow.
@@ -178,15 +185,16 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Section-wide media max width: none; the client media strip now runs full width inside the section gutter.
 - Client case-study grid position: first element, flush to top of white services section and separated from the narrower services intro wrapper.
 - Client case-study presentation: split by breakpoint. Mobile uses a simple single-column image stack; tablet/desktop use the scroll-linked horizontal rail.
+- Client case-study carousel status: preserved in component code behind a local feature flag and removed from the live page for now, so it can be restored later without rebuilding it.
 - Client case-study carousel top padding: `4px`.
 - Client case-study grid items: `8` cards total, currently repeating the four loaded project images to fill the layout.
 - Client case-study mobile stack: visible below `768px`, one card per row with `4px` vertical gap and no scroll-linked or swipe carousel behavior.
 - Client case-study mobile card sizing: full available width inside the `4px` section gutter, `16 / 10` aspect ratio.
 - Client case-study mobile reveal: each stacked card animates in one by one on scroll, starting at opacity `0`, `28px` lower, and `0.985` scale, then easing to full opacity/position over `950ms` with `120ms` stagger and viewport trigger amount `0.55`.
-- Client case-study scroll-linked carousel wrapper: visible from `768px+`, dedicated scroll scene with dynamic height of `measured rail height + horizontal travel distance`, so the section only reserves the space the shorter rail actually needs.
-- Client case-study scroll-linked carousel viewport: `position: sticky`, `top: 0`, `overflow: hidden`, `padding-top: 4px`, with live inline height matching the measured rail height instead of a full viewport.
+- Client case-study scroll-linked carousel wrapper: visible from `768px+`, dedicated scroll scene with dynamic height of `measured rail height + horizontal travel distance`, so the section reserves only the space needed for horizontal travel after the rail reaches the top.
+- Client case-study scroll-linked carousel viewport: `position: sticky`, `top: 0`, `overflow: hidden`, `padding-top: 4px`, with live inline height matching the measured scene height.
 - Client case-study scroll-linked carousel track: horizontal flex row with `4px` gap and transform-only `translate3d(...)` movement tied to section scroll progress.
-- Client case-study scroll-linked carousel motion: a requestAnimationFrame scroll loop measures the section's vertical progress and maps it from `0 -> 1` into horizontal movement from `0` to the measured negative overflow distance, so downward scroll pushes the cards left until the rail completes.
+- Client case-study scroll-linked carousel motion: a requestAnimationFrame loop measures the section's vertical progress and maps it directly into horizontal movement from `0` to the measured negative overflow distance, so the rail starts flush to the top of the white section and scrolls horizontally until the scene ends.
 - Client case-study tablet travel tuning: from `768px` to `1023px`, horizontal travel is scaled to `62%` of full overflow distance.
 - Client case-study desktop travel tuning: from `1024px+`, horizontal travel is scaled to `72%` of full overflow distance so the services content arrives sooner after the rail.
 - Client case-study scroll-linked track height: `48svh` from `768px+`, `54svh` from `1024px+`, `58svh` from `1280px+`.
@@ -201,53 +209,75 @@ Working record of CSS and visual styling applied to elements. Update this after 
 - Client case-study wordmarks: forced to a single line with `white-space: nowrap`; mobile base size trimmed to `0.9rem` before returning to `0.98rem`, and desktop base size trimmed to `1.02rem` / `1.08rem` before `1.18rem` on larger screens so longer names such as `Heatons Furniture` stay on one line.
 - Client case-study CTA: `View case study` under each wordmark, Montserrat, `0.62rem`, weight `500`, `0.16em` letter spacing, uppercase, white at `0.78` opacity, `8px` top margin, arrow `13px`, translates right `4px` on card hover.
 - Client case-study spacing before services intro wrapper: `40px` base, `48px` from small screens, `32px` from large screens.
-- Services intro top padding after carousel: `16px` base, `32px` from small screens, `24px` from large screens.
-- Layout below carousel: two-column section from large screens, intro left and service boxes right.
+- Services intro top padding after carousel or section start: `40px` base, `56px` from small screens, `64px` from large screens.
+- Layout below carousel: one-column section at all breakpoints, with the intro text first and the service boxes below it.
 - Services section wrapper max width: `82rem`, matching the hero section wrapper exactly.
 - Services content wrapper side padding: `16px` on mobile, `24px` from small screens, `0` from large screens upward; this applies only to the services copy/card section, not the image carousel above it.
-- Two-column content max width: `82rem`.
-- Desktop grid: `0.6fr 0.4fr` (60% left, 40% right).
-- Desktop gap: `32px`.
-- Left column: sticky only on large screens with `top: 7rem`, so the intro content holds while the service cards scroll beside it.
+- Content max width: `82rem`.
 - Intro alignment: left.
 - Services eyebrow: `What we do`, Montserrat, `0.72rem`, weight `500`, `0.24em` letter spacing, uppercase, colour `#5c516a`.
 - H2: ITC Blair, weight `300`, uppercase, `0.025em` letter spacing.
-- H2 sizes match hero H1: `23px` base, `23px` at `390px+`, `32px` at `640px+`, `38px` at `768px+`, `45px` at `1024px+`.
-- H2 line height: `1.1`.
-- H2 max width: `35rem` below desktop, `44rem` from `1024px+`.
-- H2 text: `Everything your business needs to grow - one team`; `- one team` is an italic inline span at weight `300` and `rgba(23,18,31,0.7)`.
-- Intro paragraph: Montserrat, weight `300`, `0.95rem`, line height `1.75rem`, max width `36rem` below desktop and `43rem` from `1024px+`, colour `#17121f`.
-- Intro paragraph copy: two paragraphs covering strategy, design, development, SEO, paid media, email, retention and the full journey from first click to repeat customer.
-- Services H2 scroll reveal: starts opacity `0`, y `12px`, blur `10px`; animates to opacity `1`, y `0`, blur `0`.
-- Services paragraph scroll reveal: starts opacity `0`, y `10px`, blur `8px`; animates to opacity `1`, y `0`, blur `0`.
-- Services text reveal trigger: Motion `whileInView`, once, amount `0.75`.
-- Services text reveal timing: `1250ms`, ease `[0,0,0.2,1]`; paragraph delay `220ms`.
+- H2 sizing and measure now match the `Why CNVRT` H2 exactly: `23px` base, `23px` at `390px+`, `32px` at `640px+`, `38px` at `768px+`, `56px` at `1024px+`, line height `1.08`, max width `22rem` base, `24rem` at `390px+`, `32rem` at `640px+`, `38rem` at `768px+`, `54rem` at `1024px+`.
+- H2 text: `Everything your business needs to grow - one team`; `- one team` remains italic. The heading is a single semantic `h2` with no fill animation.
+- Services H2 optical alignment: nudged left by `0.04em` to counter the font's built-in left sidebearing and align visually with the eyebrow and paragraph.
+- Intro paragraph sizing and measure now match the `Why CNVRT` paragraph exactly: Montserrat, weight `300`, `0.9rem` base, `0.95rem` from small screens, line height `1.75rem`, max width `21rem` base, `30rem` from small screens, `38rem` from medium screens, `56rem` from large screens.
+- Intro paragraph copy: one continuous paragraph covering strategy, design, development, SEO, paid media, email, retention and the full journey from first click to repeat customer.
+- Services paragraph fill: word-by-word dark fill on scroll, shifting from muted dark `rgba(23,18,31,0.3)` to near-black `rgba(23,18,31,0.92)` with the same delayed progress map used in `Why CNVRT`, so the paragraph starts later and completes more gradually than the heading.
+- Services text progress driver: requestAnimationFrame-backed section observer using the intro block's `getBoundingClientRect()`, beginning near `84%` of viewport height and completing near `22%`.
 - CTAs: left-aligned row from small screens, Montserrat, `0.72rem`, weight `500`, `0.2em` letter spacing, uppercase, `3.25rem` minimum height.
-- Next section: black background `#06040a` with a centered ITC Blair H2 reading `We create websites built to convert`, matching the hero H1 type system at `23px` / `32px` / `38px` / `45px` with weight `300` and `0.025em` letter spacing. The heading stays as one semantic `h2` and uses a single overlay reveal so the text can wrap naturally for SEO, while the base text remains visible immediately.
 - Primary services CTA: background and border `#c3b4d6`, text `#06040a`.
 - Secondary services CTA: border `rgba(23,18,31,0.15)`, hover border `rgba(23,18,31,0.35)`, hover background `rgba(23,18,31,0.035)`.
-- Service card area: floating cards only; no enclosing panel or panel header.
-- Service card grid: stacked rows in the right column at all sizes, `16px` gap, `align-items: start` to prevent row stretching.
-- Service card scroll reveal: each card is a `motion.article`, initial opacity `0`, y `28px`, scale `0.98`; animates to opacity `1`, y `0`, scale `1`.
-- Service card reveal trigger: `whileInView`, once, viewport amount `0.32`.
-- Service card reveal timing: `1250ms`, ease `[0,0,0.2,1]`, staggered by `120ms` per card and capped at `360ms`.
-- Service card mobile motion rule: below `768px`, service cards render statically with no entrance animation so they do not flash during hydration or scroll.
+- Services list area: clean editorial numbered list with no enclosing panel or cards.
+- Services list spacing: `40px` top margin base and `48px` from small screens.
+- Services list structure: top border on the full list and bottom borders on each item, with a lilac active line drawing across the top edge of each item as it enters view.
+- Services list motion: each row fades up from lower opacity and `26px` lower on scroll, then settles into place with an active highlight treatment.
 - Service entries: no visible numbers.
-- Service icons: Lucide icons above each title, `40px` square, `5px` radius, `16px` bottom margin, border `rgba(195,180,214,0.25)`, background `rgba(195,180,214,0.1)`, colour `#c3b4d6`.
+- Service icons: Lucide icons in a circular badge with no adjacent numbering, `48px` square, muted dark border/background by default, shifting to lilac-accent treatment on hover.
 - Service icon mapping: `Code2` for Website Design & Development, `SearchCheck` for SEO/AEO, `MousePointerClick` for Paid Advertising, `MailCheck` for Email/Automation.
-- Service entries: dark glass boxes with radius `7px`, equal padding `24px`, content-led height, border `rgba(195,180,214,0.16)`, deep purple/black gradient, lavender radial highlight, and shadow `0 24px 70px rgba(23,18,31,0.16)`.
-- Service entries hover: translate up `2px`, border `rgba(195,180,214,0.45)`, shadow `0 30px 80px rgba(23,18,31,0.22)`.
-- Service card link layout: flex column, left-aligned content.
-- Service title: ITC Blair, weight `300`, uppercase, `0.025em` letter spacing, `0.86rem` base, `0.94rem` from small screens, white.
-- Service description: Montserrat, weight `300`, `0.84rem`, line height `1.5rem`, white.
-- Service link label: Montserrat, `0.7rem`, weight `500`, `0.18em` letter spacing, uppercase, colour `#c3b4d6`, top margin `16px`, hover translate `4px`.
+- Service item layout: responsive three-part grid from small screens (`icon`, `content`, `CTA`), with `28px` vertical padding base, `32px` from small screens, `36px` from large screens; all three cells align vertically to the same horizontal row center.
+- Service title: ITC Blair, weight `400`, uppercase, `0.025em` letter spacing, `0.98rem`, muted dark `rgba(23,18,31,0.62)` by default and near-black on hover.
+- Service description: Montserrat, weight `300`, `0.9rem`, line height `1.75rem`, muted dark `rgba(23,18,31,0.58)` by default and deeper on hover.
+- Service link label: matches the lilac `Book a call` CTA treatment with Montserrat, `0.72rem`, weight `500`, `0.2em` letter spacing, uppercase, `#c3b4d6` fill, `#06040a` text, `4px` radius, and lavender shadow.
 - Services listed: Website Design & Development; SEO, AEO & Organic Growth; Paid Advertising; Email, Automation & Retention.
 
-### Lilac Section Placeholder
+### Why CNVRT Section
 
-- Element: `<section aria-label="Next lilac section">`.
-- Position: after services section, normal flow with higher stacking.
-- Stack level: `z-index: 30`, above the white services section.
-- Minimum height: `100vh`.
-- Background: CTA lilac `#c3b4d6`.
-- Purpose: placeholder for the next section.
+- Element: `<section aria-label="Why CNVRT">`.
+- Position: directly after the white services section in normal document flow.
+- Background: black `#06040a`.
+- Text alignment: left, matching the services intro text block.
+- Horizontal padding: inherited from the inner content wrapper with `16px` mobile, `24px` from small screens, `0` from large screens, matching the services text block exactly.
+- Vertical padding: `96px` mobile, `112px` from small screens, `128px` from large screens.
+- Content wrapper max width: `82rem`, matching hero and services sections.
+- Eyebrow styling matches the hero eyebrow exactly.
+- Eyebrow font: Montserrat.
+- Eyebrow font size: `0.72rem`.
+- Eyebrow font weight: `500`.
+- Eyebrow letter spacing: `0.24em`.
+- Eyebrow text transform: uppercase.
+- Eyebrow colour: `rgba(255,255,255,0.48)`.
+- Eyebrow content: `Why CNVRT`.
+- H2 styling matches the hero H1 type system.
+- H2 font: ITC Blair.
+- H2 font weight: `300`.
+- H2 letter spacing: `0.025em`.
+- H2 text transform: uppercase.
+- H2 alignment: left.
+- H2 sizes: `23px` base, `23px` at `390px+`, `32px` at `640px+`, `38px` at `768px+`, `56px` at `1024px+`.
+- H2 line height: `1.08`.
+- H2 max width: `22rem` base, `24rem` at `390px+`, `32rem` at `640px+`, `38rem` at `768px+`, `54rem` at `1024px+`, giving the heading a wider centered desktop measure.
+- H2 copy: `What's strategy without execution?`
+- H2 colour: `rgba(255,255,255,0.92)`.
+- Paragraph styling matches the hero paragraph type system.
+- Paragraph font: Montserrat.
+- Paragraph font weight: `300`.
+- Paragraph font size: `0.9rem` mobile/base, `0.95rem` from small screens.
+- Paragraph line height: `1.75rem`.
+- Paragraph top margin: `24px`.
+- Paragraph max width: `21rem` base, `30rem` from small screens, `38rem` from medium screens, `56rem` from large screens for a slightly broader desktop measure.
+- Paragraph alignment: left.
+- Paragraph base state colour: muted white `rgba(255,255,255,0.3)`.
+- Paragraph scroll-fill state colour: `rgba(255,255,255,0.92)`.
+- Paragraph scroll-fill behavior: word-by-word reveal with a delayed, stretched progress map, starting roughly `22%` later than the H2 and taking longer to complete so the fill reads more gradually.
+- Scroll progress driver: requestAnimationFrame-backed section observer using `getBoundingClientRect()`, beginning near `84%` of viewport height and completing near `22%`, updating only when progress changes meaningfully.
+- Reduced-motion behavior: full section text resolves immediately to the filled state.

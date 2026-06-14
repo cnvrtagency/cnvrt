@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Code2, MailCheck, Menu, MousePointerClick, SearchCheck, X } from 'lucide-react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 
 const services = [
   {
-    number: '01',
     title: 'Website Design & Development',
     Icon: Code2,
     description:
@@ -12,7 +11,6 @@ const services = [
     href: '/services/shopify-design-development',
   },
   {
-    number: '02',
     title: 'SEO, AEO & Organic Growth',
     Icon: SearchCheck,
     description:
@@ -20,7 +18,6 @@ const services = [
     href: '/services/shopify-seo-aeo',
   },
   {
-    number: '03',
     title: 'Paid Advertising',
     Icon: MousePointerClick,
     description:
@@ -28,7 +25,6 @@ const services = [
     href: '#contact',
   },
   {
-    number: '04',
     title: 'Email, Automation & Retention',
     Icon: MailCheck,
     description:
@@ -88,35 +84,170 @@ const clientImages = [
   },
 ];
 
-const heroWords = ['designing', 'scaling', 'building'];
 const mobileClientImages = clientImages.slice(0, 4);
+const showClientCarousel = false;
+const servicesParagraphLines = [
+  [
+    'Strategy,',
+    'design,',
+    'development,',
+    'SEO,',
+    'paid',
+    'media,',
+    'email',
+    'and',
+    'retention,',
+    'built',
+    'and',
+    'managed',
+    'under',
+    'one',
+    'roof.',
+    'Every',
+    'part',
+    'connected',
+    'into',
+    'a',
+    'single',
+    'system',
+    'instead',
+    'of',
+    'scattered',
+    'across',
+    'separate',
+    'agencies',
+    'pulling',
+    'in',
+    'different',
+    'directions.',
+    "Whether",
+    "you're",
+    'launching',
+    'something',
+    'new,',
+    'scaling',
+    "what's",
+    'working',
+    'or',
+    'fixing',
+    "what's",
+    'broken,',
+    'we',
+    'cover',
+    'the',
+    'full',
+    'journey',
+    'from',
+    'first',
+    'click',
+    'to',
+    'repeat',
+    'customer.',
+    'One',
+    'team',
+    'accountable',
+    'for',
+    'the',
+    'whole',
+    'thing,',
+    'working',
+    'towards',
+    'the',
+    'same',
+    'number.',
+  ],
+];
+const whyCnvrtParagraphWords = [
+  'CNVRT',
+  'was',
+  'built',
+  'because',
+  'founders',
+  'kept',
+  'running',
+  'into',
+  'the',
+  'same',
+  'problem:',
+  'agencies',
+  'that',
+  'could',
+  'talk',
+  'about',
+  'growth',
+  'but',
+  'could',
+  'not',
+  'build',
+  'the',
+  'infrastructure',
+  'to',
+  'support',
+  'it.',
+  'We',
+  'fix',
+  'that.',
+  'We',
+  'work',
+  'across',
+  'design,',
+  'development,',
+  'search,',
+  'paid',
+  'media,',
+  'and',
+  'email',
+  '-',
+  'and',
+  'we',
+  'build',
+  'the',
+  'internal',
+  'tools',
+  'and',
+  'systems',
+  'that',
+  'sit',
+  'underneath',
+  'your',
+  'marketing',
+  'and',
+  'make',
+  'it',
+  'work',
+  'as',
+  'a',
+  'whole.',
+  'Manchester-based.',
+  'Working',
+  'with',
+  'startups',
+  'and',
+  'growing',
+  'businesses',
+  'across',
+  'the',
+  'UK',
+  'and',
+  'internationally.',
+];
 
 export default function CnvrtHero() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [heroWordIndex, setHeroWordIndex] = useState(0);
   const [clientScrollDistance, setClientScrollDistance] = useState(0);
   const [clientCarouselOffset, setClientCarouselOffset] = useState(0);
   const [clientCarouselSceneHeight, setClientCarouselSceneHeight] = useState(0);
-  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [servicesProgress, setServicesProgress] = useState(0);
+  const [whyCnvrtProgress, setWhyCnvrtProgress] = useState(0);
   const reducedMotion = useReducedMotion();
+  const delayedServicesParagraphProgress = Math.min(Math.max((servicesProgress - 0.22) / 0.78, 0), 1);
+  const delayedWhyCnvrtParagraphProgress = Math.min(Math.max((whyCnvrtProgress - 0.22) / 1.08, 0), 1);
   const clientCarouselSectionRef = useRef<HTMLElement | null>(null);
   const clientCarouselViewportRef = useRef<HTMLDivElement | null>(null);
   const clientCarouselTrackRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const syncViewportFlags = () => {
-      if (typeof window === 'undefined') return;
-      setIsMobileViewport(window.innerWidth < 768);
-    };
-
-    syncViewportFlags();
-    window.addEventListener('resize', syncViewportFlags);
-
-    return () => {
-      window.removeEventListener('resize', syncViewportFlags);
-    };
-  }, []);
+  const servicesIntroRef = useRef<HTMLDivElement | null>(null);
+  const whyCnvrtSectionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -130,16 +261,6 @@ export default function CnvrtHero() {
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
-
-  useEffect(() => {
-    if (reducedMotion) return;
-
-    const timer = window.setInterval(() => {
-      setHeroWordIndex((current) => (current + 1) % heroWords.length);
-    }, 1350);
-
-    return () => window.clearInterval(timer);
-  }, [reducedMotion]);
 
   useEffect(() => {
     const measureClientCarousel = () => {
@@ -210,7 +331,7 @@ export default function CnvrtHero() {
 
       const availableTravel = Math.max(section.offsetHeight - window.innerHeight, 1);
       const progress = Math.min(Math.max(-section.getBoundingClientRect().top / availableTravel, 0), 1);
-      const translateX = -progress * clientScrollDistance;
+      const translateX = -(progress * clientScrollDistance);
 
       if (Math.abs(translateX - lastOffset) > 0.5 || Number.isNaN(lastOffset)) {
         lastOffset = translateX;
@@ -226,6 +347,94 @@ export default function CnvrtHero() {
       window.cancelAnimationFrame(frameId);
     };
   }, [clientScrollDistance, reducedMotion]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || reducedMotion) {
+      setServicesProgress(1);
+      return;
+    }
+
+    let frameId = 0;
+    let lastProgress = Number.NaN;
+
+    const updateServicesProgress = () => {
+      frameId = 0;
+      const section = servicesIntroRef.current;
+
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const start = viewportHeight * 0.84;
+      const end = viewportHeight * 0.22;
+      const rawProgress = (start - rect.top) / Math.max(start - end, 1);
+      const nextProgress = Math.min(Math.max(rawProgress, 0), 1);
+
+      if (Math.abs(nextProgress - lastProgress) > 0.01 || Number.isNaN(lastProgress)) {
+        lastProgress = nextProgress;
+        setServicesProgress(nextProgress);
+      }
+    };
+
+    const requestUpdate = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(updateServicesProgress);
+    };
+
+    requestUpdate();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+
+    return () => {
+      if (frameId) window.cancelAnimationFrame(frameId);
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', requestUpdate);
+    };
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || reducedMotion) {
+      setWhyCnvrtProgress(1);
+      return;
+    }
+
+    let frameId = 0;
+    let lastProgress = Number.NaN;
+
+    const updateWhyCnvrtProgress = () => {
+      frameId = 0;
+      const section = whyCnvrtSectionRef.current;
+
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const start = viewportHeight * 0.84;
+      const end = viewportHeight * 0.22;
+      const rawProgress = (start - rect.top) / Math.max(start - end, 1);
+      const nextProgress = Math.min(Math.max(rawProgress, 0), 1);
+
+      if (Math.abs(nextProgress - lastProgress) > 0.01 || Number.isNaN(lastProgress)) {
+        lastProgress = nextProgress;
+        setWhyCnvrtProgress(nextProgress);
+      }
+    };
+
+    const requestUpdate = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(updateWhyCnvrtProgress);
+    };
+
+    requestUpdate();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+
+    return () => {
+      if (frameId) window.cancelAnimationFrame(frameId);
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', requestUpdate);
+    };
+  }, [reducedMotion]);
 
   return (
     <div className="bg-white">
@@ -312,214 +521,246 @@ export default function CnvrtHero() {
         )}
       </motion.header>
 
-      <section className="sticky top-0 z-0 min-h-[112svh] overflow-hidden bg-[#06040a] text-white lg:min-h-[120svh]" aria-label="CNVRT hero">
+      <section className="relative min-h-[106svh] overflow-hidden bg-[#06040a] text-white lg:min-h-[100svh]" aria-label="CNVRT hero">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_28%,rgba(86,62,112,0.24),transparent_28rem),radial-gradient(circle_at_78%_12%,rgba(195,180,214,0.1),transparent_24rem),linear-gradient(180deg,rgba(255,255,255,0.012),transparent_40%,rgba(255,255,255,0.014))]" />
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[length:66px_66px] opacity-22 [mask-image:linear-gradient(to_bottom,transparent,black_18%,black_82%,transparent)]" />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-[#030205] to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-52 bg-gradient-to-t from-[#0a0610] to-transparent" />
 
-        <div className="mx-auto flex min-h-[112svh] max-w-[82rem] items-center justify-center px-5 py-28 sm:px-8 lg:px-10 lg:py-40">
-          <div className="w-full text-center">
-            <div className="mx-auto max-w-[56rem] text-center">
-              <p
-                className="mb-5 text-white/48"
-                style={{
-                  fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
-                  fontSize: '0.72rem',
-                  fontWeight: 500,
-                  letterSpacing: '0.24em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Manchester digital marketing agency
-              </p>
-
-              <h1
-                className="mx-auto max-w-[58rem] text-center text-[23px] leading-[1.08] text-white min-[390px]:text-[23px] sm:text-[32px] md:text-[38px] lg:text-[56px]"
-                style={{
-                  fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
-                  fontWeight: 300,
-                  letterSpacing: '0.025em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                The digital growth agency{' '}
-                <span
-                  className="relative inline-block align-baseline italic text-white/72"
-                  aria-live="polite"
-                  style={{ fontWeight: 300 }}
-                >
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.span
-                      key={heroWords[heroWordIndex]}
-                      initial={reducedMotion ? false : { opacity: 0, y: 10, filter: 'blur(4px)' }}
-                      animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, filter: 'blur(0px)' }}
-                      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -8, filter: 'blur(4px)' }}
-                      transition={{ duration: 0.2, ease: [0, 0, 0.2, 1] }}
-                      className="inline-block"
+        <div className="mx-auto flex min-h-[106svh] max-w-[82rem] items-center px-4 py-28 sm:px-6 lg:min-h-[100svh] lg:px-0 lg:py-32">
+          <div className="grid w-full items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,30%)] lg:gap-10 xl:gap-14">
+            <div className="text-left lg:order-1">
+              <div className="max-w-[56rem] text-left">
+                <div className="relative pt-6 pb-14 sm:pt-8 sm:pb-16 lg:hidden">
+                  <div className="relative w-full max-w-[22rem] sm:max-w-[26rem]">
+                    <motion.figure
+                      initial={reducedMotion ? false : { opacity: 0, y: 18, rotate: -1.5 }}
+                      animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, rotate: -1.5 }}
+                      transition={{ duration: 0.7, delay: 0.18, ease: [0, 0, 0.2, 1] }}
+                      className="relative aspect-[6/5] overflow-hidden rounded-[10px] border border-white/10 bg-[#110d18] shadow-[0_24px_80px_rgba(0,0,0,0.38)] sm:aspect-[5/4]"
                     >
-                      {heroWords[heroWordIndex]}
-                    </motion.span>
-                  </AnimatePresence>
-                </span>{' '}
-                brands properly.
-              </h1>
+                      <img src="/ya-omri.jpg" alt="CNVRT editorial placeholder project preview" className="h-full w-full object-cover" loading="lazy" />
+                    </motion.figure>
 
-              <p
-                className="mx-auto mt-6 max-w-[21rem] text-[0.9rem] leading-[1.75rem] text-white sm:max-w-[30rem] sm:text-[0.95rem] lg:max-w-[43rem]"
-                style={{
-                  fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
-                  fontWeight: 300,
-                }}
-              >
-                Manchester-based growth and digital marketing for brands that need their websites, media and retention to work as one system.
-              </p>
+                    <motion.figure
+                      initial={reducedMotion ? false : { opacity: 0, y: 22, x: 10, rotate: -3 }}
+                      animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, x: 0, rotate: -3 }}
+                      transition={{ duration: 0.7, delay: 0.28, ease: [0, 0, 0.2, 1] }}
+                      className="absolute -bottom-10 right-3 w-[46%] overflow-hidden rounded-[10px] border border-white/12 bg-[#110d18] shadow-[0_24px_70px_rgba(0,0,0,0.34)] sm:-bottom-12 sm:right-4"
+                    >
+                      <img src="/hair-made-easi.jpg" alt="CNVRT overlapping editorial placeholder detail preview" className="aspect-[4/5] h-full w-full object-cover" loading="lazy" />
+                    </motion.figure>
+                  </div>
+                </div>
 
-              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <a
-                  href="mailto:hello@cnvrt.co.uk"
-                  className="cta-sheen relative inline-flex min-h-[3.45rem] items-center justify-center overflow-hidden rounded-[4px] border px-6 outline-none transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
-                  style={{
-                    backgroundColor: '#c3b4d6',
-                    borderColor: '#c3b4d6',
-                    color: '#06040a',
-                    fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
-                    fontSize: '0.72rem',
-                    fontWeight: 500,
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Book a call
-                </a>
-                <a
-                  href="mailto:hello@cnvrt.co.uk"
-                  className="inline-flex min-h-[3.45rem] items-center justify-center rounded-[4px] border border-white/16 px-6 text-white outline-none transition hover:border-white/34 hover:bg-white/[0.045] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
+                <p
+                  className="mb-5 text-white/48"
                   style={{
                     fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
                     fontSize: '0.72rem',
                     fontWeight: 500,
-                    letterSpacing: '0.2em',
+                    letterSpacing: '0.24em',
                     textTransform: 'uppercase',
                   }}
                 >
-                  Get an audit
-                </a>
+                  Manchester digital marketing agency
+                </p>
+
+                <h1
+                  className="w-full max-w-[22rem] text-[26px] leading-[1.08] text-white min-[390px]:max-w-[24rem] min-[390px]:text-[28px] sm:max-w-[32rem] sm:text-[32px] md:max-w-[38rem] md:text-[38px] lg:max-w-[54rem] lg:text-[56px]"
+                  style={{
+                    fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
+                    fontWeight: 300,
+                    letterSpacing: '0.025em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  The digital growth agency building brands properly
+                </h1>
+
+                <p
+                  className="mt-6 max-w-[21rem] text-[0.9rem] leading-[1.75rem] text-white sm:max-w-[30rem] sm:text-[0.95rem] lg:max-w-[43rem]"
+                  style={{
+                    fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+                    fontWeight: 300,
+                  }}
+                >
+                  Manchester-based growth and digital marketing for brands that need their websites, media and retention to work as one system.
+                </p>
+
+                <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row">
+                  <a
+                    href="mailto:hello@cnvrt.co.uk"
+                    className="cta-sheen relative inline-flex min-h-[3.45rem] items-center justify-center overflow-hidden rounded-[4px] border px-6 outline-none transition hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
+                    style={{
+                      backgroundColor: '#c3b4d6',
+                      borderColor: '#c3b4d6',
+                      color: '#06040a',
+                      fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+                      fontSize: '0.72rem',
+                      fontWeight: 500,
+                      letterSpacing: '0.2em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Book a call
+                  </a>
+                  <a
+                    href="mailto:hello@cnvrt.co.uk"
+                    className="inline-flex min-h-[3.45rem] items-center justify-center rounded-[4px] border border-white/16 px-6 text-white outline-none transition hover:border-white/34 hover:bg-white/[0.045] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
+                    style={{
+                      fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+                      fontSize: '0.72rem',
+                      fontWeight: 500,
+                      letterSpacing: '0.2em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Get an audit
+                  </a>
+                </div>
               </div>
             </div>
+
+            <div className="relative hidden lg:flex lg:order-2 lg:justify-end">
+              <div className="relative w-full max-w-[22rem] xl:max-w-[24rem]">
+                <motion.figure
+                  initial={reducedMotion ? false : { opacity: 0, y: 18, rotate: -1.5 }}
+                  animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, rotate: -1.5 }}
+                  transition={{ duration: 0.7, delay: 0.18, ease: [0, 0, 0.2, 1] }}
+                  className="relative aspect-[4/5] overflow-hidden rounded-[10px] border border-white/10 bg-[#110d18] shadow-[0_24px_80px_rgba(0,0,0,0.38)]"
+                >
+                  <img src="/ya-omri.jpg" alt="CNVRT editorial placeholder project preview" className="h-full w-full object-cover" loading="lazy" />
+                </motion.figure>
+
+                <motion.figure
+                  initial={reducedMotion ? false : { opacity: 0, y: 26, x: -14, rotate: 4 }}
+                  animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, x: 0, rotate: 4 }}
+                  transition={{ duration: 0.7, delay: 0.28, ease: [0, 0, 0.2, 1] }}
+                  className="absolute -bottom-10 -left-14 w-[58%] overflow-hidden rounded-[10px] border border-white/12 bg-[#110d18] shadow-[0_24px_70px_rgba(0,0,0,0.34)]"
+                >
+                  <img src="/hair-made-easi.jpg" alt="CNVRT overlapping editorial placeholder detail preview" className="aspect-[4/5] h-full w-full object-cover" loading="lazy" />
+                </motion.figure>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
       <section
         id="services"
-        className="relative z-20 bg-white px-1 pb-20 pt-0 text-[#17121f] sm:px-1 sm:pb-24 lg:px-1 lg:pb-28"
+        className="relative bg-white px-1 pb-20 pt-0 text-[#17121f] sm:px-1 sm:pb-24 lg:px-1 lg:pb-28"
         aria-label="Services"
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(195,180,214,0.18),transparent_23rem),linear-gradient(rgba(23,18,31,0.034)_1px,transparent_1px),linear-gradient(90deg,rgba(23,18,31,0.026)_1px,transparent_1px)] bg-[length:auto,64px_64px,64px_64px] [mask-image:linear-gradient(to_bottom,black,black_78%,transparent)]" />
-        <div className="relative pt-1 md:hidden">
-          <div className="grid grid-cols-1 gap-1">
-            {mobileClientImages.map((clientImage, index) => (
-              <motion.article
-                key={`${clientImage.id}-mobile`}
-                initial={{ opacity: 0, y: 28, scale: 0.985 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, amount: 0.55 }}
-                transition={{ duration: 0.95, delay: index * 0.12, ease: [0, 0, 0.2, 1] }}
-                className="group relative aspect-[16/10] overflow-hidden bg-[#08050d] shadow-[0_18px_50px_rgba(23,18,31,0.08)]"
-              >
-                <img src={clientImage.src} alt={clientImage.alt} className="h-full w-full object-cover" loading="lazy" />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#06040a]/88 via-[#06040a]/32 to-transparent" />
-                <div className="absolute bottom-5 left-5 max-w-[14rem] drop-shadow-[0_10px_24px_rgba(0,0,0,0.42)]">
-                  <span
-                    className="block whitespace-nowrap text-[0.9rem] text-white sm:text-[0.98rem]"
-                    style={{
-                      fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
-                      fontWeight: 300,
-                      letterSpacing: '0.12em',
-                      lineHeight: 1,
-                      textTransform: 'uppercase',
-                    }}
+        {showClientCarousel && (
+          <>
+            <div className="relative pt-1 md:hidden">
+              <div className="grid grid-cols-1 gap-1">
+                {mobileClientImages.map((clientImage, index) => (
+                  <motion.article
+                    key={`${clientImage.id}-mobile`}
+                    initial={{ opacity: 0, y: 28, scale: 0.985 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, amount: 0.55 }}
+                    transition={{ duration: 0.95, delay: index * 0.12, ease: [0, 0, 0.2, 1] }}
+                    className="group relative aspect-[16/10] overflow-hidden bg-[#08050d] shadow-[0_18px_50px_rgba(23,18,31,0.08)]"
                   >
-                    {clientImage.wordmark}
-                  </span>
-                  <span
-                    className="mt-2 inline-flex items-center gap-2 text-white/78"
-                    style={{
-                      fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
-                      fontSize: '0.62rem',
-                      fontWeight: 500,
-                      letterSpacing: '0.16em',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    View case study
-                    <ArrowRight size={13} />
-                  </span>
-                </div>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-        <section
-          ref={clientCarouselSectionRef}
-          className="relative hidden md:block"
-          style={{ height: clientScrollDistance > 0 ? `${clientCarouselSceneHeight + clientScrollDistance}px` : `${clientCarouselSceneHeight || 320}px` }}
-          aria-label="Client case study carousel"
-        >
-          <div
-            ref={clientCarouselViewportRef}
-            className="sticky top-0 h-[100svh] overflow-hidden pt-1"
-            style={{ height: clientCarouselSceneHeight ? `${clientCarouselSceneHeight}px` : undefined }}
-          >
-            <div
-              ref={clientCarouselTrackRef}
-              className="flex h-[48svh] items-stretch gap-1 will-change-transform lg:h-[54svh] xl:h-[58svh]"
-              style={{ transform: `translate3d(${clientCarouselOffset}px, 0px, 0px)` }}
-            >
-              {clientImages.map((clientImage) => (
-                <article
-                  key={`${clientImage.id}-desktop`}
-                  className="group relative aspect-[16/10] h-full min-w-0 flex-[0_0_30rem] overflow-hidden bg-[#08050d] shadow-[0_18px_50px_rgba(23,18,31,0.08)] lg:flex-[0_0_34rem] xl:flex-[0_0_38rem]"
-                >
-                  <img src={clientImage.src} alt={clientImage.alt} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]" loading="lazy" />
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#06040a]/88 via-[#06040a]/32 to-transparent" />
-                  <div className="absolute bottom-7 left-7 max-w-[18rem] drop-shadow-[0_10px_24px_rgba(0,0,0,0.42)]">
-                    <span
-                      className="block whitespace-nowrap text-[1.02rem] text-white lg:text-[1.08rem] xl:text-[1.18rem]"
-                      style={{
-                        fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
-                        fontWeight: 300,
-                        letterSpacing: '0.12em',
-                        lineHeight: 1,
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      {clientImage.wordmark}
-                    </span>
-                    <span
-                      className="mt-2 inline-flex items-center gap-2 text-white/78 transition group-hover:translate-x-1 group-hover:text-white"
-                      style={{
-                        fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
-                        fontSize: '0.62rem',
-                        fontWeight: 500,
-                        letterSpacing: '0.16em',
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      View case study
-                      <ArrowRight size={13} />
-                    </span>
-                  </div>
-                </article>
-              ))}
+                    <img src={clientImage.src} alt={clientImage.alt} className="h-full w-full object-cover" loading="lazy" />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#06040a]/88 via-[#06040a]/32 to-transparent" />
+                    <div className="absolute bottom-5 left-5 max-w-[14rem] drop-shadow-[0_10px_24px_rgba(0,0,0,0.42)]">
+                      <span
+                        className="block whitespace-nowrap text-[0.9rem] text-white sm:text-[0.98rem]"
+                        style={{
+                          fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
+                          fontWeight: 300,
+                          letterSpacing: '0.12em',
+                          lineHeight: 1,
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {clientImage.wordmark}
+                      </span>
+                      <span
+                        className="mt-2 inline-flex items-center gap-2 text-white/78"
+                        style={{
+                          fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+                          fontSize: '0.62rem',
+                          fontWeight: 500,
+                          letterSpacing: '0.16em',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        View case study
+                        <ArrowRight size={13} />
+                      </span>
+                    </div>
+                  </motion.article>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+            <section
+              ref={clientCarouselSectionRef}
+              className="relative hidden md:block"
+              style={{ height: clientScrollDistance > 0 ? `${clientCarouselSceneHeight + clientScrollDistance}px` : `${clientCarouselSceneHeight || 320}px` }}
+              aria-label="Client case study carousel"
+            >
+              <div
+                ref={clientCarouselViewportRef}
+                className="sticky top-0 z-10 h-[100svh] overflow-hidden pt-1"
+                style={{ height: clientCarouselSceneHeight ? `${clientCarouselSceneHeight}px` : undefined }}
+              >
+                <div
+                  ref={clientCarouselTrackRef}
+                  className="flex h-[48svh] items-stretch gap-1 will-change-transform lg:h-[54svh] xl:h-[58svh]"
+                  style={{ transform: `translate3d(${clientCarouselOffset}px, 0px, 0px)` }}
+                >
+                  {clientImages.map((clientImage) => (
+                    <article
+                      key={`${clientImage.id}-desktop`}
+                      className="group relative aspect-[16/10] h-full min-w-0 flex-[0_0_30rem] overflow-hidden bg-[#08050d] shadow-[0_18px_50px_rgba(23,18,31,0.08)] lg:flex-[0_0_34rem] xl:flex-[0_0_38rem]"
+                    >
+                      <img src={clientImage.src} alt={clientImage.alt} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]" loading="lazy" />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#06040a]/88 via-[#06040a]/32 to-transparent" />
+                      <div className="absolute bottom-7 left-7 max-w-[18rem] drop-shadow-[0_10px_24px_rgba(0,0,0,0.42)]">
+                        <span
+                          className="block whitespace-nowrap text-[1.02rem] text-white lg:text-[1.08rem] xl:text-[1.18rem]"
+                          style={{
+                            fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
+                            fontWeight: 300,
+                            letterSpacing: '0.12em',
+                            lineHeight: 1,
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {clientImage.wordmark}
+                        </span>
+                        <span
+                          className="mt-2 inline-flex items-center gap-2 text-white/78 transition group-hover:translate-x-1 group-hover:text-white"
+                          style={{
+                            fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+                            fontSize: '0.62rem',
+                            fontWeight: 500,
+                            letterSpacing: '0.16em',
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          View case study
+                          <ArrowRight size={13} />
+                        </span>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </>
+        )}
 
-        <div className="relative mx-auto mt-10 max-w-[82rem] px-4 sm:mt-12 sm:px-6 lg:mt-8 lg:px-0">
-          <div className="grid gap-10 pt-4 sm:pt-8 lg:grid-cols-[0.6fr_0.4fr] lg:items-start lg:gap-8 lg:pt-6">
-            <div className="lg:sticky lg:top-28">
+        <div className={`relative mx-auto max-w-[82rem] px-4 sm:px-6 lg:px-0 ${showClientCarousel ? 'mt-10 sm:mt-12 lg:mt-8' : 'mt-0'}`}>
+          <div className="pt-10 sm:pt-14 lg:pt-16">
+            <div ref={servicesIntroRef}>
               <p
                 className="mb-5 text-[#5c516a]"
                 style={{
@@ -532,40 +773,53 @@ export default function CnvrtHero() {
               >
                 What we do
               </p>
-              <motion.h2
-                initial={{ opacity: 0, y: 12, filter: 'blur(10px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                viewport={{ once: true, amount: 0.75 }}
-                transition={{ duration: 1.25, ease: [0, 0, 0.2, 1] }}
-                className="max-w-[35rem] text-[23px] leading-[1.1] text-[#17121f] min-[390px]:text-[23px] sm:text-[32px] md:text-[38px] lg:max-w-[44rem] lg:text-[45px]"
+              <h2
+                className="-ml-[0.04em] w-full max-w-[22rem] text-[23px] leading-[1.08] min-[390px]:max-w-[24rem] min-[390px]:text-[23px] sm:max-w-[32rem] sm:text-[32px] md:max-w-[38rem] md:text-[38px] lg:max-w-[54rem] lg:text-[56px]"
                 style={{
                   fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
                   fontWeight: 300,
                   letterSpacing: '0.025em',
                   textTransform: 'uppercase',
+                  color: 'rgba(23,18,31,0.92)',
                 }}
               >
-                Everything your business needs to grow{' '}
-                <span className="italic text-[#17121f]/70" style={{ fontWeight: 300 }}>
-                  - one team
-                </span>
-              </motion.h2>
-              <motion.p
-                initial={{ opacity: 0, y: 10, filter: 'blur(8px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                viewport={{ once: true, amount: 0.75 }}
-                transition={{ duration: 1.25, delay: 0.22, ease: [0, 0, 0.2, 1] }}
-                className="mt-6 max-w-[36rem] text-[0.95rem] leading-7 text-[#17121f] lg:max-w-[43rem]"
+                Everything your business needs to grow <span style={{ fontStyle: 'italic' }}>- one team</span>
+              </h2>
+              <p
+                className="mt-6 max-w-[21rem] text-[0.9rem] leading-[1.75rem] sm:max-w-[30rem] sm:text-[0.95rem] md:max-w-[38rem] lg:max-w-[56rem]"
                 style={{
                   fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
                   fontWeight: 300,
                 }}
               >
-                Strategy, design, development, SEO, paid media, email and retention, built and managed under one roof. Every part connected into a single system instead of scattered across separate agencies pulling in different directions.
-                <br />
-                <br />
-                Whether you're launching something new, scaling what's working or fixing what's broken, we cover the full journey from first click to repeat customer. One team accountable for the whole thing, working towards the same number.
-              </motion.p>
+                {servicesParagraphLines.map((line, lineIndex) => {
+                  const previousWordsCount = servicesParagraphLines
+                    .slice(0, lineIndex)
+                    .reduce((count, currentLine) => count + currentLine.length, 0);
+
+                  return (
+                    <span key={`services-line-${lineIndex}`}>
+                      {line.map((word, wordIndex) => {
+                        const flatIndex = previousWordsCount + wordIndex;
+                        const threshold = flatIndex / Math.max(servicesParagraphLines.flat().length, 1);
+                        const isFilled = delayedServicesParagraphProgress >= threshold;
+
+                        return (
+                          <span
+                            key={`${word}-${flatIndex}`}
+                            className="transition-colors duration-500"
+                            style={{ color: isFilled ? 'rgba(23,18,31,0.92)' : 'rgba(23,18,31,0.3)' }}
+                          >
+                            {word}
+                            {wordIndex < line.length - 1 ? ' ' : ''}
+                          </span>
+                        );
+                      })}
+                      {lineIndex < servicesParagraphLines.length - 1 ? ' ' : null}
+                    </span>
+                  );
+                })}
+              </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
                   href="mailto:hello@cnvrt.co.uk"
@@ -599,77 +853,138 @@ export default function CnvrtHero() {
               </div>
             </div>
 
-            <div className="grid items-start gap-4">
-              {services.map((service, index) => {
-                const cardContent = (
-                  <a href={service.href} className="flex flex-col text-left outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]">
-                    <span className="block">
-                      <span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[5px] border border-[#c3b4d6]/25 bg-[#c3b4d6]/10 text-[#c3b4d6] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                        <service.Icon size={18} strokeWidth={1.7} />
-                      </span>
-                      <span
-                        className="block text-[0.86rem] leading-snug text-white sm:text-[0.94rem]"
-                        style={{
-                          fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
-                          fontWeight: 300,
-                          letterSpacing: '0.025em',
-                          textTransform: 'uppercase',
-                        }}
-                      >
-                        {service.title}
-                      </span>
-                      <span
-                        className="mt-3 block text-[0.84rem] leading-6 text-white"
-                        style={{
-                          fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
-                          fontWeight: 300,
-                        }}
-                      >
-                        {service.description}
-                      </span>
-                    </span>
-                    <span
-                      className="mt-4 inline-flex items-center gap-2 self-start text-[#c3b4d6] transition group-hover:translate-x-1"
-                      style={{
-                        fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
-                        fontSize: '0.7rem',
-                        fontWeight: 500,
-                        letterSpacing: '0.18em',
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      Learn more
-                      <ArrowRight size={15} />
-                    </span>
-                  </a>
-                );
-
-                const cardClassName =
-                  'group rounded-[7px] border border-[#c3b4d6]/[0.16] bg-[linear-gradient(145deg,rgba(18,12,28,0.96),rgba(6,4,10,0.98)),radial-gradient(circle_at_88%_0%,rgba(195,180,214,0.18),transparent_18rem)] p-6 shadow-[0_24px_70px_rgba(23,18,31,0.16),inset_0_1px_0_rgba(255,255,255,0.12)] transition duration-200 hover:-translate-y-0.5 hover:border-[#c3b4d6]/45 hover:shadow-[0_30px_80px_rgba(23,18,31,0.22),inset_0_1px_0_rgba(255,255,255,0.14)]';
-
-                if (isMobileViewport) {
-                  return (
-                    <article key={service.title} className={cardClassName}>
-                      {cardContent}
-                    </article>
-                  );
-                }
-
+            <div className="mt-10 border-t border-[#17121f]/12 sm:mt-12">
+              {services.map((service) => {
                 return (
                   <motion.article
                     key={service.title}
-                    initial={{ opacity: 0, y: 28, scale: 0.98 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true, amount: 0.32 }}
-                    transition={{ duration: 1.25, delay: Math.min(index * 0.12, 0.36), ease: [0, 0, 0.2, 1] }}
-                    className={cardClassName}
+                    initial={{ opacity: 0.42, y: 26 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.55 }}
+                    transition={{ duration: 0.8, ease: [0, 0, 0.2, 1] }}
+                    className="group relative border-b border-[#17121f]/12"
                   >
-                    {cardContent}
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true, amount: 0.55 }}
+                      transition={{ duration: 0.9, delay: 0.08, ease: [0, 0, 0.2, 1] }}
+                      className="absolute inset-x-0 top-0 h-px origin-left bg-[#c3b4d6]"
+                    />
+                    <a
+                      href={service.href}
+                      className="grid gap-5 py-7 outline-none transition sm:grid-cols-[4.75rem_minmax(0,1fr)_auto] sm:items-center sm:gap-6 sm:py-8 lg:grid-cols-[5.5rem_minmax(0,1fr)_auto] lg:py-9 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#c3b4d6]"
+                    >
+                      <div className="flex items-center self-center">
+                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#17121f]/10 bg-[#17121f]/[0.02] text-[#17121f]/42 transition-colors duration-500 group-hover:border-[#c3b4d6]/40 group-hover:bg-[#c3b4d6]/18 group-hover:text-[#393056]">
+                          <service.Icon size={22} strokeWidth={1.7} />
+                        </span>
+                      </div>
+
+                      <div className="max-w-[48rem] self-center">
+                        <span
+                          className="block text-[#17121f]/62 transition-colors duration-500 group-hover:text-[#17121f]"
+                          style={{
+                            fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
+                            fontSize: '0.98rem',
+                            fontWeight: 400,
+                            letterSpacing: '0.025em',
+                            lineHeight: 1.12,
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {service.title}
+                        </span>
+                        <span
+                          className="mt-3 block max-w-[42rem] text-[#17121f]/58 transition-colors duration-500 group-hover:text-[#17121f]/86"
+                          style={{
+                            fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+                            fontSize: '0.9rem',
+                            fontWeight: 300,
+                            lineHeight: '1.75rem',
+                          }}
+                        >
+                          {service.description}
+                        </span>
+                      </div>
+
+                      <span
+                        className="inline-flex min-h-[3.25rem] items-center gap-2 self-center rounded-[4px] border px-6 text-[#06040a] transition duration-300 group-hover:translate-x-1 group-hover:brightness-105"
+                        style={{
+                          backgroundColor: '#c3b4d6',
+                          borderColor: '#c3b4d6',
+                          boxShadow: '0 18px 60px rgba(195,180,214,0.18)',
+                          fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+                          fontSize: '0.72rem',
+                          fontWeight: 500,
+                          letterSpacing: '0.2em',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        Learn more
+                        <ArrowRight size={15} />
+                      </span>
+                    </a>
                   </motion.article>
                 );
               })}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section
+        ref={whyCnvrtSectionRef}
+        className="relative bg-[#06040a] py-24 text-white sm:py-28 lg:py-32"
+        aria-label="Why CNVRT"
+      >
+        <div className="mx-auto flex max-w-[82rem] flex-col items-start px-4 text-left sm:px-6 lg:px-0">
+          <p
+            className="mb-5 text-white/48"
+            style={{
+              fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+              fontSize: '0.72rem',
+              fontWeight: 500,
+              letterSpacing: '0.24em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Why CNVRT
+          </p>
+          <h2
+            className="w-full max-w-[22rem] text-[23px] leading-[1.08] text-white/92 min-[390px]:max-w-[24rem] min-[390px]:text-[23px] sm:max-w-[32rem] sm:text-[32px] md:max-w-[38rem] md:text-[38px] lg:max-w-[54rem] lg:text-[56px]"
+            style={{
+              fontFamily: '"ITC Blair", "Blair ITC", "BlairMdITC TT", "Eurostile Extended", "Bank Gothic", "Arial Black", sans-serif',
+              fontWeight: 300,
+              letterSpacing: '0.025em',
+              textTransform: 'uppercase',
+            }}
+          >
+            What's strategy without execution?
+          </h2>
+          <p
+            className="mt-6 max-w-[21rem] text-[0.9rem] leading-[1.75rem] sm:max-w-[30rem] sm:text-[0.95rem] md:max-w-[38rem] lg:max-w-[56rem]"
+            style={{
+              fontFamily: 'Montserrat, "Avenir Next", "Helvetica Neue", Arial, sans-serif',
+              fontWeight: 300,
+            }}
+            >
+            {whyCnvrtParagraphWords.map((word, index) => {
+              const threshold = index / Math.max(whyCnvrtParagraphWords.length, 1);
+              const isFilled = delayedWhyCnvrtParagraphProgress >= threshold;
+
+              return (
+                <span
+                  key={`${word}-${index}`}
+                  className="transition-colors duration-500"
+                  style={{ color: isFilled ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.3)' }}
+                >
+                  {word}
+                  {index < whyCnvrtParagraphWords.length - 1 ? ' ' : ''}
+                </span>
+              );
+            })}
+          </p>
         </div>
       </section>
     </div>
