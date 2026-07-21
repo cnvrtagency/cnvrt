@@ -1,0 +1,116 @@
+---
+const buildLinks = [
+  ['Web design', '/services/web-design/'],
+  ['Shopify', '/services/shopify/'],
+  ['Shopify migrations', '/services/shopify-migrations/'],
+  ['Branding', '/services/branding/'],
+  ['Custom development', '/services/custom-web-development/'],
+  ['Custom Tools', '/services/custom-tools/'],
+];
+
+const acquireLinks = [
+  ['SEO', '/services/seo/'],
+  ['Local SEO', '/services/local-seo/'],
+  ['Technical SEO', '/services/technical-seo/'],
+  ['Ecommerce SEO', '/services/ecommerce-seo/'],
+  ['AEO', '/services/aeo/'],
+  ['Google Ads', '/services/google-ads/'],
+  ['Ecommerce PPC', '/services/ecommerce-ppc/'],
+  ['Meta Ads', '/services/meta-ads/'],
+];
+
+const retainLinks = [
+  ['Email marketing', '/services/email-marketing/'],
+  ['Conversion optimisation', '/services/conversion-rate-optimisation/'],
+  ['Analytics and tracking', '/services/analytics-conversion-tracking/'],
+  ['Website support', '/services/website-support-maintenance/'],
+];
+
+const isServicesRoute = Astro.url.pathname === '/services/' || Astro.url.pathname.startsWith('/services/');
+---
+
+<header class="site-header" data-header>
+  <div class="site-header__inner shell">
+    <a class="brand" href="/" aria-label="CNVRT home"><img src="/brand/cnvrt-logo.png" alt="" width="800" height="200" /></a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <div class="nav-services">
+        <button class:list={['nav-link', 'nav-services__trigger', { 'is-active': isServicesRoute }]} type="button" aria-expanded="false" aria-controls="services-menu">
+          Services
+          <svg aria-hidden="true" viewBox="0 0 12 12"><path d="m2.5 4.5 3.5 3 3.5-3" /></svg>
+        </button>
+        <div class="services-menu" id="services-menu">
+          <div>
+            <p class="menu-label">Build</p>
+            {buildLinks.map(([label, href]) => <a href={href}>{label}<span aria-hidden="true">↗</span></a>)}
+          </div>
+          <div>
+            <p class="menu-label">Acquire</p>
+            {acquireLinks.map(([label, href]) => <a href={href}>{label}<span aria-hidden="true">↗</span></a>)}
+          </div>
+          <div>
+            <p class="menu-label">Retain and improve</p>
+            {retainLinks.map(([label, href]) => <a href={href}>{label}<span aria-hidden="true">↗</span></a>)}
+          </div>
+          <div class="services-menu__aside">
+            <a class="services-menu__overview" href="/services/" aria-current={Astro.url.pathname === '/services/' ? 'page' : undefined}>All services <span aria-hidden="true">↗</span></a>
+            <p>Not sure where the problem starts?</p>
+            <a href="/request-an-audit/">Request an audit <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-link" href="/work/">Work</a>
+      <a class="nav-link" href="/blog/">Blog</a>
+      <a class="nav-link" href="/about/">About</a>
+    </nav>
+
+    <a class="button button--light header-cta" href="/contact/">Book a call <span aria-hidden="true">↗</span></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+      <span></span><span></span>
+    </button>
+  </div>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+    <div class="mobile-nav__inner shell">
+      <a class="mobile-nav__overview" href="/services/" aria-current={Astro.url.pathname === '/services/' ? 'page' : undefined}>All services <span aria-hidden="true">↗</span></a>
+      <p class="menu-label">Build</p>
+      {buildLinks.map(([label, href]) => <a href={href}>{label}</a>)}
+      <p class="menu-label">Acquire</p>
+      {acquireLinks.map(([label, href]) => <a href={href}>{label}</a>)}
+      <p class="menu-label">Retain and improve</p>
+      {retainLinks.map(([label, href]) => <a href={href}>{label}</a>)}
+      <div class="mobile-nav__utility">
+        <a href="/work/">Work</a>
+        <a href="/blog/">Blog</a>
+        <a href="/about/">About</a>
+        <a href="/request-an-audit/">Request an audit</a>
+      </div>
+      <a class="button button--accent" href="/contact/">Book a call <span aria-hidden="true">↗</span></a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const header = document.querySelector('[data-header]');
+  const servicesTrigger = document.querySelector('.nav-services__trigger');
+  const menuToggle = document.querySelector('.menu-toggle');
+
+  servicesTrigger?.addEventListener('click', () => {
+    const open = servicesTrigger.getAttribute('aria-expanded') === 'true';
+    servicesTrigger.setAttribute('aria-expanded', String(!open));
+  });
+
+  menuToggle?.addEventListener('click', () => {
+    const open = menuToggle.getAttribute('aria-expanded') === 'true';
+    menuToggle.setAttribute('aria-expanded', String(!open));
+    menuToggle.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
+    header?.classList.toggle('mobile-menu-open', !open);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    servicesTrigger?.setAttribute('aria-expanded', 'false');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+    header?.classList.remove('mobile-menu-open');
+  });
+</script>

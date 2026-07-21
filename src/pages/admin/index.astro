@@ -1,0 +1,334 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL?.trim() || '';
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY?.trim() || '';
+const configured = Boolean(supabaseUrl && supabaseKey);
+---
+
+<AdminLayout title="Enquiry admin | CNVRT" description="Private CNVRT enquiry administration.">
+  <div class="admin-root" data-admin-root data-configured={String(configured)}>
+    <section class="admin-login admin-login--simple" data-auth-view aria-labelledby="admin-login-title">
+      <div class="admin-login__brand" aria-label="CNVRT">
+        <img class="admin-logo" src="/brand/cnvrt-logo.png" alt="CNVRT" width="800" height="200" />
+      </div>
+      <div class="admin-login__panel">
+        <h1 id="admin-login-title">Admin login</h1>
+
+        <div class="admin-config-warning" data-config-warning hidden>
+          <strong>Supabase is not configured.</strong>
+          <p>Add the public project URL and anonymous key to the local environment before signing in.</p>
+        </div>
+
+        <form class="admin-login__form" data-login-form>
+          <div class="admin-field">
+            <label for="admin-email">Email address</label>
+            <input id="admin-email" name="email" type="email" autocomplete="username" required />
+          </div>
+          <div class="admin-field">
+            <label for="admin-password">Password</label>
+            <input id="admin-password" name="password" type="password" autocomplete="current-password" required />
+          </div>
+          <p class="admin-form-status" data-login-status role="status" aria-live="polite"></p>
+          <button class="admin-button admin-button--primary" type="submit">Sign in</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="admin-workspace" data-workspace hidden>
+      <aside class="admin-sidebar" aria-label="Admin navigation">
+        <a class="admin-wordmark" href="/admin/" aria-label="CNVRT admin home"><img class="admin-logo" src="/brand/cnvrt-logo.png" alt="" width="800" height="200" /></a>
+        <nav class="admin-sidebar__nav">
+          <span>Workspace</span>
+          <a href="#admin-main" aria-current="page"><i aria-hidden="true"></i>Dashboard</a>
+          <a href="#today-title"><i aria-hidden="true"></i>Today</a>
+          <a href="#inbox-title"><i aria-hidden="true"></i>Enquiries</a>
+          <a href="/admin/clients/"><i aria-hidden="true"></i>Clients</a>
+          <a href="/admin/finance/"><i aria-hidden="true"></i>Finance</a>
+          <a href="/admin/documents/"><i aria-hidden="true"></i>Documents</a>
+        </nav>
+        <div class="admin-sidebar__foot">
+          <span><i aria-hidden="true"></i>Protected workspace</span>
+          <small>Supabase enquiry admin</small>
+        </div>
+      </aside>
+
+      <div class="admin-shell">
+        <header class="admin-header">
+          <a class="admin-wordmark admin-wordmark--mobile" href="/admin/" aria-label="CNVRT admin home"><img class="admin-logo admin-logo--dark" src="/brand/cnvrt-logo.png" alt="" width="800" height="200" /></a>
+          <div class="admin-header__context">
+            <span data-today-date>Today</span>
+            <small data-sync-status>Connecting securely</small>
+          </div>
+          <button class="admin-text-button" type="button" data-sign-out>Sign out <span aria-hidden="true">↗</span></button>
+        </header>
+
+        <main class="admin-main" id="admin-main">
+          <section class="admin-overview" aria-labelledby="admin-title">
+            <div>
+              <span class="admin-kicker">Dashboard</span>
+              <h1 id="admin-title">Commercial overview</h1>
+              <p>Prioritise today’s work, review pipeline value and keep every active enquiry moving.</p>
+            </div>
+            <div class="admin-overview__actions">
+              <button class="admin-button admin-button--primary" type="button" data-create-enquiry>New enquiry <span aria-hidden="true">＋</span></button>
+              <button class="admin-button" type="button" data-refresh>Refresh data</button>
+              <button class="admin-button" type="button" data-export>Export CSV <span aria-hidden="true">↗</span></button>
+            </div>
+          </section>
+
+          <section class="admin-metrics" aria-label="Enquiry summary">
+            <article data-tone="danger"><span>Overdue actions</span><strong data-metric="overdue">0</strong><small>Need immediate attention</small></article>
+            <article data-tone="attention"><span>Due today</span><strong data-metric="due">0</strong><small>Scheduled for today</small></article>
+            <article data-tone="new"><span>New enquiries</span><strong data-metric="new">0</strong><small>Waiting to be reviewed</small></article>
+            <article data-tone="value"><span>Open pipeline</span><strong data-metric="pipeline">£0</strong><small>Estimated opportunity value</small></article>
+          </section>
+
+          <div class="admin-dashboard-grid">
+            <section class="admin-panel admin-today" aria-labelledby="today-title">
+              <div class="admin-panel__heading admin-today__heading">
+                <div><span class="admin-kicker">Priority queue</span><h2 id="today-title">Needs attention</h2></div>
+                <p data-today-summary>Reviewing the active enquiry ledger.</p>
+              </div>
+              <div class="admin-today__labels" aria-hidden="true"><span>Priority</span><span>Contact</span><span>Next action</span><span>Value</span></div>
+              <div class="admin-today__list" data-today-list aria-live="polite"></div>
+            </section>
+
+            <aside class="admin-panel admin-pipeline" aria-labelledby="pipeline-title">
+              <div class="admin-panel__heading">
+                <div><span class="admin-kicker">Live pipeline</span><h2 id="pipeline-title">Stage summary</h2></div>
+              </div>
+              <div class="admin-pipeline__list">
+                <div class="admin-pipeline-row" data-stage="new"><div><span>New</span><strong data-stage-count>0</strong></div><small data-stage-value>£0</small><i><b data-stage-bar></b></i></div>
+                <div class="admin-pipeline-row" data-stage="contacted"><div><span>Contacted</span><strong data-stage-count>0</strong></div><small data-stage-value>£0</small><i><b data-stage-bar></b></i></div>
+                <div class="admin-pipeline-row" data-stage="qualified"><div><span>Qualified</span><strong data-stage-count>0</strong></div><small data-stage-value>£0</small><i><b data-stage-bar></b></i></div>
+                <div class="admin-pipeline-row" data-stage="proposal"><div><span>Proposal</span><strong data-stage-count>0</strong></div><small data-stage-value>£0</small><i><b data-stage-bar></b></i></div>
+                <div class="admin-pipeline-row admin-pipeline-row--won" data-stage="won"><div><span>Won</span><strong data-stage-count>0</strong></div><small data-stage-value>£0</small><i><b data-stage-bar></b></i></div>
+              </div>
+            </aside>
+          </div>
+
+          <section class="admin-panel admin-inbox" aria-labelledby="inbox-title">
+            <div class="admin-panel__heading admin-inbox__heading">
+              <div>
+                <span class="admin-kicker">Enquiry ledger</span>
+                <h2 id="inbox-title">All conversations</h2>
+              </div>
+            </div>
+
+            <div class="admin-toolbar">
+              <label class="admin-search" for="enquiry-search">
+                <span>Search enquiries</span>
+                <input id="enquiry-search" type="search" placeholder="Name, company, email or brief" data-search />
+              </label>
+              <div class="admin-filters" aria-label="Filter enquiries by status" data-filters>
+                <button type="button" data-filter="all" aria-pressed="true">All</button>
+                <button type="button" data-filter="discovery" aria-pressed="false">Discoveries</button>
+                <button type="button" data-filter="new" aria-pressed="false">New</button>
+                <button type="button" data-filter="contacted" aria-pressed="false">Contacted</button>
+                <button type="button" data-filter="qualified" aria-pressed="false">Qualified</button>
+                <button type="button" data-filter="proposal" aria-pressed="false">Proposal</button>
+                <button type="button" data-filter="won" aria-pressed="false">Won</button>
+                <button type="button" data-filter="lost" aria-pressed="false">Lost</button>
+              </div>
+            </div>
+
+            <div class="admin-table-head" aria-hidden="true">
+              <span>Received / status</span><span>Contact</span><span>Requirement</span><span>Next action</span><span>Open</span>
+            </div>
+            <div class="admin-enquiry-list" data-enquiry-list aria-live="polite">
+              <div class="admin-empty-state" data-list-status>
+                <span>•••</span>
+                <strong>Loading enquiries</strong>
+                <p>The workspace is connecting to the protected enquiry ledger.</p>
+              </div>
+            </div>
+          </section>
+        </main>
+
+      <dialog class="admin-detail" data-detail-dialog aria-labelledby="detail-title">
+        <div class="admin-detail__top">
+          <div><span data-detail-reference>Enquiry</span><small data-detail-date></small></div>
+          <button type="button" data-detail-close aria-label="Close enquiry detail">Close ×</button>
+        </div>
+        <div class="admin-detail__body">
+          <section class="admin-detail__intro">
+            <span class="admin-kicker" data-detail-type>Website enquiry</span>
+            <h2 id="detail-title" data-detail-name>Enquiry detail</h2>
+            <a data-detail-email href="mailto:">Email contact</a>
+          </section>
+
+          <section class="admin-detail__facts" data-detail-facts aria-label="Enquiry facts"></section>
+
+          <section class="admin-next-move" aria-labelledby="next-move-title">
+            <div class="admin-next-move__heading">
+              <div><span class="admin-kicker">Next move</span><h3 id="next-move-title">Leave a clear action</h3></div>
+              <button class="admin-text-button" type="button" data-complete-action>Mark action complete</button>
+            </div>
+            <div class="admin-commercial-grid">
+              <div class="admin-field admin-field--wide">
+                <label for="enquiry-next-action">Next action</label>
+                <input id="enquiry-next-action" type="text" maxlength="300" placeholder="For example: Send audit scope and book review call" data-detail-next-action />
+              </div>
+              <div class="admin-field">
+                <label for="enquiry-action-due">Due date and time</label>
+                <input id="enquiry-action-due" type="datetime-local" data-detail-action-due />
+              </div>
+              <div class="admin-field">
+                <label for="enquiry-priority">Priority</label>
+                <select id="enquiry-priority" data-detail-priority>
+                  <option value="low">Low</option>
+                  <option value="normal">Normal</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section class="admin-detail__brief">
+            <span>What needs to change</span>
+            <p data-detail-brief></p>
+          </section>
+
+          <section class="admin-discovery" data-detail-discovery hidden aria-labelledby="discovery-response-title">
+            <div><span class="admin-kicker">Client questionnaire</span><h3 id="discovery-response-title">Web design discovery</h3></div>
+            <div class="admin-discovery__answers" data-detail-discovery-answers></div>
+          </section>
+
+          <section class="admin-discovery-invite" aria-labelledby="discovery-invite-title">
+            <div><span class="admin-kicker">Web build discovery</span><h3 id="discovery-invite-title">Send the client questionnaire</h3><p>Creates a private link connected to this enquiry. A new link invalidates the previous one, and the completed answers appear above.</p></div>
+            <button class="admin-button" type="button" data-generate-discovery>Generate and copy questionnaire link <span>↗</span></button>
+            <p data-discovery-link-status role="status" aria-live="polite"></p>
+          </section>
+
+          <section class="admin-invoice" data-invoice-section hidden aria-labelledby="invoice-title">
+            <div class="admin-invoice__heading">
+              <div><span class="admin-kicker">Proposal stage</span><h3 id="invoice-title">Create client invoice</h3><p>Build a clear GBP invoice, save it against this enquiry and copy a private client link.</p></div>
+              <span data-invoice-number-label>New invoice</span>
+            </div>
+            <div class="admin-commercial-grid">
+              <div class="admin-field admin-field--wide"><label for="invoice-number">Invoice number</label><input id="invoice-number" maxlength="25" autocapitalize="characters" spellcheck="false" placeholder="CNVRT-4827" data-invoice-number /><small>Generated automatically. You can replace it with a short reference such as TRD-P1.</small></div>
+              <div class="admin-field"><label for="invoice-status">Status</label><select id="invoice-status" data-invoice-status><option value="draft">Draft</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="void">Void</option></select></div>
+              <div class="admin-field"><label for="invoice-vat">VAT rate</label><select id="invoice-vat" data-invoice-vat><option value="0">No VAT</option><option value="20">20%</option></select></div>
+              <div class="admin-field"><label for="invoice-issued">Issue date</label><input id="invoice-issued" type="date" data-invoice-issued /></div>
+              <div class="admin-field"><label for="invoice-due">Due date</label><input id="invoice-due" type="date" data-invoice-due /></div>
+              <div class="admin-field"><label for="invoice-client">Client name</label><input id="invoice-client" maxlength="160" data-invoice-client /></div>
+              <div class="admin-field"><label for="invoice-email">Client email</label><input id="invoice-email" type="email" maxlength="254" data-invoice-email /></div>
+              <div class="admin-field admin-field--wide"><label for="invoice-company">Business name</label><input id="invoice-company" maxlength="160" data-invoice-company /></div>
+            </div>
+            <div class="admin-invoice__items-heading"><span>Invoice items</span><button class="admin-text-button" type="button" data-invoice-add>Add line item +</button></div>
+            <div class="admin-invoice__items" data-invoice-items></div>
+            <div class="admin-commercial-grid">
+              <div class="admin-field admin-field--wide"><label for="invoice-payment-url">Online payment link</label><input id="invoice-payment-url" type="url" maxlength="1000" placeholder="https://" data-invoice-payment-url /><small>Optional Stripe, Xero, FreeAgent or other hosted payment link.</small></div>
+              <div class="admin-field admin-field--wide"><label for="invoice-account-name">Account name</label><input id="invoice-account-name" maxlength="160" placeholder="CNVRT" data-invoice-account-name /></div>
+              <div class="admin-field"><label for="invoice-sort-code">Sort code</label><input id="invoice-sort-code" inputmode="numeric" maxlength="8" placeholder="00-00-00" data-invoice-sort-code /></div>
+              <div class="admin-field"><label for="invoice-account-number">Account number</label><input id="invoice-account-number" inputmode="numeric" maxlength="8" placeholder="00000000" data-invoice-account-number /></div>
+              <div class="admin-field admin-field--wide"><label for="invoice-reference">Payment reference</label><input id="invoice-reference" maxlength="80" placeholder="Invoice number or client name" data-invoice-reference /></div>
+              <div class="admin-field admin-field--wide"><label for="invoice-notes">Invoice notes</label><textarea id="invoice-notes" rows="4" maxlength="2000" placeholder="For example: 50% project deposit. Work begins once payment is received." data-invoice-notes></textarea></div>
+            </div>
+            <div class="admin-invoice__total"><span>Invoice total</span><strong data-invoice-total>£0.00</strong></div>
+            <div class="admin-invoice__actions"><button class="admin-button" type="button" data-invoice-preview>Preview invoice</button><button class="admin-button admin-button--primary" type="button" data-invoice-save>Save and copy invoice link <span>↗</span></button></div>
+            <p data-invoice-message role="status" aria-live="polite"></p>
+          </section>
+
+          <section class="admin-opportunity" aria-labelledby="opportunity-title">
+            <div><span class="admin-kicker">Commercial context</span><h3 id="opportunity-title">Qualification and opportunity</h3></div>
+            <div class="admin-commercial-grid">
+              <div class="admin-field">
+                <label for="enquiry-status">Commercial stage</label>
+                <select id="enquiry-status" data-detail-status>
+                  <option value="new">New</option>
+                  <option value="contacted">Contacted</option>
+                  <option value="qualified">Qualified</option>
+                  <option value="proposal">Proposal</option>
+                  <option value="won">Won</option>
+                  <option value="lost">Lost</option>
+                  <option value="spam">Spam</option>
+                </select>
+              </div>
+              <div class="admin-field">
+                <label for="enquiry-fit">Commercial fit</label>
+                <select id="enquiry-fit" data-detail-fit>
+                  <option value="unreviewed">Not reviewed</option>
+                  <option value="strong">Strong fit</option>
+                  <option value="possible">Possible fit</option>
+                  <option value="unsuitable">Not suitable</option>
+                </select>
+              </div>
+              <div class="admin-field">
+                <label for="enquiry-value">Estimated project value</label>
+                <div class="admin-money-input"><span>£</span><input id="enquiry-value" type="number" inputmode="decimal" min="0" step="50" placeholder="0" data-detail-value /></div>
+              </div>
+              <div class="admin-field">
+                <label for="enquiry-close-date">Expected close date</label>
+                <input id="enquiry-close-date" type="date" data-detail-close-date />
+              </div>
+              <div class="admin-field admin-field--wide">
+                <label for="enquiry-lost-reason">Lost or unsuitable reason</label>
+                <textarea id="enquiry-lost-reason" rows="3" maxlength="500" placeholder="Complete this when an opportunity is lost or unsuitable." data-detail-lost-reason></textarea>
+              </div>
+            </div>
+            <button class="admin-button admin-button--primary" type="button" data-save-opportunity>Save opportunity <span aria-hidden="true">↗</span></button>
+          </section>
+
+          <section class="admin-convert" data-convert-section hidden aria-labelledby="convert-title">
+            <div><span class="admin-kicker">Won enquiry</span><h3 id="convert-title">Start client onboarding</h3><p>Creates the client, project and tailored checklist in one step. The private client link is shown once and copied to your clipboard.</p></div>
+            <div class="admin-commercial-grid">
+              <div class="admin-field admin-field--wide"><label for="convert-project-name">Project name</label><input id="convert-project-name" type="text" maxlength="180" data-convert-project-name /></div>
+              <div class="admin-field"><label for="convert-template">Onboarding route</label><select id="convert-template" data-convert-template><option value="">Choose automatically</option><option value="website">Website project</option><option value="shopify">Shopify and ecommerce</option><option value="growth">Ongoing growth</option><option value="general">General project</option></select></div>
+              <div class="admin-field"><label for="convert-start">Target start date</label><input id="convert-start" type="date" data-convert-start /></div>
+            </div>
+            <button class="admin-button admin-button--primary" type="button" data-convert-client>Create client and copy invite link <span>↗</span></button>
+            <p data-convert-status role="status" aria-live="polite"></p>
+          </section>
+
+          <section class="admin-notes" aria-labelledby="activity-title">
+            <div><span class="admin-kicker">Complete history</span><h3 id="activity-title">Activity and internal notes</h3></div>
+            <form class="admin-note-form" data-note-form>
+              <div class="admin-field">
+                <label for="enquiry-note">Add an internal note</label>
+                <textarea id="enquiry-note" name="note" rows="4" maxlength="2000" required placeholder="Record the useful context, decision or next action."></textarea>
+              </div>
+              <button class="admin-button" type="submit">Add note</button>
+            </form>
+            <div class="admin-activity-list" data-activity-list></div>
+          </section>
+        </div>
+        <div class="admin-detail__footer">
+          <p data-detail-status-message role="status" aria-live="polite"></p>
+          <button class="admin-text-button admin-text-button--danger" type="button" data-archive>Archive enquiry</button>
+        </div>
+        </dialog>
+
+      <dialog class="admin-detail admin-create" data-create-dialog aria-labelledby="create-enquiry-title">
+        <div class="admin-detail__top"><div><span>New enquiry</span><small>Manual lead or referral</small></div><button type="button" data-create-close>Close ×</button></div>
+        <form class="admin-detail__body admin-create__form" data-create-form>
+          <section class="admin-detail__intro"><span class="admin-kicker">Start a conversation</span><h2 id="create-enquiry-title">Create an enquiry</h2><p>Add what you know now. Qualification, value and onboarding can be completed from the enquiry afterwards.</p></section>
+          <section class="admin-commercial-grid">
+            <div class="admin-field"><label for="create-name">Contact name</label><input id="create-name" name="name" maxlength="120" autocomplete="name" required /></div>
+            <div class="admin-field"><label for="create-email">Email address</label><input id="create-email" name="email" type="email" maxlength="254" autocomplete="email" /><small>Optional if the contact details are still to be confirmed.</small></div>
+            <div class="admin-field"><label for="create-company">Company</label><input id="create-company" name="company" maxlength="160" autocomplete="organization" /></div>
+            <div class="admin-field"><label for="create-website">Website</label><input id="create-website" name="website" type="url" maxlength="500" placeholder="https://" /></div>
+            <div class="admin-field"><label for="create-service">Service</label><select id="create-service" name="service"><option value="">Not decided</option><option value="web-design">Web design</option><option value="shopify">Shopify</option><option value="branding">Branding</option><option value="paid-media">Paid media</option><option value="email-marketing">Email marketing</option><option value="seo-aeo">SEO and AEO</option><option value="custom-development">Custom development</option><option value="not-sure">Not sure</option></select></div>
+            <div class="admin-field"><label for="create-project-type">Project type</label><select id="create-project-type" name="project-type"><option value="">Not decided</option><option value="website">Website</option><option value="shopify">Shopify store</option><option value="migration">Migration</option><option value="branding">Branding</option><option value="custom-development">Custom development</option><option value="other">Other</option></select></div>
+            <div class="admin-field"><label for="create-budget">Indicative budget</label><select id="create-budget" name="budget"><option value="">Unknown</option><option value="1000-3000">£1,000–£3,000</option><option value="3000-7500">£3,000–£7,500</option><option value="7500-15000">£7,500–£15,000</option><option value="15000-plus">£15,000+</option><option value="not-sure">Not sure</option></select></div>
+            <div class="admin-field"><label for="create-timing">Timing</label><input id="create-timing" name="timing" maxlength="240" placeholder="For example: launch within 12 weeks" /></div>
+            <div class="admin-field admin-field--wide"><label for="create-brief">What does the client need?</label><textarea id="create-brief" name="brief" rows="6" minlength="10" maxlength="2000" required placeholder="Record the commercial problem, requirement or useful context."></textarea></div>
+          </section>
+          <section class="admin-create__submit"><p data-create-status role="status" aria-live="polite"></p><button class="admin-button admin-button--primary" type="submit">Create enquiry <span>↗</span></button></section>
+        </form>
+      </dialog>
+      </div>
+    </section>
+
+    <section class="admin-invoice-preview" data-invoice-preview-panel hidden aria-label="Invoice preview">
+      <header><div><span>Invoice preview</span><small>Check the document before saving and sending it.</small></div><button type="button" data-invoice-preview-close>Close ×</button></header>
+      <iframe title="Invoice preview" data-invoice-preview-frame></iframe>
+    </section>
+  </div>
+
+  <script>
+    import { initialiseAdmin } from '@/scripts/admin';
+    initialiseAdmin();
+  </script>
+</AdminLayout>

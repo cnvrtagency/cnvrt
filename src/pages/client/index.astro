@@ -1,0 +1,60 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL?.trim().replace(/\/$/, '') || '';
+const endpoint = supabaseUrl ? `${supabaseUrl}/functions/v1/client-portal` : '';
+---
+
+<AdminLayout title="Client onboarding | CNVRT" description="Your private CNVRT client onboarding workspace." skipLabel="Skip to onboarding checklist" showMobileNav={false}>
+  <main class="portal" id="admin-main" data-client-portal data-endpoint={endpoint}>
+    <header class="portal__header">
+      <a class="portal__wordmark" href="/" aria-label="CNVRT home">CNVRT</a>
+      <span>Private client workspace</span>
+    </header>
+
+    <section class="portal-state portal-state--error" data-portal-error hidden>
+      <span class="portal-eyebrow">Link unavailable</span>
+      <h1>This workspace<br />cannot be opened.</h1>
+      <p data-portal-error-message>Check that you opened the complete link supplied by CNVRT.</p>
+      <a href="mailto:hello@cnvrtdigital.co.uk">Contact CNVRT ↗</a>
+    </section>
+
+    <div class="portal__workspace" data-portal-workspace hidden>
+      <section class="portal-hero">
+        <div>
+          <span class="portal-eyebrow">Client onboarding / <b data-portal-status>Awaiting client</b></span>
+          <h1 data-portal-title>Your project</h1>
+          <p>Complete the steps below so decisions, access and responsibilities are clear before production begins.</p>
+        </div>
+        <div class="portal-progress" aria-label="Onboarding progress">
+          <strong data-portal-progress>0%</strong>
+          <span><b data-portal-completed>0</b> of <b data-portal-total>0</b> required steps complete</span>
+          <i><b data-portal-progress-bar></b></i>
+        </div>
+      </section>
+
+      <section class="portal-guide" aria-label="Important guidance">
+        <span>Security note</span>
+        <p>Share access by inviting <strong>hello@cnvrtdigital.co.uk</strong> or linking to a password-manager collection. Never enter passwords into this portal.</p>
+      </section>
+
+      <section class="portal-checklist" aria-labelledby="portal-checklist-title">
+        <div class="portal-checklist__heading">
+          <div><span class="portal-eyebrow">Start here</span><h2 id="portal-checklist-title">Onboarding checklist</h2></div>
+          <p>Your answers save individually, so you can leave and return using the same private link.</p>
+        </div>
+        <div data-portal-items></div>
+      </section>
+
+      <footer class="portal__footer">
+        <div><span>Need help?</span><a href="mailto:hello@cnvrtdigital.co.uk">hello@cnvrtdigital.co.uk</a></div>
+        <span>CNVRT / Manchester, UK</span>
+      </footer>
+    </div>
+  </main>
+</AdminLayout>
+
+<script>
+  import { initialiseClientPortal } from '@/scripts/client-portal';
+  initialiseClientPortal();
+</script>

@@ -1,0 +1,23 @@
+---
+import ArticlePage from '@/components/ArticlePage.astro';
+import HomepageStructureArticle from '@/components/articles/HomepageStructureArticle.astro';
+import ShopifyMigrationArticle from '@/components/articles/ShopifyMigrationArticle.astro';
+import SeoAeoArticle from '@/components/articles/SeoAeoArticle.astro';
+import { articles } from '@/data/articles';
+
+export function getStaticPaths() {
+  return articles.map((article) => ({ params: { slug: article.slug }, props: { article } }));
+}
+
+const { article } = Astro.props;
+const content = {
+  'homepage-structure-that-converts': HomepageStructureArticle,
+  'shopify-migration-checklist': ShopifyMigrationArticle,
+  'seo-and-aeo-foundation': SeoAeoArticle,
+} as const;
+const ArticleContent = content[article.slug as keyof typeof content];
+---
+
+<ArticlePage article={article}>
+  <ArticleContent />
+</ArticlePage>

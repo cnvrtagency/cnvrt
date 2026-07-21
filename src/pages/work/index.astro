@@ -1,0 +1,78 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import ResponsiveProjectImage from '@/components/ResponsiveProjectImage.astro';
+import { projects } from '@/data/projects';
+import '@/styles/work-page.css';
+
+const pageUrl = new URL('/work/', Astro.site).href;
+const schema = [{
+  '@type': 'CollectionPage',
+  '@id': `${pageUrl}#work`,
+  url: pageUrl,
+  name: 'Selected digital work by CNVRT',
+  description: 'Selected web design, Shopify, ecommerce and digital growth work by CNVRT.',
+  isPartOf: { '@id': `${Astro.site}#website` },
+  inLanguage: 'en-GB',
+}];
+---
+
+<BaseLayout title="Selected Digital Work | CNVRT" description="Selected web design, Shopify, ecommerce and digital growth work by CNVRT." additionalSchema={schema}>
+  <SiteHeader />
+  <main id="main" class="work-index">
+    <section class="work-index__hero">
+      <div class="shell">
+        <div class="section-rail section-rail--inverse" data-reveal><span>01</span><span>Selected work</span><span>Websites + growth</span></div>
+        <div class="work-index__hero-grid">
+          <h1 class="hero-title" data-reveal="hero-title">
+            <span class="hero-title__line"><span class="hero-title__inner">Selected work</span></span>
+            <span class="hero-title__line"><span class="hero-title__inner">built around</span></span>
+            <span class="hero-title__line"><span class="hero-title__inner">real ambition.</span></span>
+          </h1>
+          <div data-reveal style="--reveal-index: 3">
+            <p>Brand systems, ecommerce stores, lead-generation websites and custom platforms shaped around different audiences, operating models and commercial priorities.</p>
+            <p>Explore the strategy, design, technology and growth work behind each project.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="work-index__projects section-pad" aria-labelledby="projects-title">
+      <div class="shell">
+        <div class="section-rail" data-reveal><span>02</span><span id="projects-title">Project index</span><span>{projects.length} selected projects</span></div>
+        <div class="work-index__grid">
+          {projects.map((project, index) => (
+            <article class="work-card" data-reveal style={`--reveal-index: ${index % 3}`}>
+              <a class="work-card__image" href={`/work/${project.slug}/`} aria-label={`View ${project.name} case study`}>
+                <ResponsiveProjectImage src={project.coverImage ?? project.image} portraitSrc={project.coverPortraitImage} alt={project.coverAlt ?? project.alt} widths={[560, 840, 1200]} sizes="(max-width: 760px) 100vw, 50vw" />
+                <span>View project <span aria-hidden="true">↗</span></span>
+              </a>
+              <div class="work-card__meta"><span>{project.number}</span><span>{project.sector}</span></div>
+              <div class="work-card__body">
+                <div>
+                  <h2><a href={`/work/${project.slug}/`}>{project.name}</a></h2>
+                  <p class="work-card__scope">{project.scope}</p>
+                </div>
+                <p>{project.summary}</p>
+                <div class="work-card__proof" aria-label="Project highlight">
+                  <strong>{project.metrics[0]?.[0] ?? 'Project'}</strong>
+                  <span>{project.metrics[0]?.[1] ?? 'Case study highlight'}</span>
+                </div>
+                <a class="work-card__link" href={`/work/${project.slug}/`} aria-label={`Read the ${project.name} case study`}>View case study <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="work-index__cta section-pad">
+      <div class="shell work-index__cta-grid">
+        <div><span>Start a project</span><h2>Have something valuable that needs a clearer digital experience?</h2></div>
+        <div><p>Share the brief, the problem or the opportunity. CNVRT will help define the most useful place to begin.</p><a class="button button--paper" href="/submit-a-project/">Submit a project <span aria-hidden="true">↗</span></a></div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

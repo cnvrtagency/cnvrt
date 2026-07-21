@@ -1,0 +1,53 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import FoundationHero from '@/components/FoundationHero.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import '@/styles/foundation-pages.css';
+
+const reviewAreas = [
+  ['Website', 'Journey, content, trust, conversion and technical foundations.'],
+  ['Shopify', 'Storefront, catalogue, migration risk and customer experience.'],
+  ['Paid media', 'Campaign structure, tracking, creative and landing-page alignment.'],
+  ['Search', 'SEO, local visibility, content architecture and AI search readiness.'],
+];
+const pageUrl = new URL('/request-an-audit/', Astro.site).href;
+const schema = [{ '@type': 'WebPage', '@id': `${pageUrl}#audit`, url: pageUrl, name: 'Request a digital audit from CNVRT', isPartOf: { '@id': `${Astro.site}#website` } }];
+---
+
+<BaseLayout title="Request a Website or Marketing Audit | CNVRT" description="Request a focused CNVRT audit covering a website, Shopify store, Google Ads, Meta Ads, email marketing, SEO or AEO." additionalSchema={schema}>
+  <SiteHeader />
+  <main id="main" class="foundation-page">
+    <FoundationHero eyebrow="Request an audit" context="Free, subject to fit" lines={['Find the problem', 'before spending', 'more to feed it.']} intro={[
+      'A focused audit reviews the current position, identifies the strongest constraints and gives the next actions a clear order.',
+      'Audits are free where CNVRT has enough access, context and relevant experience to provide useful direction.',
+    ]} />
+
+    <section class="section-pad">
+      <div class="shell">
+        <div class="section-rail" data-reveal><span>02</span><span>Review areas</span><span>One focused question</span></div>
+        <div class="foundation-card-grid" style="margin-top: 2.5rem">
+          {reviewAreas.map(([title, copy], index) => <article class="foundation-card" data-reveal style={`--reveal-index: ${index}`}><div><span>0{index + 1}</span><h3>{title}</h3></div><p>{copy}</p></article>)}
+        </div>
+      </div>
+    </section>
+
+    <section class="foundation-form-section section-pad">
+      <div class="shell foundation-form-layout">
+        <div class="foundation-form-context" data-reveal>
+          <span class="menu-label">Useful access</span>
+          <h2>A review is only useful when there is enough evidence.</h2>
+          <p>Publicly visible information can start the assessment. Analytics, advertising or platform access may be requested where it changes the quality of the recommendation.</p>
+          <dl>
+            <div><dt>Cost</dt><dd>Free, subject to fit</dd></div>
+            <div><dt>Response</dt><dd>Within one working day</dd></div>
+            <div><dt>Output</dt><dd>Focused findings and prioritised next actions</dd></div>
+          </dl>
+        </div>
+        <div data-reveal style="--reveal-index: 1"><InquiryForm variant="audit" /></div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

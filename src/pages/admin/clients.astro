@@ -1,0 +1,80 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+
+const configured = Boolean(import.meta.env.PUBLIC_SUPABASE_URL?.trim() && import.meta.env.PUBLIC_SUPABASE_ANON_KEY?.trim());
+---
+
+<AdminLayout title="Client hub | CNVRT" description="Private CNVRT client onboarding workspace." skipLabel="Skip to client projects">
+  <div class="admin-root" data-client-admin data-configured={String(configured)}>
+    <section class="admin-login" data-auth-view aria-labelledby="client-login-title">
+      <div class="admin-login__brand"><img class="admin-logo" src="/brand/cnvrt-logo.png" alt="CNVRT" width="800" height="200" /><small>Private workspace / 02</small></div>
+      <div class="admin-login__panel">
+        <span class="admin-kicker">Client administration</span>
+        <h1 id="client-login-title">Keep every client<br />ready to move.</h1>
+        <p>Sign in to create onboarding links, track client inputs and prepare projects for delivery.</p>
+        <form class="admin-login__form" data-login-form>
+          <div class="admin-field"><label for="client-admin-email">Email address</label><input id="client-admin-email" name="email" type="email" autocomplete="username" required /></div>
+          <div class="admin-field"><label for="client-admin-password">Password</label><input id="client-admin-password" name="password" type="password" autocomplete="current-password" required /></div>
+          <p class="admin-form-status" data-login-status role="status" aria-live="polite"></p>
+          <button class="admin-button admin-button--primary" type="submit">Enter the client hub <span aria-hidden="true">↗</span></button>
+        </form>
+      </div>
+      <div class="admin-login__foot"><span>Protected by Supabase Auth</span><span>Manchester / UK</span></div>
+    </section>
+
+    <section class="admin-workspace" data-workspace hidden>
+      <aside class="admin-sidebar" aria-label="Admin navigation">
+        <a class="admin-wordmark" href="/admin/" aria-label="CNVRT admin home"><img class="admin-logo" src="/brand/cnvrt-logo.png" alt="" width="800" height="200" /></a>
+        <nav class="admin-sidebar__nav">
+          <span>Workspace</span>
+          <a href="/admin/"><i aria-hidden="true"></i>Dashboard</a>
+          <a href="/admin/#inbox-title"><i aria-hidden="true"></i>Enquiries</a>
+          <a href="/admin/clients/" aria-current="page"><i aria-hidden="true"></i>Clients</a>
+          <a href="/admin/finance/"><i aria-hidden="true"></i>Finance</a>
+          <a href="/admin/documents/"><i aria-hidden="true"></i>Documents</a>
+        </nav>
+        <div class="admin-sidebar__foot"><span><i aria-hidden="true"></i>Protected workspace</span><small>CNVRT client operations</small></div>
+      </aside>
+      <div class="admin-shell">
+        <header class="admin-header">
+          <a class="admin-wordmark admin-wordmark--mobile" href="/admin/" aria-label="CNVRT admin home"><img class="admin-logo admin-logo--dark" src="/brand/cnvrt-logo.png" alt="" width="800" height="200" /></a>
+          <div class="admin-header__context"><span>Client hub</span><small data-sync-status>Connecting securely</small></div>
+          <button class="admin-text-button" type="button" data-sign-out>Sign out <span>↗</span></button>
+        </header>
+        <main class="admin-main client-admin" id="admin-main">
+          <section class="admin-overview">
+            <div><span class="admin-kicker">Client questionnaires</span><h1>Client forms</h1><p>Open a client to copy their questionnaire link or read their submitted answers.</p></div>
+            <div class="admin-overview__actions"><button class="admin-button" type="button" data-refresh>Refresh data</button></div>
+          </section>
+          <section class="admin-panel client-ledger" aria-labelledby="client-ledger-title">
+            <div class="admin-panel__heading"><div><span class="admin-kicker">Client directory</span><h2 id="client-ledger-title">Choose a client</h2></div><p>Questionnaire links and completed responses are kept together.</p></div>
+            <div class="client-ledger__list" data-client-list aria-live="polite"><div class="admin-empty-state"><span>•••</span><strong>Loading client workspaces</strong></div></div>
+          </section>
+        </main>
+      </div>
+    </section>
+
+    <dialog class="admin-detail client-detail" data-client-dialog aria-labelledby="client-detail-title">
+      <div class="admin-detail__top"><div><span>Client project</span><small data-client-company></small></div><button type="button" data-client-close>Close ×</button></div>
+      <div class="admin-detail__body">
+        <section class="admin-detail__intro"><span class="admin-kicker">Client form</span><h2 id="client-detail-title" data-client-project-name>Client questionnaire</h2><a data-client-email href="mailto:">Email client</a></section>
+        <section class="client-link-panel"><div><span class="admin-kicker">Step 01</span><h3>Send the questionnaire</h3><p>Creates one private form link, copies it and gives you a button to check it before sending.</p></div><button class="admin-button admin-button--primary" type="button" data-client-questionnaire-link>Copy questionnaire link ↗</button><p data-client-questionnaire-status role="status" aria-live="polite"></p></section>
+        <section class="client-discovery" data-client-discovery hidden aria-labelledby="client-discovery-title">
+          <div class="client-discovery__heading">
+            <div><span class="admin-kicker">Step 02</span><h3 id="client-discovery-title">Completed answers</h3><p>The submitted answers appear here automatically.</p></div>
+            <div class="client-discovery__actions"><button class="admin-button admin-button--primary" type="button" data-copy-discovery>Copy all answers</button></div>
+          </div>
+          <div class="client-discovery__answers" data-client-discovery-answers></div>
+          <p class="admin-form-status" data-client-discovery-status role="status" aria-live="polite"></p>
+        </section>
+        <section class="client-link-panel"><div><span class="admin-kicker">After the form</span><h3>Access checklist</h3><p>Open the separate page where Jamie can share platform access and complete the remaining setup steps.</p></div><button class="admin-button" type="button" data-client-link>Open access checklist ↗</button><p data-client-link-status role="status" aria-live="polite"></p></section>
+      </div>
+      <div class="admin-detail__footer"><p data-client-save-status role="status" aria-live="polite"></p><button class="admin-button" type="button" data-client-refresh>Refresh answers</button></div>
+    </dialog>
+  </div>
+</AdminLayout>
+
+<script>
+  import { initialiseClientAdmin } from '@/scripts/client-admin';
+  initialiseClientAdmin();
+</script>

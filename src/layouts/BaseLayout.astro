@@ -1,0 +1,107 @@
+---
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  additionalSchema?: Record<string, unknown>[];
+  robots?: string;
+  ogType?: 'website' | 'article';
+  socialImage?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+}
+
+const {
+  title,
+  description,
+  additionalSchema = [],
+  robots = 'index, follow',
+  ogType = 'website',
+  socialImage,
+  publishedTime,
+  modifiedTime,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${Astro.site}#organization`,
+      name: 'CNVRT',
+      url: Astro.site,
+      email: 'hello@cnvrtdigital.co.uk',
+      areaServed: { '@type': 'Country', name: 'United Kingdom' },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${Astro.site}#website`,
+      url: Astro.site,
+      name: 'CNVRT',
+      publisher: { '@id': `${Astro.site}#organization` },
+      inLanguage: 'en-GB',
+    },
+    ...additionalSchema,
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content="#f0eee9" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="CNVRT" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
+    <link rel="preload" href="/fonts/general-sans-variable.woff2" as="font" type="font/woff2" crossorigin />
+    <title>{title}</title>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+    <script is:inline>
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion-ready');
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <slot />
+    <script>
+      import { initialiseEnquiryForms } from '@/scripts/enquiry-forms';
+
+      const revealItems = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+      const show = (element: HTMLElement) => element.classList.add('is-visible');
+
+      if (!document.documentElement.classList.contains('motion-ready') || !('IntersectionObserver' in window)) {
+        revealItems.forEach(show);
+      } else {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            show(entry.target as HTMLElement);
+            observer.unobserve(entry.target);
+          });
+        }, { rootMargin: '0px 0px -7% 0px', threshold: 0.08 });
+
+        revealItems.forEach((item) => observer.observe(item));
+      }
+
+      initialiseEnquiryForms();
+    </script>
+  </body>
+</html>

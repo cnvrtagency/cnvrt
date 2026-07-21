@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import FoundationHero from '@/components/FoundationHero.astro';
+import { Image } from 'astro:assets';
+import { articles } from '@/data/articles';
+import '@/styles/foundation-pages.css';
+
+const topics = ['Web design and conversion', 'Shopify and ecommerce', 'SEO and AI search', 'Paid acquisition', 'Email and retention', 'Custom tools and software'];
+const pageUrl = new URL('/blog/', Astro.site).href;
+const schema = [{
+  '@type': 'Blog',
+  '@id': `${pageUrl}#blog`,
+  url: pageUrl,
+  name: 'CNVRT digital growth blog',
+  description: 'Practical guidance about web design, Shopify, SEO, AEO, paid media, email and custom business technology.',
+  publisher: { '@id': `${Astro.site}#organization` },
+  inLanguage: 'en-GB',
+  blogPost: articles.map((article) => ({ '@id': `${new URL(`/blog/${article.slug}/`, Astro.site).href}#article` })),
+}];
+---
+
+<BaseLayout title="Digital Growth Blog | CNVRT" description="Practical CNVRT guidance covering web design, Shopify, SEO, AEO, paid media, email marketing and useful business technology." additionalSchema={schema}>
+  <SiteHeader />
+  <main id="main" class="foundation-page">
+    <FoundationHero eyebrow="Blog" context="Research + practical guidance" lines={['Useful thinking', 'for better digital', 'decisions.']} intro={[
+      'Decision guides, practical checklists and honest analysis built around the questions businesses ask before and after investing in digital growth.',
+      'Every article will connect original CNVRT experience with properly sourced guidance, clear limitations and a useful next step.',
+    ]} />
+
+    <section class="foundation-index">
+      <div class="shell">
+        <div class="section-rail" data-reveal><span>02</span><span>Latest guidance</span><span>Three research-led guides</span></div>
+        <div class="blog-empty">
+          <div class="blog-empty__statement" data-reveal>
+            <span>Publishing standard</span>
+            <h2>Fewer articles. More useful answers.</h2>
+          </div>
+          <div data-reveal style="--reveal-index: 1">
+            <p style="color: var(--muted); margin-bottom: 1.5rem">Every guide is built around a real decision, supported by direct experience and primary sources, then connected to the service and evidence that help a reader act on it.</p>
+            <ol class="blog-topics">
+              {topics.map((topic, index) => <li><span>0{index + 1}</span><p>{topic}</p></li>)}
+            </ol>
+          </div>
+        </div>
+        <div class="blog-feature-grid">
+          {articles.map((article, index) => (
+            <article data-reveal style={`--reveal-index: ${index + 1}`}>
+              <a class="blog-feature__image" href={`/blog/${article.slug}/`}><Image src={article.image} alt={article.imageAlt} widths={[520, 760, 1040]} sizes="(max-width: 760px) 100vw, 33vw" /></a>
+              <div class="blog-feature__body">
+                <p class="blog-feature__meta"><span>{article.category}</span><span>{article.readTime}</span></p>
+                <h2><a href={`/blog/${article.slug}/`}>{article.cardTitle}</a></h2>
+                <p>{article.description}</p>
+                <a class="blog-feature__link" href={`/blog/${article.slug}/`}>Read the guide <span aria-hidden="true">↗</span></a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="foundation-cta section-pad">
+      <div class="shell foundation-cta__layout">
+        <div><span class="menu-label">Need direction now?</span><h2>Start with a focused review.</h2></div>
+        <div><p>You do not need to wait for the guide. Share the current problem and CNVRT can recommend the most useful place to begin.</p><div class="foundation-cta__actions"><a class="button button--paper" href="/request-an-audit/">Request an audit <span aria-hidden="true">↗</span></a><a class="text-link" href="/contact/">Contact CNVRT <span aria-hidden="true">↗</span></a></div></div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,238 @@
+<section id="scope">
+  <h2>What does a Shopify migration include?</h2>
+  <p class="article-lead">A Shopify migration is the controlled transfer of an active ecommerce business to Shopify or Shopify Plus. Data import is only one workstream. A complete replatforming also considers catalogue structure, storefront design, URLs, trading operations, customer journeys, integrations, tracking and the launch itself.</p>
+  <p>The scope changes by business. A small store with a few simple products may move using native CSV tools and careful manual setup. An established retailer with thousands of variants, historic orders, subscriptions, multiple markets, warehouse integrations and significant organic traffic needs a more rigorous programme.</p>
+  <p>Define four terms before agreeing the project:</p>
+  <ul>
+    <li><strong>Migration:</strong> moving agreed data and content from the source platform.</li>
+    <li><strong>Replatforming:</strong> rebuilding the wider trading system and operational workflows on Shopify.</li>
+    <li><strong>Redesign:</strong> changing the customer experience, interface and theme.</li>
+    <li><strong>Transformation:</strong> cleaning data, changing information architecture or improving processes rather than recreating the old store exactly.</li>
+  </ul>
+  <p>These can happen together, but each adds risk, decisions and testing. A proposal that says “migrate the website” without defining the objects, rules and responsibilities is not a useful scope.</p>
+  <div class="article-callout">
+    <span>Start with acceptance criteria</span>
+    <p>Agree what a successful product, customer, order, redirect, payment, tracking event and operational workflow looks like before the migration method is chosen.</p>
+  </div>
+</section>
+
+<section id="protect">
+  <h2>What must a safe Shopify migration protect?</h2>
+  <p class="article-lead">The project must protect the ability to trade, serve customers and understand performance. That requires continuity across seven connected areas, not an isolated product import.</p>
+  <div class="article-framework">
+    <article><div><span>01</span><h3>Revenue continuity</h3></div><p>Products, prices, inventory, payments, tax, shipping, discounts and checkout journeys must behave as agreed when the new store opens.</p></article>
+    <article><div><span>02</span><h3>Catalogue meaning</h3></div><p>Titles, variants, attributes, media, metafields, collections, filters and search must help people find and evaluate the right product.</p></article>
+    <article><div><span>03</span><h3>Customer continuity</h3></div><p>Customer records, order history, credit, loyalty, subscriptions, support expectations and account limitations need a defined treatment.</p></article>
+    <article><div><span>04</span><h3>Search equity</h3></div><p>Useful URLs, content, metadata, internal links, canonicals and structured information need mapping, with relevant redirects for changed destinations.</p></article>
+    <article><div><span>05</span><h3>Operations</h3></div><p>Fulfilment, warehouse, ERP, finance, customer support and staff workflows need testing beyond the storefront.</p></article>
+    <article><div><span>06</span><h3>Marketing signals</h3></div><p>Analytics, consent, advertising events, product feeds, email flows, review platforms and attribution need to function from launch.</p></article>
+    <article><div><span>07</span><h3>Control</h3></div><p>Backups, migration logs, owners, sign-off, a change freeze, delta plan and rollback decisions reduce avoidable launch confusion.</p></article>
+  </div>
+  <p>Shopify's own migration guidance covers products, customers, historic orders, gift cards or credit, blogs and pages, but the available method differs by data type. It also says import order matters: products should be moved before customers, then historic orders, so relationships can be retained. See <a href="https://help.shopify.com/en/manual/migrating-to-shopify">Shopify's migration guide</a>.</p>
+</section>
+
+<section id="discovery">
+  <h2>Audit the existing store before moving anything</h2>
+  <p class="article-lead">The source store is the only reliable starting point. Build an inventory of what exists, who uses it, what can be retired and what must work on day one.</p>
+  <h3>Establish the baseline</h3>
+  <p>Record current revenue, conversion, traffic, organic landing pages, rankings where available, paid-media feeds, key events, site speed and error levels. This is not to promise identical performance after launch. It creates a dated comparison and helps distinguish normal variation from a genuine migration problem.</p>
+  <h3>Inventory data and content</h3>
+  <p>Export products, variants, customers, orders, pages, blogs, reviews, discounts, gift cards, store credit, loyalty, subscriptions, menus and media. Record the source count, destination count, rejected records and any transformations. “Import completed” is not evidence that every record is correct.</p>
+  <h3>Map systems and owners</h3>
+  <p>List payment providers, shipping tools, fulfilment partners, tax logic, ERP, warehouse management, point of sale, helpdesk, search, personalisation, reviews, email, analytics, consent, advertising and product feeds. For each, name the owner, data exchanged, trigger, failure condition and test.</p>
+  <div class="article-table-wrap">
+    <table class="article-table">
+      <caption>Example migration responsibility map</caption>
+      <thead><tr><th>Workstream</th><th>Decisions required</th><th>Evidence before sign-off</th></tr></thead>
+      <tbody>
+        <tr><td>Catalogue</td><td>Fields, variants, identifiers, media, product status and transformation rules.</td><td>Counts, exception log and approved sample records.</td></tr>
+        <tr><td>Customer and orders</td><td>Scope, lawful handling, account journey, history and communication.</td><td>Sample customer, order relationships and account test.</td></tr>
+        <tr><td>SEO</td><td>URL ownership, content, redirects, canonicals and pages to retire.</td><td>Crawl comparison, redirect tests and indexability review.</td></tr>
+        <tr><td>Operations</td><td>Payments, tax, shipping, fulfilment, notifications and returns.</td><td>Successful and failed end-to-end order scenarios.</td></tr>
+        <tr><td>Marketing</td><td>Consent, analytics events, pixels, feeds, email triggers and attribution.</td><td>Debug evidence and test records in each destination platform.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Only move personal data the business needs and has a valid reason to retain. The UK ICO's <a href="https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/data-minimisation/">data minimisation guidance</a> says personal data should be adequate, relevant and limited to what is necessary. Legal retention and privacy decisions require appropriate professional advice.</p>
+</section>
+
+<section id="data">
+  <h2>Map and clean ecommerce data</h2>
+  <p class="article-lead">A technically successful import can still produce a poor store. Legacy data must be mapped into a Shopify model that supports products, filtering, merchandising, search, feeds and daily management.</p>
+  <h3>Define fields before choosing an import method</h3>
+  <p>For every source field, record the destination field, format, transformation, default, validation rule and treatment when data is missing. Preserve stable identifiers such as SKUs where they are genuinely controlled. Do not let a migration tool make silent decisions about variants, handles or product status.</p>
+  <div class="article-table-wrap">
+    <table class="article-table">
+      <caption>Illustrative product-field mapping</caption>
+      <thead><tr><th>Source issue</th><th>Shopify destination</th><th>Rule</th><th>QA question</th></tr></thead>
+      <tbody>
+        <tr><td>Colour exists only inside a product title.</td><td>Variant option or product metafield.</td><td>Extract from an approved controlled vocabulary and flag ambiguous values.</td><td>Can customers filter and choose the colour consistently?</td></tr>
+        <tr><td>Fabric is absent or free text.</td><td>Structured metafield.</td><td>Map known values, preserve source copy and queue missing records for enrichment.</td><td>Does the field support product detail, feeds and collection rules?</td></tr>
+        <tr><td>Category names mix navigation and supplier labels.</td><td>Product type, taxonomy and collection logic.</td><td>Separate internal classification from customer-facing routes.</td><td>Does each product appear in the intended collections without duplication?</td></tr>
+        <tr><td>Duplicate or inconsistent image paths.</td><td>Product media.</td><td>Validate ownership, accessibility, file quality, order and alt text requirements.</td><td>Do all variants and products show the correct media?</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3>Products, variants and options</h3>
+  <p>Decide whether a source record should become a product, variant, bundle or separate item. Check platform limits and app dependencies against current Shopify documentation rather than relying on an old checklist. Test edge cases such as products with one option, many options, unusual prices, zero stock, pre-orders or market-specific availability.</p>
+  <h3>Metafields and collection rules</h3>
+  <p>Use structured fields for information that needs consistent display, filtering, feeds or automation. Build automated collections only after the product rules are stable. Then test both membership and exclusion. A rule that populates a collection is incomplete if it also admits unsuitable products.</p>
+  <h3>Customer accounts and passwords</h3>
+  <p>Do not promise that customer passwords will move. Shopify states that passwords are encrypted and customer records can be imported without those passwords, which may require customers to activate or register accounts again. The account model and communication plan should be agreed early. See the <a href="https://help.shopify.com/en/manual/intro-to-shopify/initial-setup/new-to-shopify-checklists/migrating-to-shopify-checklist">official Shopify migration checklist</a>.</p>
+  <div class="article-field-note">
+    <span>CNVRT field note</span>
+    <h3>Ten thousand products needed more than an import.</h3>
+    <p>For the <a href="/work/uberkinky/">UberKinky Shopline to Shopify Plus migration</a>, legacy records lacked dependable attributes including colour and fabric. CNVRT reviewed and restructured the catalogue, then created around 200 targeted collections and the logic required to populate them correctly. The lesson is simple: protect the meaning of the catalogue, not only the record count.</p>
+  </div>
+</section>
+
+<section id="seo">
+  <h2>Protect URLs, content and search signals</h2>
+  <p class="article-lead">A platform change often changes URL patterns and site structure. Search risk is reduced by understanding the old estate, designing relevant new destinations and testing permanent redirects. It is not reduced by sending every retired URL to the homepage.</p>
+  <h3>Build a defensible URL inventory</h3>
+  <p>Combine a crawl of the current site with XML sitemaps, analytics landing pages, Google Search Console exports, backlink data, product and content exports, paid landing pages and server logs where available. No single source normally captures every valuable URL.</p>
+  <h3>Map old URLs to relevant destinations</h3>
+  <p>Use one-to-one permanent redirects where an equivalent page exists. When content is consolidated, map to the closest useful parent or combined resource. If a page has no replacement and no continuing value, a genuine not-found response can be more honest than an irrelevant redirect.</p>
+  <h3>Carry forward the signals that still matter</h3>
+  <ul>
+    <li>Page purpose, useful copy, headings and media.</li>
+    <li>Titles and descriptions where they remain accurate.</li>
+    <li>Internal links and navigation paths into important products and collections.</li>
+    <li>Canonical decisions, indexability and robots directives.</li>
+    <li>Structured data that matches the visible product and organisation information.</li>
+    <li>International URLs and language or regional annotations where applicable.</li>
+  </ul>
+  <h3>Expect movement without accepting avoidable mistakes</h3>
+  <p>Google's site-move documentation says temporary ranking fluctuations can occur while Googlebot revisits and reindexes changed URLs. It recommends mapping old URLs to new ones, testing thoroughly, using server-side permanent redirects and monitoring the move. No agency can truthfully guarantee that rankings will remain fixed. See <a href="https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes">Google's site move guidance</a>.</p>
+  <div class="article-callout article-callout--dark">
+    <span>Redirect warning</span>
+    <p>Shopify reserves some URL prefixes and has platform-specific path patterns. Validate the proposed redirect set in the real destination store, including query strings, chains, loops, case and trailing-slash behaviour.</p>
+  </div>
+</section>
+
+<section id="systems">
+  <h2>Rebuild the complete trading system</h2>
+  <p class="article-lead">A storefront is ready only when customers can complete real journeys and the business can fulfil, support and measure them.</p>
+  <h3>Payments, tax and shipping</h3>
+  <p>Configure the intended payment providers, currencies, tax treatment, shipping zones, rates, pickup and fulfilment logic. Test success, failure, cancellation, refund, partial fulfilment, discount and high-risk scenarios where relevant. Tax and legal compliance remain the merchant's responsibility and should be reviewed by qualified advisers.</p>
+  <h3>Apps and integrations</h3>
+  <p>Do not replace every legacy plugin automatically. Document the business requirement first, then decide whether Shopify provides it natively, a suitable app is needed or custom development is justified. Record recurring cost, data access, performance, support, failure handling and ownership.</p>
+  <h3>Reviews, loyalty, subscriptions and credit</h3>
+  <p>Each object has different platform and provider constraints. Confirm whether historic data can be imported, whether identifiers will remain connected, what the customer sees and how balances or recurring commitments will be reconciled.</p>
+  <h3>Analytics, ads and retention</h3>
+  <p>Define the consent model and the events required for GA4, advertising platforms, product feeds and email automation. Validate event names, values, currency, product identifiers, deduplication and channel destinations. A browser event firing is not enough if the receiving platform rejects or misinterprets it.</p>
+  <p>CNVRT treats <a href="/services/analytics-conversion-tracking/">analytics and conversion tracking</a> as a launch workstream, not a later enhancement. This matters because an apparently smooth launch can still damage decision-making if purchase, lead or product events change silently.</p>
+</section>
+
+<section id="testing">
+  <h2>Test the store before launch</h2>
+  <p class="article-lead">Quality assurance should follow agreed scenarios and evidence, not a final afternoon of clicking through the homepage. Test customer journeys, data, operations, search and measurement on realistic devices and accounts.</p>
+  <div class="article-table-wrap">
+    <table class="article-table">
+      <caption>Minimum pre-launch test coverage</caption>
+      <thead><tr><th>Area</th><th>Example tests</th><th>Evidence</th></tr></thead>
+      <tbody>
+        <tr><td>Catalogue</td><td>Simple and complex products, variants, availability, media, price, tax, filters, search and collection rules.</td><td>Approved sample set, exception log and source-to-destination counts.</td></tr>
+        <tr><td>Customer journey</td><td>Navigation, search, product selection, cart, account, checkout, confirmation and support routes.</td><td>Device matrix, screenshots and resolved defect list.</td></tr>
+        <tr><td>Orders</td><td>Successful and failed payment, discounts, shipping, tax, cancellation, refund and fulfilment.</td><td>Test order references in Shopify and connected systems.</td></tr>
+        <tr><td>SEO</td><td>Indexability, canonicals, metadata, structured data, internal links, sitemap, 404s and redirect samples.</td><td>Pre-launch crawl, redirect test and approved exceptions.</td></tr>
+        <tr><td>Marketing</td><td>Consent, analytics, pixels, purchase values, feeds, email triggers, audiences and attribution parameters.</td><td>Debug records from the browser and receiving platforms.</td></tr>
+        <tr><td>Operations</td><td>Notifications, stock, warehouse, helpdesk, ERP, invoices, returns and staff permissions.</td><td>Named business-owner sign-off for each workflow.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Shopify recommends placing test orders before launch and checking successful and failed transactions, refunds, cancellations and fulfilment. Treat that as a minimum, then add every workflow the real business depends on.</p>
+</section>
+
+<section id="launch">
+  <h2>Plan cutover and launch day</h2>
+  <p class="article-lead">A launch plan defines what changes, when it changes, who owns each check and what happens if an acceptance test fails. It should be written and rehearsed before DNS is touched.</p>
+  <h3>Initial migration, freeze and delta</h3>
+  <p>Large or active stores normally need an initial migration followed by a delta containing records created or changed after the cutoff. Define whether products, customers, orders, content and stock are frozen, synchronised or reimported. Document the exact cutoff time and reconcile counts after the delta.</p>
+  <h3>Backups and rollback decisions</h3>
+  <p>Retain the source exports, configuration records and redirect map. A rollback plan should explain which failures justify reversal, whether new orders can be reconciled and who has authority to decide. Not every post-launch defect warrants a rollback, but leaving the decision undefined creates delay.</p>
+  <h3>Domain and communication</h3>
+  <p>Reduce DNS time-to-live where appropriate, confirm domain ownership, SSL, sender authentication and contact routes, then schedule internal and customer communications. Keep the old platform accessible to authorised staff for reconciliation where contracts and security allow.</p>
+  <ul class="article-checklist">
+    <li>Final data and delta counts are reconciled.</li>
+    <li>Payment, shipping, tax and fulfilment owners have signed off.</li>
+    <li>Redirects are loaded and a representative set has been tested.</li>
+    <li>Robots, password and noindex controls are in the intended launch state.</li>
+    <li>Analytics, consent, advertising events and feeds are validated.</li>
+    <li>DNS, SSL, email authentication and notification routes are ready.</li>
+    <li>Monitoring owners and escalation contacts are available.</li>
+    <li>The launch and rollback decision points are documented.</li>
+  </ul>
+</section>
+
+<section id="monitoring">
+  <h2>Monitor the first 30 days</h2>
+  <p class="article-lead">Launch is the start of observation, not the end of the project. Monitor trading and technical signals closely enough to find issues while they are small, then compare performance with context rather than reacting to every daily movement.</p>
+  <div class="article-table-wrap">
+    <table class="article-table">
+      <caption>Post-launch monitoring rhythm</caption>
+      <thead><tr><th>Period</th><th>Priority checks</th><th>Likely action</th></tr></thead>
+      <tbody>
+        <tr><td>First hour</td><td>Homepage and key routes, orders, payment, stock, notifications, analytics, consent, redirects and indexability.</td><td>Fix critical trading or access failures immediately and record the decision.</td></tr>
+        <tr><td>First day</td><td>404s, redirect failures, feeds, email triggers, fulfilment, search, mobile journeys and customer support reports.</td><td>Prioritise by revenue, customer harm and visibility risk.</td></tr>
+        <tr><td>First week</td><td>Search Console coverage, crawl data, organic landing pages, paid campaigns, product disapprovals and conversion quality.</td><td>Correct patterns, not isolated noise, and annotate material changes.</td></tr>
+        <tr><td>First 30 days</td><td>Revenue, conversion, search visibility, indexed URLs, lead quality, returns, support themes and operational workload.</td><td>Separate migration defects from improvement opportunities and create the next backlog.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Keep redirect monitoring beyond the first month, particularly for large catalogues and seasonal URLs. Do not remove redirects simply because the replacement pages have been indexed. Historic customer bookmarks and external links can remain valuable for years.</p>
+</section>
+
+<section id="checklist">
+  <h2>Complete Shopify migration checklist</h2>
+  <p class="article-lead">Use this summary to expose missing workstreams. The detailed requirements and sign-off evidence should live in the project plan.</p>
+  <ul class="article-checklist">
+    <li>Define migration, replatforming, redesign and transformation scope separately.</li>
+    <li>Name an owner and acceptance criteria for every workstream.</li>
+    <li>Capture commercial, search, tracking and technical baselines.</li>
+    <li>Inventory URLs, content, products, variants, customers, orders and media.</li>
+    <li>Inventory apps, integrations, feeds and operational workflows.</li>
+    <li>Decide what to retain, clean, transform, rebuild or retire.</li>
+    <li>Map every source data field to a destination and validation rule.</li>
+    <li>Test product samples and edge cases before full import.</li>
+    <li>Design collections, navigation, filters and search around customer tasks.</li>
+    <li>Agree the customer-account and password communication journey.</li>
+    <li>Build the complete URL inventory and relevant redirect map.</li>
+    <li>Validate content, metadata, canonicals, indexability and structured data.</li>
+    <li>Configure payment, currency, tax, shipping, fulfilment and returns.</li>
+    <li>Replace or rebuild reviews, loyalty, subscriptions, credit and support tools.</li>
+    <li>Configure consent, analytics, advertising, feeds and email automation.</li>
+    <li>Run functional, data, device, accessibility, performance and operational QA.</li>
+    <li>Plan the freeze, delta migration, reconciliation, backups and rollback decisions.</li>
+    <li>Prepare DNS, SSL, sender authentication and customer communications.</li>
+    <li>Assign first-hour, first-day, first-week and first-month monitoring.</li>
+    <li>Record defects, evidence, decisions and the post-launch improvement backlog.</li>
+  </ul>
+</section>
+
+<section id="questions">
+  <h2>Frequently asked Shopify migration questions</h2>
+  <div class="article-questions">
+    <details><summary>Will migrating to Shopify affect SEO?</summary><p>It can cause temporary movement while changed URLs and content are recrawled. Risk increases when valuable pages disappear, redirects are irrelevant or missing, internal links change without planning, or the new store is accidentally blocked. A complete inventory, relevant permanent redirects, careful QA and monitoring reduce avoidable loss but cannot guarantee fixed rankings.</p></details>
+    <details><summary>Can customer passwords be migrated to Shopify?</summary><p>Do not assume so. Shopify says encrypted passwords are not imported through its standard customer migration process, so customers may need to activate or register accounts again. Confirm the chosen customer-account model and communication plan.</p></details>
+    <details><summary>What data can move to Shopify?</summary><p>Depending on the source, method and data quality, this can include products, customers, historic orders, gift cards or credit, blogs and pages. Reviews, subscriptions, loyalty and other app data depend on their providers and APIs. Audit each object rather than treating “all data” as one promise.</p></details>
+    <details><summary>How long does a Shopify migration take?</summary><p>There is no dependable generic duration. Catalogue size and quality, design, integrations, international requirements, data history, client sign-off and the number of migration rehearsals all affect timing. A useful estimate follows discovery and data sampling.</p></details>
+    <details><summary>Are 301 redirects enough to protect rankings?</summary><p>No. Redirects are important, but content purpose, internal links, indexability, canonicals, structured information, performance and the wider architecture also matter. Redirects must point to relevant live destinations and be tested after launch.</p></details>
+    <details><summary>Should every old URL redirect to the homepage?</summary><p>No. Map an old URL to the closest equivalent where one exists. An irrelevant homepage redirect is poor for customers and may be treated as a soft 404. Retire pages honestly when there is no useful replacement.</p></details>
+    <details><summary>Can a migration guarantee no downtime or sales loss?</summary><p>A well-run project can reduce and control risk through rehearsal, delta planning, testing and monitoring. It cannot responsibly guarantee that every external system, search engine or customer journey will remain unchanged. The proposal should state risks, acceptance criteria and response ownership.</p></details>
+  </div>
+</section>
+
+<section id="sources">
+  <h2>Sources and review notes</h2>
+  <p class="article-lead">This guide combines official Shopify and Google documentation with CNVRT's direct catalogue and Shopify Plus migration experience. Platform rules can change, so it is classed as platform-dependent and should be reviewed at least every six months. Last reviewed 17 July 2026.</p>
+  <ol class="article-sources">
+    <li><a href="https://help.shopify.com/en/manual/migrating-to-shopify">Shopify Help Centre: migrate to Shopify</a></li>
+    <li><a href="https://help.shopify.com/en/manual/intro-to-shopify/initial-setup/new-to-shopify-checklists/migrating-to-shopify-checklist">Shopify Help Centre: migration checklist</a></li>
+    <li><a href="https://help.shopify.com/en/manual/intro-to-shopify/plus-launch-checklist">Shopify Help Centre: Shopify Plus launch checklist</a></li>
+    <li><a href="https://help.shopify.com/en/manual/online-store/menus-and-links/url-redirect">Shopify Help Centre: creating and managing URL redirects</a></li>
+    <li><a href="https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes">Google Search Central: site moves with URL changes</a></li>
+    <li><a href="https://developers.google.com/search/docs/crawling-indexing/301-redirects">Google Search Central: redirects and Google Search</a></li>
+    <li><a href="https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/data-minimisation/">ICO: data minimisation guidance</a></li>
+  </ol>
+</section>

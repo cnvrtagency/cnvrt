@@ -1,0 +1,444 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import '@/styles/discovery-page.css';
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL?.trim().replace(/\/$/, '') || '';
+const formEndpoint = import.meta.env.PUBLIC_FORM_ENDPOINT?.trim() || (supabaseUrl ? `${supabaseUrl}/functions/v1/submit-enquiry-v2` : '');
+const linkedDiscoveryEndpoint = supabaseUrl ? `${supabaseUrl}/functions/v1/discovery-questionnaire-v2` : '';
+const successUrl = '/thank-you/?form=web-design-discovery';
+const questionnaireSections = [
+  { title: 'Priorities and positioning', note: 'The commercial priorities and position the website needs to establish.', questions: [
+    ['main-result', 'What is the main result you want from the new website?'],
+    ['priority-treatments', 'Which five treatments would you most like the website to generate bookings for?'],
+    ['treatment-priority', 'Should the business be positioned equally around hair restoration and medical aesthetics, or should one take priority?'],
+    ['patient-choice', 'What do you believe makes patients choose you over another clinic?'],
+    ['competitor-sites', 'Are there any competitors or websites you particularly like or dislike?'],
+  ]},
+  { title: 'Treatments and content', note: 'What is current, what can change and who will approve the medical content.', questions: [
+    ['current-services-accuracy', 'Can I treat the services and information on the current website as accurate and current?'],
+    ['treatment-changes', 'Are there any treatments you plan to introduce, remove or stop actively promoting?'],
+    ['content-rewrite-approval', 'Are you happy for me to restructure and rewrite the existing content, subject to your medical approval?'],
+    ['treatment-pricing', 'Can we publish treatment prices or meaningful starting prices?'],
+    ['hair-finance', 'Do you currently offer finance for hair transplants?'],
+    ['medical-accuracy-owner', 'Who will have final responsibility for checking the medical accuracy of the website?'],
+  ]},
+  { title: 'Locations and consultations', note: 'Active clinics, public contact information and consultation arrangements.', questions: [
+    ['clinic-locations', 'Which clinic locations are currently active, and which treatments are available at each?'],
+    ['clinic-contact-details', 'What are the correct addresses, opening hours, telephone number and public email address?'],
+    ['consultation-formats', 'Which consultations are available online, in person or at both?'],
+    ['consultation-fees', 'What are the current consultation fees, and are they deducted from treatment?'],
+  ]},
+  { title: 'Booking system', note: 'How patients should book, pay and receive communication.', questions: [
+    ['online-appointments', 'Which appointments should patients be able to book online?'],
+    ['direct-booking-scope', 'Should patients book consultations only, or should any treatments also be directly bookable?'],
+    ['booking-payment', 'Should payment or a deposit be collected when booking?'],
+    ['cancellation-rules', 'What are your cancellation and rescheduling rules?'],
+    ['calendar-sync', 'Should availability synchronise with your existing Google or Apple calendar?'],
+    ['booking-information', 'What information do you need from a patient when they book?'],
+    ['hair-photo-upload', 'Should hair patients be able to upload photographs before their consultation?'],
+    ['automatic-messages', 'Which automatic messages are required, such as booking confirmations, reminders and follow-ups?'],
+    ['reminder-channels', 'Should reminders be sent by email, SMS, WhatsApp or a combination?'],
+  ]},
+  { title: 'Leads and admin panel', note: 'The patient enquiry pipeline and the operational tools the clinic needs.', questions: [
+    ['enquiry-sources', 'Which enquiry sources should appear in the management system, such as website forms, bookings, telephone calls, WhatsApp and social media?'],
+    ['patient-stages', 'What stages should a patient move through after enquiring?'],
+    ['admin-users', 'Who needs access to the admin panel?'],
+    ['admin-capabilities', 'What should the admin panel allow you to do?'],
+    ['clinical-software', 'Do you currently use any clinical or patient-record software?'],
+    ['records-separation', 'Can we agree that the website system will manage enquiries and consultation bookings, while confidential clinical records remain in your dedicated clinical system?'],
+  ]},
+  { title: 'Photography, results and reviews', note: 'Available evidence, patient permissions and review content.', questions: [
+    ['available-media', 'What professional photography and video do you already have available?'],
+    ['before-after-volume', 'Approximately how many hair and aesthetics before-and-after cases can we use?'],
+    ['patient-permissions', 'Is written permission held for the website use of those images and patient stories?'],
+    ['result-clinical-info', 'Can you provide clinical information for each featured result, such as treatment, graft count and review stage?'],
+    ['google-reviews', 'Are you happy for us to feature selected Google reviews and link back to your Google profile?'],
+  ]},
+  { title: 'Professional and clinic information', note: 'Credentials, regulation, policies and the founder story.', questions: [
+    ['professional-details', 'Please provide the professional details you want displayed, including full professional name, GMC number, qualifications, relevant training, current memberships and years of experience.'],
+    ['cqc-details', 'What are the correct CQC provider and clinic details?'],
+    ['required-policies', 'Are there any required safety, complaints, privacy or cancellation policies already available?'],
+    ['personal-story', 'Are you happy for the website to include your personal hair-transplant experience and career story?'],
+  ]},
+  { title: 'SEO and articles', note: 'Search locations, patient questions and the initial editorial plan.', questions: [
+    ['seo-locations', 'Which locations should we focus on for Google visibility?'],
+    ['patient-questions', 'What questions do patients repeatedly ask during consultations?'],
+    ['seo-article-selection', 'Are you happy for the initial four SEO articles to be selected around the strongest search and commercial opportunities?'],
+    ['article-approver', 'Who will approve those articles before publication?'],
+  ]},
+  { title: 'Access and launch', note: 'Access, migration, approval and ongoing ownership after launch.', questions: [
+    ['platform-access', 'Can you provide access to the current Wix website, domain, booking system, Google Analytics, Search Console and Google Business Profile?'],
+    ['data-migration', 'Does any existing customer, booking or enquiry data need to be migrated?'],
+    ['final-approval', 'Who will provide final approval for the design and content?'],
+    ['launch-dates', 'Are there any important dates or campaigns connected to the launch?'],
+    ['ongoing-content-owner', 'Who will be responsible for updating content, prices and patient results after launch?'],
+  ]},
+];
+type AuditAssist = { answer: string; source: string; kind?: 'suggestion' | 'audit' };
+const suggestedAnswers: Record<string, AuditAssist> = {
+  'main-result': { answer: 'Generate more qualified consultation bookings, with a particular focus on high-value hair restoration enquiries, while presenting the full medical aesthetics offer clearly and credibly.', source: 'Suggested direction based on the homepage, booking journey and treatment emphasis.' },
+  'priority-treatments': { answer: 'FUE hair transplant surgery; general hair-loss consultations and treatment plans; PRP and polynucleotides for hair loss; anti-wrinkle treatment; advanced dermal filler treatments including non-surgical rhinoplasty.', source: 'Current homepage, treatment list and online booking catalogue.' },
+  'treatment-priority': { answer: 'Hair restoration should take priority, with medical aesthetics retained as a strong secondary service line. The current site says hair restoration is Dr Jamie’s real passion and gives FUE the strongest commercial treatment page.', source: 'Meet Dr Jamie and FUE hair transplant pages.' },
+  'patient-choice': { answer: 'Doctor-led treatment, medical and ethical planning rather than sales pressure, natural-looking results, detailed individual assessment, structured aftercare, and Dr Jamie’s ability to explain hair transplantation from both a doctor’s and patient’s perspective.', source: 'Meet Dr Jamie, homepage and FUE hair transplant pages.' },
+  'current-services-accuracy': { answer: 'No, not without a final medical and operational review. The current site contains useful treatment detail, but there are conflicting prices, locations and contact details across treatment, booking and contact pages.', source: 'Page-by-page content audit.' },
+  'treatment-pricing': { answer: 'Yes. The current website already publishes prices and starting prices for consultations, hair transplants, injectables, skin boosters and other treatments.', source: 'Online booking and individual treatment pages.' },
+  'hair-finance': { kind: 'audit', answer: 'No hair-transplant finance option is currently shown on the website. Please confirm whether finance is available elsewhere.', source: 'FUE, booking and plans/pricing pages.' },
+  'medical-accuracy-owner': { answer: 'Dr Jamie should have final responsibility for approving medical claims, treatment information, risks, contraindications and clinical result descriptions.', source: 'Suggested governance based on the doctor-led positioning.' },
+  'clinic-locations': { kind: 'audit', answer: 'The site currently references Hilton House, Irwell Street, Bury and Andy Jones Mens Salon, Bolton Road, Darwen. Other pages target or mention Manchester, Blackburn and Lancashire. Please confirm which are active treatment locations and what is offered at each.', source: 'Booking-service, FUE and SEO page content.' },
+  'clinic-contact-details': { kind: 'audit', answer: 'Current public details are inconsistent. The booking pages show 07565 926236 and therejuvenationdoctorsmcr@outlook.com; the global footer shows info@therejuvenationdoctors.com. Please confirm the canonical phone number, email, addresses and opening hours.', source: 'Contact page, booking services and global footer.' },
+  'consultation-formats': { kind: 'audit', answer: 'Hair transplant consultations are currently offered by Zoom and in clinic. General hair-loss consultations are shown in clinic. The contact page also describes video skincare consultations.', source: 'Online booking, FUE and contact pages.' },
+  'consultation-fees': { kind: 'audit', answer: 'The current site shows £50 for hair transplant consultations, general hair-loss consultations and Botox consultations. The general hair-loss page says the £50 is deducted from treatment if the patient proceeds.', source: 'Online booking and general hair-loss consultation pages.' },
+  'online-appointments': { kind: 'audit', answer: 'The current Wix booking system lists consultations, Botox and reviews, filler treatments, skin boosters, hair-loss treatments, collagen stimulators, skin rejuvenation treatments and a 12-month hair transplant review.', source: 'Online booking catalogue.' },
+  'direct-booking-scope': { kind: 'audit', answer: 'The current site allows both consultations and selected treatments to be booked directly online, not consultations only.', source: 'Online booking catalogue.' },
+  'booking-payment': { kind: 'audit', answer: 'A £50 booking fee is currently collected for consultations. Treatment pages also display fixed or starting prices, but the new system should confirm which treatments require full payment, a deposit or no advance payment.', source: 'Booking-service descriptions and cancellation policy.' },
+  'cancellation-rules': { kind: 'audit', answer: 'The current general hair-loss consultation states that cancellation at least seven days before the appointment is eligible for a refund of the £50 booking fee. One reschedule within seven days is allowed without charge; further rescheduling requires another £50 fee. This needs confirming as the single clinic-wide policy.', source: 'General hair-loss consultation booking page.' },
+  'hair-photo-upload': { answer: 'Yes. The FUE page already invites prospective patients to send photographs by WhatsApp for a quote, so a secure pre-consultation photo-upload route would formalise an existing patient journey.', source: 'FUE hair transplant page.' },
+  'enquiry-sources': { answer: 'Website contact forms, Wix online bookings, telephone, email, WhatsApp, Instagram and Facebook should be represented as enquiry sources.', source: 'Current contact, booking and FUE pages.' },
+  'patient-stages': { answer: 'New enquiry; Contacted; Consultation booked; Consultation completed; Treatment plan sent; Treatment booked; Completed; Not proceeding.', source: 'Suggested starting pipeline based on the current consultation and treatment-plan journey.' },
+  'admin-capabilities': { answer: 'Manage appointments and availability; view and update leads; add notes and follow-up actions; manage treatments and prices; publish articles; upload patient results; export data; and report on bookings, lead sources and conversion.', source: 'Suggested scope based on the current Wix site, booking catalogue and project brief.' },
+  'records-separation': { answer: 'Yes. The website system should manage marketing enquiries and consultation bookings only. Confidential clinical records should remain in an appropriate dedicated clinical record system.', source: 'Recommended operational and data-protection boundary.' },
+  'available-media': { kind: 'audit', answer: 'The current site contains professional portraits of Dr Jamie, clinic and treatment imagery, patient-review video content, and extensive hair-transplant and aesthetics result galleries. Original high-resolution files should be collected rather than downloaded from Wix.', source: 'Homepage, Meet Dr Jamie, FUE and treatment gallery pages.' },
+  'before-after-volume': { kind: 'audit', answer: 'The FUE page alone displays at least 17 result images, and the treatment gallery contains many additional images. The exact number of distinct, consented patient cases still needs confirming.', source: 'FUE and treatment gallery pages.' },
+  'professional-details': { kind: 'audit', answer: 'Dr Jamie graduated from Lancaster University in 2017, worked for several years in the NHS, began aesthetic medicine training in 2018, later retrained as a hair transplant surgeon, and left the NHS in January 2025 to focus on The Rejuvenation Doctors. GMC number, full qualifications, named courses, memberships and the precise years-of-experience wording still need confirmation.', source: 'Meet Dr Jamie page.' },
+  'personal-story': { answer: 'Yes. The existing site already explains that Dr Jamie had a hair transplant in 2020 and that the experience led him to retrain in hair transplant surgery. It is one of the clearest differentiators in the current positioning.', source: 'Meet Dr Jamie page.' },
+  'seo-locations': { answer: 'Primary focus: Manchester and Bury. Secondary local reach: Darwen, Blackburn and Lancashire, subject to confirming the active clinic locations and avoiding claims for places without a genuine operating presence.', source: 'Homepage, FUE page, booking locations and existing page titles.' },
+  'patient-questions': { kind: 'audit', answer: 'Common questions already covered include: who is suitable for FUE; FUE versus FUT; procedure duration; pain and anaesthetic; scarring; recovery time; when results appear; permanence; suitability for women; Botox duration and safety; treatment discomfort; consultation fees; and cancellation terms.', source: 'FUE and anti-wrinkle FAQs plus booking pages.' },
+  'seo-article-selection': { answer: 'Yes. The existing blog is already weighted toward hair loss, including finasteride, minoxidil, dutasteride, treatment options and transplant costs. The first four new articles should fill the strongest commercial and local-search gaps rather than duplicate those topics.', source: 'Current blog index and published articles.' },
+  'data-migration': { kind: 'audit', answer: 'The current Wix site includes online bookings, customer accounts, contact submissions and a blog. Please confirm whether booking history, customer details, future appointments, enquiries, articles and media must be retained or exported.', source: 'Current Wix booking, account, contact and blog features.' },
+};
+const legacySuggestedAnswerValues = Object.values(suggestedAnswers).map(({ answer }) => answer);
+void questionnaireSections;
+
+const clientQuestionnaireSections = [
+  { title: 'Goals and positioning', note: 'What the new website needs to achieve and how the clinic should be presented.', questions: [
+    ['main-result', 'What is the main result you want from the new website?'],
+    ['patient-audience', 'Who are the main patient groups the website needs to speak to, and what concerns or questions do they usually have?'],
+    ['priority-treatments', 'Which treatments should the website prioritise for enquiries and bookings? Please list them in order of importance.'],
+    ['treatment-priority', 'Should hair restoration or medical aesthetics lead the website, or should they have equal emphasis?'],
+    ['patient-choice', 'Why do patients choose you instead of another clinic?'],
+    ['competitor-sites', 'Are there any competitor websites or other sites you like or dislike? Please include links and what you like or dislike about them.'],
+    ['visual-direction', 'How should the new website feel visually, and are there any existing colours, fonts or brand elements that must be retained?'],
+  ]},
+  { title: 'Treatments and content', note: 'The services, information and approvals needed to build accurate website pages.', questions: [
+    ['current-services-accuracy', 'Is the treatment information on your current website accurate and current? Please include anything that should be added, removed or changed.'],
+    ['treatment-pricing', 'Which prices or starting prices can we publish? Please also confirm whether finance is available for any treatments.'],
+    ['content-rewrite-approval', 'Can CNVRT restructure and rewrite the existing content, subject to medical approval, and who will provide that approval?'],
+    ['professional-details', 'Please provide the professional details that should appear on the website, including full name, GMC number, qualifications, relevant training and memberships.'],
+  ]},
+  { title: 'Locations and booking', note: 'Where treatments take place and how the patient booking journey should work.', questions: [
+    ['clinic-locations', 'Which clinic locations are active? For each one, provide the treatments offered, address, opening hours, telephone number and public email address.'],
+    ['consultation-formats', 'Which consultations are available online, in person or both, and what are the current fees?'],
+    ['online-appointments', 'Which consultations or treatments should patients book online, and should each require full payment, a deposit or no advance payment?'],
+    ['cancellation-rules', 'What are your cancellation and rescheduling rules?'],
+    ['booking-information', 'What information should patients provide when booking? Should hair patients upload photographs in advance?'],
+    ['automatic-messages', 'Which confirmations, reminders and follow-ups should be automatic, and should they use email, SMS, WhatsApp or a combination?'],
+  ]},
+  { title: 'Enquiries and administration', note: 'The practical tools required to manage enquiries and consultation bookings.', questions: [
+    ['enquiry-sources', 'Which enquiry sources should appear in the management system, and what stages should a patient move through from first enquiry to completed treatment?'],
+    ['admin-users', 'Who needs access to the admin area?'],
+    ['admin-capabilities', 'What must the admin area allow your team to do?'],
+    ['clinical-software', 'Which booking, calendar, CRM or clinical systems do you currently use? Please confirm where confidential clinical records will remain.'],
+  ]},
+  { title: 'Images, proof and search', note: 'The assets and evidence needed to make the website credible and discoverable.', questions: [
+    ['available-media', 'What original photography and video can you provide?'],
+    ['before-after-volume', 'How many before-and-after cases can we use? Please confirm that written website permission is held and that you can provide treatment details for each case.'],
+    ['google-reviews', 'Can we feature selected Google reviews and link to your Google profile?'],
+    ['seo-locations', 'Which locations should the website target for Google visibility?'],
+    ['patient-questions', 'What questions do patients ask most often before booking or during consultations?'],
+  ]},
+];
+---
+
+<BaseLayout
+  title="Web Design Discovery Questionnaire | CNVRT"
+  description="A private web design discovery questionnaire for CNVRT clients, covering business goals, audiences, content, functionality and delivery."
+  robots="noindex, nofollow, noarchive"
+>
+  <main id="main" class="discovery-page">
+    <header class="discovery-header">
+      <a href="/" class="discovery-wordmark" aria-label="CNVRT home">CNVRT</a>
+      <div><span>Client discovery</span><small>Clinic website / 01</small></div>
+    </header>
+
+    <section class="discovery-intro">
+      <div class="discovery-intro__copy">
+        <p class="discovery-kicker">The Rejuvenation Doctors</p>
+        <h1>Website discovery questionnaire</h1>
+      </div>
+      <div class="discovery-intro__note">
+        <span>Allow 15–25 minutes</span>
+        <p>Your answers will guide the website structure, treatment content, booking journey and management system. Access and file-sharing steps are handled separately. If an answer is not yet confirmed, please write “to be agreed”.</p>
+      </div>
+    </section>
+
+    <section class="discovery-workspace">
+      <aside class="discovery-progress" aria-label="Questionnaire progress">
+        <div class="discovery-progress__sticky">
+          <div class="discovery-progress__summary">
+            <span>Completion</span>
+            <strong data-discovery-progress-text>0%</strong>
+            <div aria-hidden="true"><i data-discovery-progress-bar></i></div>
+            <small data-discovery-save-state>Your answers will save on this device.</small>
+          </div>
+          <nav>
+            {clientQuestionnaireSections.map((section, index) => { const number = String(index + 1).padStart(2, '0'); return <a href={`#discovery-${number}`} data-section-link={`discovery-${number}`}><span>{number}</span>{section.title}</a>; })}
+          </nav>
+          <button type="button" data-discovery-clear>Clear saved answers</button>
+        </div>
+      </aside>
+
+      <form
+        class="discovery-form"
+        name="web-design-discovery"
+        method="post"
+        action={successUrl}
+        data-enquiry-form
+        data-form-provider="supabase"
+        data-form-name="web-design-discovery"
+        data-form-endpoint={formEndpoint || undefined}
+        data-linked-endpoint={linkedDiscoveryEndpoint || undefined}
+        data-success-url={successUrl}
+        data-discovery-form
+        data-legacy-suggested-answers={JSON.stringify(legacySuggestedAnswerValues)}
+      >
+        <input type="hidden" name="form-name" value="web-design-discovery" />
+        <input type="hidden" name="enquiry-type" value="discovery" />
+        <input type="hidden" name="source-page" value={Astro.url.pathname} />
+        <input type="hidden" name="service" value="web-design" />
+        <input type="hidden" name="project-type" value="website" />
+        <input type="hidden" name="brief" value="" />
+        <input type="hidden" name="discovery-background" value="replacement" />
+        <input type="hidden" name="discovery-goal" value="bookings" />
+        <input type="hidden" name="discovery-content" value="some-ready" />
+        <input type="hidden" name="discovery-brand" value="established" />
+        <input type="hidden" name="discovery-platform" value="recommend" />
+        <input type="hidden" name="discovery-access" value="partial" />
+        <input type="hidden" name="discovery-features" value="booking" />
+        <input type="hidden" name="started-at" value="" />
+        <input type="hidden" name="form-duration-ms" value="" />
+        <input type="hidden" name="discovery-token" value="" />
+        <p class="discovery-honeypot" aria-hidden="true"><label>Leave empty <input name="company-website-confirmation" tabindex="-1" autocomplete="off" /></label></p>
+
+        {clientQuestionnaireSections.map((section, index) => { const number = String(index + 1).padStart(2, '0'); return (
+          <fieldset id={`discovery-${number}`} class="discovery-section" data-discovery-section>
+            <legend><span>{number}</span><strong>{section.title}</strong><small>{section.note}</small></legend>
+            <div class="discovery-grid">
+              {index === 0 && <>
+                <div class="discovery-field"><label for="discovery-name">Your name <b>*</b></label><input id="discovery-name" name="name" type="text" autocomplete="name" required /></div>
+                <div class="discovery-field"><label for="discovery-email">Work email <b>*</b></label><input id="discovery-email" name="email" type="email" inputmode="email" autocomplete="email" required /></div>
+                <div class="discovery-field"><label for="discovery-company">Business name <b>*</b></label><input id="discovery-company" name="company" type="text" autocomplete="organization" required /></div>
+                <div class="discovery-field"><label for="discovery-website">Current website</label><input id="discovery-website" name="website" type="url" inputmode="url" autocomplete="url" placeholder="https://" /></div>
+              </>}
+              {section.questions.map(([name, question], questionIndex) => { const fieldName = String(name || ''); return <div class="discovery-field discovery-field--wide"><label for={`discovery-${fieldName}`}>{question}{index === 0 && questionIndex === 0 && <b> *</b>}</label><textarea id={`discovery-${fieldName}`} name={fieldName} rows="4" maxlength="2400" required={index === 0 && questionIndex === 0}></textarea></div>; })}
+            </div>
+          </fieldset>
+        ); })}
+
+        <footer class="discovery-submit">
+          <div>
+            <span>Ready to send?</span>
+            <p>Your answers will be submitted securely to the private CNVRT project admin. Read the <a href="/privacy/">privacy policy</a>.</p>
+            <p class="discovery-submit__status" data-form-status role="status" aria-live="polite" hidden></p>
+          </div>
+          <button type="submit">Submit discovery <span aria-hidden="true">↗</span></button>
+        </footer>
+      </form>
+    </section>
+
+    <footer class="discovery-footer"><span>CNVRT</span><span>Manchester / UK</span><a href="mailto:hello@cnvrtdigital.co.uk">Need help completing this?</a></footer>
+  </main>
+
+  <script>
+    const form = document.querySelector<HTMLFormElement>('[data-discovery-form]');
+    if (form) {
+      const parameters = new URLSearchParams(window.location.search);
+      const discoveryToken = parameters.get('token')?.trim() || '';
+      const clientName = parameters.get('client')?.trim() || '';
+      const clientDraftKey = clientName ? `client:${clientName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}` : 'general';
+      const storageKey = `cnvrt:web-design-discovery:v2:${discoveryToken || clientDraftKey}`;
+      const progressText = document.querySelector<HTMLElement>('[data-discovery-progress-text]');
+      const progressBar = document.querySelector<HTMLElement>('[data-discovery-progress-bar]');
+      const saveState = document.querySelector<HTMLElement>('[data-discovery-save-state]');
+      const legacySuggestedAnswers = new Set<string>(JSON.parse(form.dataset.legacySuggestedAnswers || '[]'));
+      const excludedNames = new Set(['form-name', 'enquiry-type', 'source-page', 'service', 'project-type', 'started-at', 'form-duration-ms', 'discovery-token', 'company-website-confirmation']);
+
+      const namedControls = () => Array.from(form.elements).filter((control): control is HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement =>
+        control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement || control instanceof HTMLSelectElement
+      ).filter((control) => control.name && !excludedNames.has(control.name));
+
+      const serialise = () => {
+        const values: Record<string, string | string[]> = {};
+        namedControls().forEach((control) => {
+          if (control instanceof HTMLInputElement && control.type === 'checkbox') {
+            const existing = Array.isArray(values[control.name]) ? values[control.name] as string[] : [];
+            if (control.checked) existing.push(control.value);
+            values[control.name] = existing;
+          } else if (control instanceof HTMLInputElement && control.type === 'radio') {
+            if (control.checked) values[control.name] = control.value;
+          } else {
+            values[control.name] = control.value;
+          }
+        });
+        return values;
+      };
+
+      const restore = () => {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey) || 'null') as Record<string, string | string[]> | null;
+          if (!saved) return;
+          namedControls().forEach((control) => {
+            const value = saved[control.name];
+            if (value == null) return;
+            if (control instanceof HTMLInputElement && control.type === 'checkbox') control.checked = Array.isArray(value) && value.includes(control.value);
+            else if (control instanceof HTMLInputElement && control.type === 'radio') control.checked = value === control.value;
+            else if (typeof value === 'string') control.value = value;
+          });
+          if (saveState) saveState.textContent = 'Draft restored. You can leave and return using this browser.';
+        } catch {
+          localStorage.removeItem(storageKey);
+        }
+      };
+
+      const groupComplete = (name: string, scope: ParentNode = form) => {
+        const controls = Array.from(scope.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(`[name="${CSS.escape(name)}"]`));
+        if (!controls.length) return false;
+        const first = controls[0];
+        if (!first) return false;
+        if (first instanceof HTMLInputElement && (first.type === 'radio' || first.type === 'checkbox')) return controls.some((control) => control instanceof HTMLInputElement && control.checked);
+        return Boolean(first.value.trim() && first.checkValidity());
+      };
+
+      const updateProgress = () => {
+        const visibleNames = (scope: ParentNode) => Array.from(new Set(Array.from(scope.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('.discovery-field input:not([type="hidden"]), .discovery-field textarea, .discovery-field select')).map(({ name }) => name).filter(Boolean)));
+        const questionNames = visibleNames(form);
+        const complete = questionNames.filter((name) => groupComplete(name)).length;
+        const percentage = questionNames.length ? Math.round((complete / questionNames.length) * 100) : 0;
+        if (progressText) progressText.textContent = `${percentage}%`;
+        if (progressBar) progressBar.style.width = `${percentage}%`;
+        form.querySelectorAll<HTMLElement>('[data-discovery-section]').forEach((section) => {
+          const sectionQuestions = visibleNames(section);
+          const done = sectionQuestions.length > 0 && sectionQuestions.every((name) => groupComplete(name, section));
+          const link = document.querySelector<HTMLElement>(`[data-section-link="${section.id}"]`);
+          if (link) link.dataset.complete = String(done);
+        });
+      };
+
+      let saveTimer = 0;
+      let serverSaveTimer = 0;
+      let submitted = false;
+      let lastObservedDraft = JSON.stringify(serialise());
+      const saveServerDraft = async () => {
+        if (submitted || !discoveryToken || !form.dataset.linkedEndpoint) return;
+        const payload = new FormData(form);
+        payload.set('submission-mode', 'draft');
+        try {
+          const response = await fetch(form.dataset.linkedEndpoint, { method: 'POST', body: payload });
+          if (!response.ok) throw new Error('Draft save failed');
+          if (saveState) saveState.textContent = `Secure draft saved at ${new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit' }).format(new Date())}.`;
+        } catch {
+          if (saveState) saveState.textContent = 'Saved on this device. Secure backup will retry when you continue.';
+        }
+      };
+      const saveDraft = () => {
+        if (submitted) return;
+        window.clearTimeout(saveTimer);
+        lastObservedDraft = JSON.stringify(serialise());
+        localStorage.setItem(storageKey, lastObservedDraft);
+        if (saveState) saveState.textContent = `Draft saved at ${new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit' }).format(new Date())}. You can safely leave this page.`;
+      };
+      const queueSave = () => {
+        window.clearTimeout(saveTimer);
+        window.clearTimeout(serverSaveTimer);
+        if (saveState) saveState.textContent = 'Saving draft on this device…';
+        saveTimer = window.setTimeout(saveDraft, 250);
+        serverSaveTimer = window.setTimeout(saveServerDraft, 1200);
+        updateProgress();
+      };
+
+      restore();
+      if (discoveryToken && form.dataset.linkedEndpoint) {
+        form.dataset.formEndpoint = form.dataset.linkedEndpoint;
+        const tokenField = form.elements.namedItem('discovery-token') as HTMLInputElement | null;
+        if (tokenField) tokenField.value = discoveryToken;
+        fetch(`${form.dataset.linkedEndpoint}?token=${encodeURIComponent(discoveryToken)}`)
+          .then(async (response) => {
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'This questionnaire link could not be opened.');
+            const details = result.enquiry as Record<string, string>;
+            const serverDraft = result.draft as Record<string, string> | undefined;
+            if (serverDraft) Object.entries(serverDraft).forEach(([fieldName, value]) => {
+              if (legacySuggestedAnswers.has(value)) return;
+              const control = form.elements.namedItem(fieldName.replaceAll('_', '-')) as HTMLInputElement | HTMLTextAreaElement | null
+                || form.elements.namedItem(fieldName) as HTMLInputElement | HTMLTextAreaElement | null;
+              if (control && typeof value === 'string' && value && !control.value.trim()) control.value = value;
+            });
+            Object.entries({ name: details.name, email: details.email, company: details.company, website: details.website }).forEach(([fieldName, value]) => {
+              const control = form.elements.namedItem(fieldName) as HTMLInputElement | null;
+              if (control && value && !control.value) control.value = value;
+            });
+            if (details.company?.toLowerCase().includes('rejuvenation doctors')) {
+              const confirmedDetails = {
+                email: 'info@therejuvenationdoctors.com',
+                company: 'The Rejuvenation Doctors',
+                website: 'https://www.therejuvenationdoctors.com/',
+              };
+              Object.entries(confirmedDetails).forEach(([fieldName, value]) => {
+                const control = form.elements.namedItem(fieldName) as HTMLInputElement | null;
+                if (control && !control.value) control.value = value;
+              });
+              queueSave();
+            }
+            if (saveState) saveState.textContent = result.completed ? 'A response was previously submitted. You can update and resubmit it.' : result.draftUpdatedAt ? 'Your secure draft has been restored.' : 'This questionnaire is securely linked to your CNVRT project.';
+            updateProgress();
+          })
+          .catch((error) => {
+            form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLButtonElement>('input, textarea, select, button[type="submit"]').forEach((control) => { control.disabled = true; });
+            const status = form.querySelector<HTMLElement>('[data-form-status]');
+            if (status) { status.hidden = false; status.dataset.state = 'error'; status.textContent = error instanceof Error ? error.message : 'This questionnaire link is unavailable.'; }
+          });
+      }
+      const company = form.elements.namedItem('company') as HTMLInputElement | null;
+      if (clientName && company && !company.value) company.value = clientName.slice(0, 160);
+      if (clientName?.toLowerCase().includes('rejuvenation doctors')) {
+        const email = form.elements.namedItem('email') as HTMLInputElement | null;
+        const website = form.elements.namedItem('website') as HTMLInputElement | null;
+        if (email && !email.value) email.value = 'info@therejuvenationdoctors.com';
+        if (company) company.value = 'The Rejuvenation Doctors';
+        if (website && !website.value) website.value = 'https://www.therejuvenationdoctors.com/';
+      }
+      updateProgress();
+      form.addEventListener('input', queueSave);
+      form.addEventListener('change', queueSave);
+      // Browser autofill and some mobile input methods can update values without
+      // consistently emitting input/change. Detect those changes as a fallback.
+      window.setInterval(() => {
+        if (submitted || document.visibilityState === 'hidden') return;
+        const currentDraft = JSON.stringify(serialise());
+        if (currentDraft !== lastObservedDraft) {
+          lastObservedDraft = currentDraft;
+          queueSave();
+        }
+      }, 500);
+      form.addEventListener('submit', () => {
+        const legacyBrief = form.elements.namedItem('brief') as HTMLInputElement | null;
+        const mainResult = form.elements.namedItem('main-result') as HTMLTextAreaElement | null;
+        if (legacyBrief) legacyBrief.value = mainResult?.value.trim() || '';
+        saveDraft();
+      }, { capture: true });
+      window.addEventListener('pagehide', saveDraft);
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveDraft(); });
+      document.querySelector<HTMLButtonElement>('[data-discovery-clear]')?.addEventListener('click', () => {
+        if (!window.confirm('Clear every answer saved on this device?')) return;
+        localStorage.removeItem(storageKey);
+        form.reset();
+        if (saveState) saveState.textContent = 'Saved answers cleared.';
+        updateProgress();
+      });
+
+      window.addEventListener('cnvrt:enquiry-sent', (event) => {
+        const detail = (event as CustomEvent<{ form?: string }>).detail;
+        if (detail?.form === 'web-design-discovery') { submitted = true; localStorage.removeItem(storageKey); }
+      });
+    }
+  </script>
+</BaseLayout>

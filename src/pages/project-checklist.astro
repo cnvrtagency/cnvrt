@@ -1,0 +1,460 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import '@/styles/project-checklist.css';
+
+type CheckItem = { id: string; label: string; note?: string; done?: boolean };
+type CheckSection = { id: string; number: string; title: string; context: string; kind: 'page' | 'project'; items: CheckItem[] };
+
+const sections: CheckSection[] = [
+  {
+    id: 'strategy', number: '00', title: 'Strategy and decisions', context: 'Project-wide', kind: 'project', items: [
+      { id: 'strategy-positioning', label: 'Manchester digital marketing agency positioning agreed', done: true },
+      { id: 'strategy-services', label: 'Core service architecture agreed', done: true },
+      { id: 'strategy-home-boundary', label: 'Homepage refinement boundary agreed', done: true },
+      { id: 'strategy-competitor-audit-20', label: 'Complete expanded UK competitor page and service audit', note: 'Twenty relevant UK agencies were reviewed across public service estates, conversion patterns, specialist pages, proof and commercial entry points. The full report is recorded in UK-COMPETITOR-PAGE-AND-SERVICE-AUDIT-20.md.', done: true },
+      { id: 'strategy-cro-page', label: 'Add Conversion Rate Optimisation to the service architecture', note: 'The highest-priority gap from the 20-agency audit is now a primary Retain and Improve service connected to ecommerce, paid media, research, measurement and ongoing development.', done: true },
+      { id: 'strategy-analytics-page', label: 'Add Analytics and Conversion Tracking to the service architecture', note: 'The new Retain and Improve page covers GA4, GTM, ecommerce events, enhanced conversions, Pixel, CAPI, call tracking, CRM outcomes, consent dependencies and attribution limits.', done: true },
+      { id: 'strategy-branding-page', label: 'Add Branding and Brand Identity after the proof set is organised', note: 'Branding is now a primary Build service supported contextually by Heatons, Hear Better, RFT and TopDraw. Approved identity imagery and final evidence records still remain.', done: true },
+      { id: 'strategy-support-page', label: 'Confirm the Website Support and Optimisation product', note: 'The retained service now defines platform qualification, paid onboarding for inherited sites, allocated monthly capacity, response targets, hosting and third-party boundaries, and explicit exclusions for unlimited or 24/7 support.', done: true },
+      { id: 'strategy-ecommerce-ppc-page', label: 'Add Ecommerce PPC after delivery boundaries and proof are confirmed', note: 'The final service page now owns Merchant Center, feeds, Shopping, retail Performance Max, product economics and transaction-value tracking without creating separate campaign-type pages. Direct campaign proof still remains an evidence task.', done: true },
+      { id: 'strategy-pricing', label: 'Projects from £1,000 confirmed', done: true },
+      { id: 'strategy-retainer', label: 'Three-month minimum for ongoing work confirmed', done: true },
+      { id: 'strategy-claims', label: 'Define the £5M+ revenue claim precisely', note: 'Confirm meaning, period, source and calculation.' },
+      { id: 'strategy-keywords', label: 'Define the 20,000+ keyword claim precisely', note: 'Confirm positions, territory, source and snapshot date.' },
+    ],
+  },
+  {
+    id: 'homepage', number: '01', title: 'Homepage', context: '/', kind: 'page', items: [
+      { id: 'home-structure', label: 'Overall editorial structure and section order approved', done: true },
+      { id: 'home-h1', label: 'Manchester agency H1 approved', done: true },
+      { id: 'home-hero-media', label: 'Landscape and portrait hero media connected', done: true },
+      { id: 'home-hero-height', label: 'Reduce hero height and rail gap on small and stacked screens', done: true },
+      { id: 'home-logo-marquee', label: 'Selected-client logo marquee approved', done: true },
+      { id: 'home-services', label: 'Balance service rows across the full agency offer', note: 'Sixteen equal-height rows now cover branding, web design, ecommerce, Shopify, migrations, search, paid media, retention, measurement, support and custom technology.', done: true },
+      { id: 'home-copy', label: 'Complete line-by-line homepage copy approval', note: 'Controlled copy pass completed across metadata, hero support, services, engagement routes, customer journeys, process, audit and factual FAQs. Project claims, articles, booking behaviour and unapproved commercial notes remain unchanged.', done: true },
+      { id: 'home-articles', label: 'Replace all three article placeholders with finished guides', note: 'All three homepage cards now link to complete guides covering homepage structure, Shopify migration and the shared SEO/AEO foundation.', done: true },
+      { id: 'home-images', label: 'Replace remaining homepage placeholder imagery with project artwork', done: true },
+      { id: 'home-responsive', label: 'Complete final responsive review from 320px to large desktop', note: 'Checked across the full 15-viewport matrix from 320 by 568 to 1920 by 1080, including short landscape, tablet, laptop and 1710px MacBook Air dimensions, with one H1, no clipped text and no horizontal overflow.', done: true },
+      { id: 'home-form', label: 'Connect and test the homepage enquiry form', note: 'Shared submission handling, progress, validation, local success and failure states, and duplicate protection are implemented and tested. Production delivery remains tracked under the processor and inbox tasks.', done: true },
+    ],
+  },
+  {
+    id: 'services-hub', number: '02', title: 'Services hub', context: '/services/', kind: 'page', items: [
+      { id: 'services-route', label: 'Services hub route and foundation layout built', done: true },
+      { id: 'services-groups', label: 'Approve the final service grouping and order', done: true },
+      { id: 'services-ecommerce', label: 'Add Ecommerce Web Design to the directory', note: 'The new route now appears in the Build group between Web Design and Shopify.', done: true },
+      { id: 'services-copy', label: 'Approve service summaries and connected-engagement copy', note: 'Nineteen distinct, search-focused summaries now sit within the approved Build, Acquire and Retain and Improve groups. A dedicated section explains when and why services are connected.', done: true },
+      { id: 'services-links', label: 'Verify every service and CTA link', done: true },
+      { id: 'services-architecture-complete', label: 'Close the complete service-page architecture and QA pass', note: 'All nineteen service routes are built and connected. Thirty-eight mobile and desktop page checks passed across the estate, the hub passed at both widths and all thirty-six collected internal destinations returned successfully.', done: true },
+      { id: 'services-imagery', label: 'Replace the Services hub and growth-service image briefs with approved final assets', note: 'Twenty-four responsive placeholders are now implemented across the Services hub, growth-service template, About and Blog. The complete shot list and source sizes are recorded in IMAGE-PLACEHOLDERS.md.' },
+      { id: 'services-responsive', label: 'Complete mobile, tablet and desktop layout review', note: 'The hub was checked across the full 15-viewport matrix, including 1710px MacBook Air and 1920px desktop dimensions. The final nineteen-page estate also passed a closing 390px and 1440px audit with one H1, equal content grids, no broken images, no missing labels and no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'web-design', number: '03', title: 'Web Design', context: '/services/web-design/', kind: 'page', items: [
+      { id: 'web-layout', label: 'Core page design and visual direction approved', done: true },
+      { id: 'web-hero', label: 'Background work carousel and hero presentation approved', done: true },
+      { id: 'web-scope', label: 'Service scope and process blocks refined', done: true },
+      { id: 'web-copy', label: 'Approve final SEO and conversion copy', done: true },
+      { id: 'web-proof', label: 'Connect final Hear Better, RFT and ecommerce proof', done: true },
+      { id: 'web-placeholder', label: 'Replace the mobile-first grey image placeholder', done: true },
+      { id: 'web-responsive', label: 'Complete final line-break and responsive review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'ecommerce-design', number: '04', title: 'Ecommerce Web Design', context: '/services/ecommerce-web-design/', kind: 'page', items: [
+      { id: 'ecom-intent', label: 'Approve page intent and boundary from Shopify', done: true },
+      { id: 'ecom-copy', label: 'Write and approve the complete service copy', note: 'Research-led copy covers catalogue architecture, navigation, search, filtering, product pages, mobile shopping, cart and checkout handoffs, measurement and improvement boundaries.', done: true },
+      { id: 'ecom-design', label: 'Design the page within the service system', note: 'Built within the established editorial service-page system with a dedicated ecommerce accent, equal-depth outcomes, six delivery areas and a four-stage method.', done: true },
+      { id: 'ecom-proof', label: 'Add Heatons, UberKinky and Ya Omri proof', note: 'Heatons leads the qualitative proof with UberKinky and Ya Omri linked as supporting work. Final evidence and client approvals remain project-level tasks.', done: true },
+      { id: 'ecom-meta', label: 'Add metadata, schema and internal links', note: 'Page-specific metadata, WebPage, Service and breadcrumb schema, Services-directory placement, Shopify cross-link and related Shopify, Ecommerce SEO and Email links are implemented.', done: true },
+      { id: 'ecom-responsive', label: 'Complete responsive and accessibility review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with one H1, equal-height content grids, no horizontal overflow, valid proof imagery and no console errors.', done: true },
+    ],
+  },
+  {
+    id: 'shopify', number: '05', title: 'Shopify', context: '/services/shopify/', kind: 'page', items: [
+      { id: 'shopify-route', label: 'Initial service page and design system built', done: true },
+      { id: 'shopify-copy', label: 'Rewrite around Shopify design, development and growth', done: true },
+      { id: 'shopify-partner', label: 'Add the current approved Shopify Partner badge and wording', note: 'Supplied Shopify Partners asset converted to a white transparent version with the bag S preserved as negative space.', done: true },
+      { id: 'shopify-plus', label: 'Frame Shopify Plus experience accurately', note: 'References delivered Shopify Plus project experience without claiming Shopify Plus Partner status.', done: true },
+      { id: 'shopify-proof', label: 'Connect Heatons, UberKinky and Ya Omri proof', note: 'All three case studies are connected. Their final evidence, screenshots and quote approvals remain tracked under Selected Work.', done: true },
+      { id: 'shopify-links', label: 'Connect Shopify migrations, email and Meta Ads links', done: true },
+      { id: 'shopify-responsive', label: 'Complete final responsive review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with no horizontal overflow, missing images or structural accessibility issues.', done: true },
+    ],
+  },
+  {
+    id: 'shopify-migrations', number: '06', title: 'Shopify Migrations', context: '/services/shopify-migrations/', kind: 'page', items: [
+      { id: 'migration-route', label: 'Initial service page built', done: true },
+      { id: 'migration-copy', label: 'Approve data, redirects, SEO and launch-continuity copy', done: true },
+      { id: 'migration-limits', label: 'Document source-platform and order-data limitations', note: 'FAQ now covers passwords, gift cards, discount logic, subscriptions, app data and historical order-field limitations.', done: true },
+      { id: 'migration-proof', label: 'Complete the UberKinky Shopline to Shopify Plus case study', note: 'Core copy and delivery facts added. Final screenshots, sales evidence, search evidence and client quote approval remain.' },
+      { id: 'migration-checklist', label: 'Publish the Shopify migration checklist guide' },
+      { id: 'migration-responsive', label: 'Complete final responsive review', note: 'Checked from 320 to 1440 pixels. Repeated grids have equal heights with no clipped content or horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'custom-development', number: '07', title: 'Custom Web Development', context: '/services/custom-web-development/', kind: 'page', items: [
+      { id: 'custom-route', label: 'Initial service page built', done: true },
+      { id: 'custom-copy', label: 'Approve the public-facing platform and integration copy', done: true },
+      { id: 'custom-boundary', label: 'Clarify boundary from internal tools and software', done: true },
+      { id: 'custom-proof', label: 'Add TopDraw and RFT as relevant custom-development proof', done: true },
+      { id: 'custom-support', label: 'Define ownership, maintenance and support wording', done: true },
+      { id: 'custom-responsive', label: 'Complete final responsive review', note: 'Checked from 320 to 1440 pixels with equal-height cards, no clipped content and no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'custom-tools', number: '08', title: 'Custom Tools', context: '/services/custom-tools/', kind: 'page', items: [
+      { id: 'tools-route', label: 'Initial service page built', done: true },
+      { id: 'tools-copy', label: 'Approve the business software and efficiency copy', done: true },
+      { id: 'tools-examples', label: 'Add booking, portal, calculator, CRM and integration examples', done: true },
+      { id: 'tools-payments', label: 'Clarify client-owned payment-provider integration', done: true },
+      { id: 'tools-proof', label: 'Connect RFT and TopDraw as custom-tool and platform proof', done: true },
+      { id: 'tools-responsive', label: 'Complete final responsive review', note: 'Checked from 320 to 1440 pixels with equal-height cards, no clipped content and no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'seo', number: '09', title: 'SEO', context: '/services/seo/', kind: 'page', items: [
+      { id: 'seo-route', label: 'Initial service page built', done: true },
+      { id: 'seo-copy', label: 'Approve strategy, content, authority and reporting copy', note: 'Rewritten as the main SEO hub following a ten-agency competitor audit and current Google guidance.', done: true },
+      { id: 'seo-local', label: 'Define specialist Local, Technical and Ecommerce SEO boundaries', note: 'Distinct page ownership, delivery scope and internal links are now documented and implemented.', done: true },
+      { id: 'seo-proof', label: 'Complete Hear Better search evidence and methodology' },
+      { id: 'seo-guides', label: 'Publish the first SEO decision-stage guides' },
+      { id: 'seo-links', label: 'Connect SEO, AEO, Web Design and case-study links', done: true },
+      { id: 'seo-responsive', label: 'Complete final responsive review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with equal-height cards, one H1 and no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'local-seo', number: '10', title: 'Local SEO', context: '/services/local-seo/', kind: 'page', items: [
+      { id: 'local-seo-route', label: 'Build the dedicated Local SEO route and service-page structure', done: true },
+      { id: 'local-seo-copy', label: 'Write conversion-focused Local SEO copy around qualified enquiries', done: true },
+      { id: 'local-seo-boundary', label: 'Document Business Profile, locations, reviews and ranking limitations', note: 'Copy follows Google\'s relevance, distance and prominence framework and makes clear that positions cannot be guaranteed.', done: true },
+      { id: 'local-seo-proof', label: 'Complete approved Hear Better local-search evidence' },
+      { id: 'local-seo-links', label: 'Connect Web Design, Google Ads, SEO and Hear Better proof', done: true },
+      { id: 'local-seo-responsive', label: 'Complete responsive, accessibility and line-break review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with controlled heading wraps, equal-height cards and no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'technical-seo', number: '11', title: 'Technical SEO', context: '/services/technical-seo/', kind: 'page', items: [
+      { id: 'technical-seo-route', label: 'Build the dedicated Technical SEO route and service-page structure', done: true },
+      { id: 'technical-seo-copy', label: 'Write crawl, indexation, architecture and performance copy', done: true },
+      { id: 'technical-seo-implementation', label: 'Define audit, developer-ticket and implementation ownership', note: 'The page distinguishes direct implementation from support where client access or development ownership sits elsewhere.', done: true },
+      { id: 'technical-seo-proof', label: 'Complete approved technical and migration evidence' },
+      { id: 'technical-seo-links', label: 'Connect Custom Development, Shopify Migrations, SEO and relevant proof', done: true },
+      { id: 'technical-seo-responsive', label: 'Complete responsive, accessibility and line-break review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with equal-height cards, readable technical content and no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'ecommerce-seo', number: '12', title: 'Ecommerce SEO', context: '/services/ecommerce-seo/', kind: 'page', items: [
+      { id: 'ecommerce-seo-route', label: 'Build the dedicated Ecommerce SEO route and service-page structure', done: true },
+      { id: 'ecommerce-seo-copy', label: 'Write category, product, catalogue and organic-revenue copy', done: true },
+      { id: 'ecommerce-seo-boundary', label: 'Define Shopify SEO, catalogue control and Merchant Center boundaries', done: true },
+      { id: 'ecommerce-seo-proof', label: 'Complete approved Heatons and UberKinky ecommerce SEO evidence' },
+      { id: 'ecommerce-seo-links', label: 'Connect Shopify, Migrations, Email Marketing and ecommerce proof', done: true },
+      { id: 'ecommerce-seo-responsive', label: 'Complete responsive, accessibility and line-break review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with equal-height cards, readable service navigation and no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'aeo', number: '13', title: 'AEO', context: '/services/aeo/', kind: 'page', items: [
+      { id: 'aeo-route', label: 'Initial service page built', done: true },
+      { id: 'aeo-copy', label: 'Approve truthful AEO scope and monitoring language', note: 'Scope is based on a documented prompt set, citation review, first-party referral data and qualified outcomes. No inclusion guarantees or universal visibility score.', done: true },
+      { id: 'aeo-boundary', label: 'Explain the distinct intent and shared SEO foundations', note: 'The page owns AI-answer visibility and monitoring while explicitly retaining crawlability, indexation, useful content and authority as shared SEO foundations.', done: true },
+      { id: 'aeo-proof', label: 'Document Hear Better AI-search evidence' },
+      { id: 'aeo-guide', label: 'Publish the AEO vs SEO guide' },
+      { id: 'aeo-responsive', label: 'Complete final responsive review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with one H1, equal-height content grids, no horizontal overflow and the lazy-loaded proof image verified.', done: true },
+    ],
+  },
+  {
+    id: 'google-ads', number: '14', title: 'Google Ads', context: '/services/google-ads/', kind: 'page', items: [
+      { id: 'google-route', label: 'Initial service page built', done: true },
+      { id: 'google-copy', label: 'Approve campaign, tracking, landing-page and reporting copy', note: 'Rewritten around qualified demand, conversion-goal quality, offline outcomes, account ownership, consent-aware measurement and commercially useful reporting.', done: true },
+      { id: 'google-boundary', label: 'Confirm Shopping, Performance Max and Microsoft Ads scope', note: 'Search is the core offer. Shopping and Performance Max are conditional on ecommerce fit, product data, Merchant Center, creative and value tracking. Microsoft Ads is separately scoped.', done: true },
+      { id: 'google-proof', label: 'Record the period and source for Hear Better 10x ROAS' },
+      { id: 'google-guide', label: 'Publish the Google Ads audit guide' },
+      { id: 'google-partner', label: 'Begin the Google Partners accreditation roadmap' },
+      { id: 'google-responsive', label: 'Complete final responsive review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with one H1, equal-height content grids, no horizontal overflow and the lazy-loaded proof image verified.', done: true },
+    ],
+  },
+  {
+    id: 'ecommerce-ppc', number: '15', title: 'Ecommerce PPC', context: '/services/ecommerce-ppc/', kind: 'page', items: [
+      { id: 'ecommerce-ppc-route', label: 'Build the dedicated Ecommerce PPC route', done: true },
+      { id: 'ecommerce-ppc-copy', label: 'Write and approve the complete retail paid-media copy', note: 'The page covers catalogue economics, Merchant Center, feed quality, Shopping, retail Performance Max, Search alignment, transaction values and product-level optimisation.', done: true },
+      { id: 'ecommerce-ppc-boundary', label: 'Define feed, policy, measurement and performance boundaries', note: 'The page does not guarantee Merchant Center approval, reinstatement, impressions, sales, profitability or ROAS. Client-owned source data, stock, pricing, margins, fulfilment and platform decisions remain visible dependencies.', done: true },
+      { id: 'ecommerce-ppc-proof', label: 'Complete a verified Ecommerce PPC evidence record', note: 'UberKinky provides catalogue and advertising-readiness context, supported by Heatons. Direct campaign performance, Merchant Center and feed-improvement evidence still requires approval.' },
+      { id: 'ecommerce-ppc-imagery', label: 'Replace the retail-media placeholder with approved campaign imagery' },
+      { id: 'ecommerce-ppc-responsive', label: 'Complete final responsive, accessibility and line-break review', note: 'Checked at 390, 768, 1024, 1440, 1710 and 1920 pixels with one H1, equal-height outcome, scope, method and related-service cards, no horizontal overflow, complete accessible names and clean internal links across Google Ads, the homepage and Services hub.', done: true },
+    ],
+  },
+  {
+    id: 'meta-ads', number: '16', title: 'Meta Ads', context: '/services/meta-ads/', kind: 'page', items: [
+      { id: 'meta-route', label: 'Initial service page built', done: true },
+      { id: 'meta-copy', label: 'Approve strategy, creative-testing and measurement copy', note: 'Rewritten around the offer, Advantage+ decisions, Pixel and Conversions API, consent, destination experience, customer quality and commercial reporting.', done: true },
+      { id: 'meta-creative', label: 'Define the creative-production boundary', note: 'Core management can include strategy, briefs, copy and variants from approved assets. Shoots, creators, UGC, video, substantial editing, licensing and high-volume production are separately scoped.', done: true },
+      { id: 'meta-proof', label: 'Complete an approved Meta Ads case study', note: 'Heatons is connected as the proof project. Performance evidence and client approval remain.' },
+      { id: 'meta-partner', label: 'Review Meta agency eligibility and training' },
+      { id: 'meta-responsive', label: 'Complete final responsive review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with one H1, equal-height content grids, no horizontal overflow and the lazy-loaded Heatons proof image verified.', done: true },
+    ],
+  },
+  {
+    id: 'email-marketing', number: '17', title: 'Email Marketing', context: '/services/email-marketing/', kind: 'page', items: [
+      { id: 'email-route', label: 'Initial service page built', done: true },
+      { id: 'email-copy', label: 'Approve campaign, flow, segmentation and retention copy', note: 'Rewritten around permission, customer data, campaigns, lifecycle flows, capture, deliverability, testing, attribution limits and repeat value after official-platform and ten-agency research.', done: true },
+      { id: 'email-platforms', label: 'Confirm Klaviyo-preferred and Mailchimp-supported wording', note: 'Klaviyo is preferred for deeper Shopify data and ecommerce lifecycle work. Mailchimp remains supported for suitable existing accounts, service businesses and simpler programmes. A separate Klaviyo page is deferred.', done: true },
+      { id: 'email-proof', label: 'Complete Heatons email evidence and outcome' },
+      { id: 'email-guide', label: 'Publish the Klaviyo vs Mailchimp guide' },
+      { id: 'email-partner', label: 'Apply to Klaviyo K:Partners when evidence is ready' },
+      { id: 'email-responsive', label: 'Complete final responsive review', note: 'Checked at 320, 390, 768, 1024 and 1440 pixels with one H1, equal-height content grids, no horizontal overflow, the lazy-loaded Heatons proof image verified and no console errors.', done: true },
+    ],
+  },
+  {
+    id: 'conversion-rate-optimisation', number: '18', title: 'Conversion Rate Optimisation', context: '/services/conversion-rate-optimisation/', kind: 'page', items: [
+      { id: 'cro-route', label: 'Build the dedicated CRO route and service-page structure', done: true },
+      { id: 'cro-copy', label: 'Write and approve evidence-led CRO service copy', note: 'The page covers measurement readiness, journey review, customer evidence, hypothesis prioritisation, implementation, responsible testing and the limits of low-volume data.', done: true },
+      { id: 'cro-boundary', label: 'Define the testing, implementation and measurement boundaries', note: 'A/B testing is used only when traffic, platform control, consent and measurement support it. Lower-volume work uses clearly labelled research and before-and-after evidence without false statistical claims.', done: true },
+      { id: 'cro-proof', label: 'Complete a verified CRO evidence record', note: 'Heatons leads the contextual proof, supported by Hear Better, UberKinky and Ya Omri. A controlled or properly caveated before-and-after result remains required.' },
+      { id: 'cro-imagery', label: 'Replace the CRO diagnostic placeholder with approved imagery' },
+      { id: 'cro-responsive', label: 'Complete final responsive, accessibility and line-break review', note: 'Checked at 390, 768, 1024, 1440, 1710 and 1920 pixels with one H1, equal-height outcome, scope, method and related-service cards, no horizontal overflow and clean internal links across the homepage and Services hub.', done: true },
+    ],
+  },
+  {
+    id: 'analytics-conversion-tracking', number: '19', title: 'Analytics and Conversion Tracking', context: '/services/analytics-conversion-tracking/', kind: 'page', items: [
+      { id: 'analytics-route', label: 'Build the dedicated analytics and tracking route', done: true },
+      { id: 'analytics-copy', label: 'Write and approve the complete measurement service copy', note: 'The page covers planning, GA4, GTM, ecommerce events, advertising signals, enhanced conversions, Pixel, CAPI, calls, CRM outcomes, validation and reporting.', done: true },
+      { id: 'analytics-boundary', label: 'Define consent, attribution and server-side tracking boundaries', note: 'The page does not promise perfect attribution, treat server-side delivery as a consent bypass or imply that improved signals guarantee stronger advertising performance.', done: true },
+      { id: 'analytics-proof', label: 'Complete a verified analytics implementation record', note: 'Heatons leads the contextual proof with Hear Better and UberKinky supporting. Final screenshots, event specifications and approved evidence remain required.' },
+      { id: 'analytics-imagery', label: 'Replace the analytics diagnostic placeholder with approved imagery' },
+      { id: 'analytics-responsive', label: 'Complete final responsive, accessibility and line-break review', note: 'Checked at 390, 768, 1024, 1440, 1710 and 1920 pixels with one H1, equal-height outcome, scope, method and related-service cards, no horizontal overflow and clean internal links across the CRO page, homepage and Services hub.', done: true },
+    ],
+  },
+  {
+    id: 'branding', number: '20', title: 'Branding and Brand Identity', context: '/services/branding/', kind: 'page', items: [
+      { id: 'branding-route', label: 'Build the dedicated branding and brand identity route', done: true },
+      { id: 'branding-copy', label: 'Write and approve the complete brand identity service copy', note: 'The page covers discovery, positioning inputs, creative direction, logo systems, typography, colour, imagery, graphic language, guidelines and practical rollout.', done: true },
+      { id: 'branding-boundary', label: 'Define naming, research, production and legal boundaries', note: 'Naming, extensive research, photography, illustration, packaging, print production and campaign asset volumes are separately scoped. CNVRT does not provide trademark clearance or attribute wider programme results to branding alone.', done: true },
+      { id: 'branding-proof', label: 'Complete the verified branding evidence record', note: 'Heatons leads the rebrand context with Hear Better, RFT and TopDraw supporting. Final identity assets, approved testimonial evidence and application screenshots remain required.' },
+      { id: 'branding-imagery', label: 'Replace the brand-system placeholder with approved identity imagery' },
+      { id: 'branding-responsive', label: 'Complete final responsive, accessibility and line-break review', note: 'Checked at 390, 768, 1024, 1440, 1710 and 1920 pixels with one H1, equal-height outcome, scope, method and related-service cards, no horizontal overflow, complete accessible names and clean internal links across the homepage and Services hub.', done: true },
+    ],
+  },
+  {
+    id: 'website-support-maintenance', number: '21', title: 'Website Support and Continuous Improvement', context: '/services/website-support-maintenance/', kind: 'page', items: [
+      { id: 'support-route', label: 'Build the dedicated website support and maintenance route', done: true },
+      { id: 'support-copy', label: 'Write and approve the retained support service copy', note: 'The page covers onboarding, issue triage, platform care, retained design and development, Shopify trading support, analytics and continuous improvement.', done: true },
+      { id: 'support-boundary', label: 'Define platform, capacity, response and hosting boundaries', note: 'Existing CNVRT builds receive priority, inherited systems require paid review, monthly work uses allocated capacity and response targets do not guarantee resolution. Unlimited requests and 24/7 emergency support are explicitly excluded.', done: true },
+      { id: 'support-proof', label: 'Complete a verified retained-support evidence record', note: 'Hear Better leads the ongoing improvement context, supported by Heatons, UberKinky and RFT. Final backlog examples, support-period evidence and approved client commentary remain required.' },
+      { id: 'support-imagery', label: 'Replace the support-cycle placeholder with approved working imagery' },
+      { id: 'support-responsive', label: 'Complete final responsive, accessibility and line-break review', note: 'Checked at 390, 768, 1024, 1440, 1710 and 1920 pixels with one H1, equal-height outcome, scope, method and related-service cards, no horizontal overflow, complete accessible names and clean internal links across the homepage and Services hub.', done: true },
+    ],
+  },
+  {
+    id: 'work', number: '22', title: 'Work and case studies', context: '/work/', kind: 'page', items: [
+      { id: 'work-hub', label: 'Selected Work hub built', done: true },
+      { id: 'work-hear', label: 'Complete final Hear Better evidence record and service links' },
+      { id: 'work-uber', label: 'Complete UberKinky case-study narrative and layout', note: 'Final screenshots, sales evidence, search evidence and Richard Tropez quote approval remain.', done: true },
+      { id: 'work-topdraw', label: 'Complete TopDraw case-study narrative and layout', note: 'Final platform screenshots and Aaron Smith quote approval remain.', done: true },
+      { id: 'work-heatons', label: 'Complete Heatons Furniture case-study narrative and layout', note: 'Final screenshots, performance evidence and Tony Keigher quote approval remain.', done: true },
+      { id: 'work-rft', label: 'Complete RFT Recruitment case-study narrative and layout', note: 'Final screenshots, domain confirmation and Martyna Dudek quote approval remain.', done: true },
+      { id: 'work-yaomri', label: 'Complete Ya Omri case-study narrative and layout', note: 'Final screenshots and Helen Areguy quote approval remain.', done: true },
+      { id: 'work-placeholders', label: 'Remove every placeholder metric and image' },
+      { id: 'work-responsive', label: 'Complete final responsive review across every case study', note: 'All six case studies and the Work hub were checked across the full 15-viewport matrix, including short landscape, tablet, laptop, 1710px MacBook Air and 1920px desktop dimensions, with no clipped text or horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'about', number: '23', title: 'About', context: '/about/', kind: 'page', items: [
+      { id: 'about-route', label: 'Initial About page built', done: true },
+      { id: 'about-bio', label: 'Approve Daniel Lyons biography and level of visibility' },
+      { id: 'about-links', label: 'Add approved professional profile links' },
+      { id: 'about-image', label: 'Add the final portrait or working image' },
+      { id: 'about-claims', label: 'Verify experience and project-count statements' },
+      { id: 'about-responsive', label: 'Complete final responsive review', note: 'Checked across the full 15-viewport matrix with one H1, no clipped text and no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'blog', number: '24', title: 'Blog and topical authority', context: '/blog/', kind: 'page', items: [
+      { id: 'blog-hub', label: 'Blog hub foundation built', done: true },
+      { id: 'blog-template', label: 'Build and approve the reusable article template', note: 'The template includes a direct answer, linked table of contents, author and dates, long-form content patterns, source lists, relevant next steps and accessible responsive behaviour.', done: true },
+      { id: 'blog-author', label: 'Add authorship, review dates and Article schema', note: 'Daniel Lyons is shown as the responsible author with an About-page link. Visible published and reviewed dates match BlogPosting, WebPage and BreadcrumbList schema.', done: true },
+      { id: 'blog-first-three', label: 'Publish the three homepage-featured guides', note: 'Three substantial guides are implemented as indexable static routes. Final production deployment remains a separate release action.', done: true },
+      { id: 'blog-internal', label: 'Connect each guide to a service and relevant case study', note: 'Each guide includes contextual service links, a relevant field note and dedicated service and case-study next-step cards.', done: true },
+      { id: 'blog-images', label: 'Create final editorial social and article imagery', note: 'Relevant project imagery and large-image social metadata are implemented. Bespoke multi-ratio editorial artwork can replace these assets later without changing the template.' },
+      { id: 'blog-responsive', label: 'Complete article and hub responsive review', note: 'The hub and three articles passed 24 checks across 390, 768, 1024, 1440, 1710 and 1920px with one H1, intact contents links and no horizontal overflow.', done: true },
+    ],
+  },
+  {
+    id: 'enquiries', number: '25', title: 'Enquiries and conversion', context: 'Forms and routes', kind: 'project', items: [
+      { id: 'forms-routes', label: 'Contact, project, audit and thank-you routes built', done: true },
+      { id: 'forms-fields', label: 'Approve final qualification fields and budget choices', note: 'Contact, project and audit variants now collect only the context each route needs. Project budgets run from £1,000 to £3,000 through £15,000+, with a Not sure yet route.', done: true },
+      { id: 'forms-supabase-build', label: 'Build the Supabase enquiry data layer and admin', note: 'The local build includes the enquiry schema, admin allowlist, row-level security, validated Edge Function and authenticated commercial workspace.', done: true },
+      { id: 'forms-admin-workflow', label: 'Turn the admin into a useful daily sales workflow', note: 'The Today queue prioritises overdue, due-today and unreviewed enquiries. Each opportunity now carries a next action, due date, priority, fit, value, expected close date, reason when lost and a chronological activity history.', done: true },
+      { id: 'forms-processor', label: 'Configure and deploy the production Supabase project', note: 'Apply the migration, deploy the submit-enquiry Edge Function, configure public build variables and protected function secrets, then complete the production acceptance test.' },
+      { id: 'forms-inbox', label: 'Connect notifications to the correct inbox', note: 'The Supabase admin is the persistent enquiry inbox. Choose the alert provider and run a delivered-email test without making notification success a condition of database persistence.' },
+      { id: 'forms-spam', label: 'Configure spam protection', note: 'Client duplicate protection is joined by server-side origin, payload-size, field, honeypot, duration, duplicate and rate-limit checks. Production thresholds still need acceptance testing.', done: true },
+      { id: 'forms-success', label: 'Test success, validation, failure and duplicate submissions', note: 'All four client journeys were tested locally across the shared handler. A final delivered-submission test is still required on the chosen production host.', done: true },
+      { id: 'forms-analytics', label: 'Track qualified enquiry completions', note: 'The thank-you route emits qualified_enquiry to dataLayer and a cnvrt:qualified-enquiry browser event once per successful session. GA4 or GTM mapping remains.' },
+    ],
+  },
+  {
+    id: 'launch', number: '26', title: 'Technical launch', context: 'Site-wide', kind: 'project', items: [
+      { id: 'launch-legal', label: 'Confirm and approve the substantive legal policies', note: 'Privacy, cookies, accessibility and website terms now reflect the current forms, Supabase admin, Netlify preview cookie and essential-only tracking position. Confirm the exact legal operator, registered details, production provider regions and retention practice before final approval.' },
+      { id: 'launch-domain', label: 'Confirm the canonical production domain', note: 'The canonical and live production domain is https://cnvrtdigital.co.uk.', done: true },
+      { id: 'launch-redirects', label: 'Export old URLs and complete the redirect map' },
+      { id: 'launch-noindex', label: 'Remove production noindex while keeping previews noindexed', note: 'The current private preview is intentionally blocked by the Edge Function and its password page is noindex. Complete this task only when the public launch is approved.' },
+      { id: 'launch-robots', label: 'Verify robots.txt, sitemap and canonical URLs', note: 'The generated-site audit confirms the production robots file, sitemap index, sitemap membership and all indexable canonical URLs. Noindexed utility routes and the custom 404 are excluded from the sitemap.', done: true },
+      { id: 'launch-ga4', label: 'Configure GA4 and consent requirements' },
+      { id: 'launch-gsc', label: 'Configure Google Search Console and Bing Webmaster Tools' },
+      { id: 'launch-performance', label: 'Complete performance, accessibility and browser testing' },
+      { id: 'launch-links', label: 'Run the final broken-link and one-H1 audit', note: 'All 44 generated pages pass internal route, fragment, one-H1, main landmark, image source, accessible link name, duplicate ID and structured-data checks with zero structural errors.', done: true },
+      { id: 'launch-404', label: 'Build and verify a useful custom 404 page', note: 'The branded route keeps the CNVRT visual system, provides clear recovery links, remains noindexed and returns a genuine HTTP 404 response.', done: true },
+      { id: 'launch-deploy', label: 'Deploy only after Daniel gives explicit approval', note: 'Daniel approved deployment on 17 July 2026. The verified build is live behind the secure private-preview gate and the deploy is pinned against accidental replacement.', done: true },
+    ],
+  },
+];
+
+const total = sections.reduce((sum, section) => sum + section.items.length, 0);
+const completed = sections.reduce((sum, section) => sum + section.items.filter((item) => item.done).length, 0);
+---
+
+<BaseLayout title="CNVRT Project Checklist" description="Private working checklist for the CNVRT website project." robots="noindex, nofollow">
+  <SiteHeader />
+  <main id="main" class="checklist-page" data-checklist-root data-default-completed={completed} data-total={total}>
+    <section class="checklist-hero">
+      <div class="checklist-hero__grid" aria-hidden="true"></div>
+      <div class="shell checklist-hero__layout">
+        <div class="section-rail section-rail--inverse"><span>CNVRT</span><span>Project control</span><span>Local checklist</span></div>
+        <div class="checklist-hero__copy">
+          <div>
+            <span class="menu-label">Website completion tracker</span>
+            <h1>See what is done.<br /><span>Know what is next.</span></h1>
+          </div>
+          <p>Tick work off as it is approved. Progress is saved in this browser and organised by page, proof, content and launch readiness.</p>
+        </div>
+        <div class="checklist-summary" aria-live="polite">
+          <div class="checklist-summary__figure"><strong data-progress-percent>{Math.round((completed / total) * 100)}%</strong><span>complete</span></div>
+          <div class="checklist-summary__bar"><i data-progress-bar style={`--progress: ${(completed / total) * 100}%`}></i></div>
+          <dl>
+            <div><dt>Completed</dt><dd data-completed-count>{completed}</dd></div>
+            <div><dt>Remaining</dt><dd data-remaining-count>{total - completed}</dd></div>
+            <div><dt>Total</dt><dd>{total}</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="checklist-body section-pad">
+      <div class="shell">
+        <div class="checklist-toolbar">
+          <div class="checklist-filters" role="group" aria-label="Filter checklist sections">
+            <button type="button" class="is-active" data-filter="all">All</button>
+            <button type="button" data-filter="active">In progress</button>
+            <button type="button" data-filter="pending">Not started</button>
+            <button type="button" data-filter="complete">Complete</button>
+          </div>
+          <button type="button" class="checklist-reset" data-reset-checklist>Reset saved ticks</button>
+        </div>
+
+        <div class="checklist-sections">
+          {sections.map((section, index) => {
+            const sectionDone = section.items.filter((item) => item.done).length;
+            return (
+              <details class="checklist-section" data-section data-kind={section.kind} open={index < 2}>
+                <summary>
+                  <span class="checklist-section__number">{section.number}</span>
+                  <span class="checklist-section__heading"><strong>{section.title}</strong><small>{section.context}</small></span>
+                  <span class="checklist-section__progress"><b data-section-count>{sectionDone}/{section.items.length}</b><i><em data-section-bar style={`--section-progress: ${(sectionDone / section.items.length) * 100}%`}></em></i></span>
+                  <span class="checklist-section__toggle" aria-hidden="true"></span>
+                </summary>
+                <div class="checklist-items">
+                  {section.items.map((item) => (
+                    <label class="checklist-item">
+                      <input type="checkbox" data-check-id={item.id} checked={item.done} />
+                      <span class="checklist-item__box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="m3 8.5 3.1 3L13 4.8" /></svg></span>
+                      <span class="checklist-item__copy"><strong>{item.label}</strong>{item.note && <small>{item.note}</small>}</span>
+                    </label>
+                  ))}
+                </div>
+              </details>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const storageKey = 'cnvrt-project-checklist-v8';
+    const previousStorageKey = 'cnvrt-project-checklist-v7';
+    const root = document.querySelector<HTMLElement>('[data-checklist-root]');
+    const checks = Array.from(document.querySelectorAll<HTMLInputElement>('[data-check-id]'));
+    const sections = Array.from(document.querySelectorAll<HTMLDetailsElement>('[data-section]'));
+    const filters = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+    const defaults = Object.fromEntries(checks.map((input) => [input.dataset.checkId!, input.defaultChecked]));
+
+    const readSaved = () => {
+      try {
+        const current = localStorage.getItem(storageKey);
+        if (current) return JSON.parse(current) as Record<string, boolean>;
+        const previous = JSON.parse(localStorage.getItem(previousStorageKey) || '{}') as Record<string, boolean>;
+        if (!Object.keys(previous).length) return {};
+        const migrated: Record<string, boolean> = { ...previous, 'work-responsive': true, 'about-responsive': true };
+        localStorage.setItem(storageKey, JSON.stringify(migrated));
+        return migrated;
+      }
+      catch { return {}; }
+    };
+
+    const save = () => {
+      const state = Object.fromEntries(checks.map((input) => [input.dataset.checkId!, input.checked]));
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    };
+
+    const sectionStatus = (section: HTMLDetailsElement) => {
+      const sectionChecks = Array.from(section.querySelectorAll<HTMLInputElement>('[data-check-id]'));
+      const done = sectionChecks.filter((input) => input.checked).length;
+      if (done === sectionChecks.length) return 'complete';
+      if (done === 0) return 'pending';
+      return 'active';
+    };
+
+    const update = () => {
+      const done = checks.filter((input) => input.checked).length;
+      const percent = checks.length ? Math.round((done / checks.length) * 100) : 0;
+      root?.querySelector<HTMLElement>('[data-progress-percent]')?.replaceChildren(`${percent}%`);
+      root?.querySelector<HTMLElement>('[data-completed-count]')?.replaceChildren(String(done));
+      root?.querySelector<HTMLElement>('[data-remaining-count]')?.replaceChildren(String(checks.length - done));
+      root?.querySelector<HTMLElement>('[data-progress-bar]')?.style.setProperty('--progress', `${percent}%`);
+
+      sections.forEach((section) => {
+        const sectionChecks = Array.from(section.querySelectorAll<HTMLInputElement>('[data-check-id]'));
+        const sectionDone = sectionChecks.filter((input) => input.checked).length;
+        const sectionPercent = sectionChecks.length ? (sectionDone / sectionChecks.length) * 100 : 0;
+        section.dataset.status = sectionStatus(section);
+        section.querySelector<HTMLElement>('[data-section-count]')?.replaceChildren(`${sectionDone}/${sectionChecks.length}`);
+        section.querySelector<HTMLElement>('[data-section-bar]')?.style.setProperty('--section-progress', `${sectionPercent}%`);
+      });
+    };
+
+    const applyFilter = (filter: string) => {
+      sections.forEach((section) => { section.hidden = filter !== 'all' && section.dataset.status !== filter; });
+      filters.forEach((button) => button.classList.toggle('is-active', button.dataset.filter === filter));
+    };
+
+    const saved = readSaved();
+    checks.forEach((input) => {
+      const id = input.dataset.checkId!;
+      if (Object.prototype.hasOwnProperty.call(saved, id)) input.checked = saved[id] ?? false;
+      input.addEventListener('change', () => { save(); update(); });
+    });
+
+    filters.forEach((button) => button.addEventListener('click', () => applyFilter(button.dataset.filter || 'all')));
+    document.querySelector<HTMLButtonElement>('[data-reset-checklist]')?.addEventListener('click', () => {
+      if (!window.confirm('Reset every tick to the project defaults?')) return;
+      checks.forEach((input) => { input.checked = defaults[input.dataset.checkId!] ?? false; });
+      localStorage.removeItem(storageKey);
+      localStorage.removeItem(previousStorageKey);
+      update();
+      applyFilter('all');
+    });
+
+    update();
+  </script>
+</BaseLayout>

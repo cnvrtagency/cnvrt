@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.netlify/
+.vercel/
+.DS_Store
+*.tsbuildinfo
+
+.env
+.env.*
+!.env.example
+
+supabase/.temp/
+tmp/

@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import '@/styles/foundation-pages.css';
+---
+
+<BaseLayout title="Enquiry received | CNVRT" description="CNVRT has received your enquiry." robots="noindex, follow">
+  <SiteHeader />
+  <main id="main" class="thank-you">
+    <div class="shell thank-you__content">
+      <span class="menu-label">Enquiry received</span>
+      <h1>Thank you.<br />CNVRT will be in touch.</h1>
+      <p data-thank-you-copy>Your enquiry has been submitted. CNVRT normally responds within one working day.</p>
+      <a class="button button--paper" href="/">Return to the homepage <span aria-hidden="true">↗</span></a>
+    </div>
+  </main>
+  <script>
+    const formNames: Record<string, string> = {
+      'homepage-enquiry': 'homepage enquiry',
+      'contact-enquiry': 'enquiry',
+      'project-enquiry': 'project enquiry',
+      'audit-request': 'audit request',
+    };
+    const form = new URLSearchParams(window.location.search).get('form') || 'enquiry';
+    const copy = document.querySelector<HTMLElement>('[data-thank-you-copy]');
+    if (copy && formNames[form]) copy.textContent = `Your ${formNames[form]} has been submitted. CNVRT normally responds within one working day.`;
+
+    try {
+      const success = JSON.parse(sessionStorage.getItem('cnvrt:enquiry-success') || 'null') as { form?: string; time?: number; tracked?: boolean } | null;
+      if (success?.form === form && success.time && Date.now() - success.time < 1_800_000 && !success.tracked) {
+        const eventDetail = { form_name: form, page_path: window.location.pathname };
+        const dataLayer = (window as Window & { dataLayer?: Record<string, unknown>[] }).dataLayer;
+        dataLayer?.push({ event: 'qualified_enquiry', ...eventDetail });
+        window.dispatchEvent(new CustomEvent('cnvrt:qualified-enquiry', { detail: eventDetail }));
+        sessionStorage.setItem('cnvrt:enquiry-success', JSON.stringify({ ...success, tracked: true }));
+      }
+    } catch {
+      // A blocked storage API must not interrupt the confirmation page.
+    }
+  </script>
+</BaseLayout>

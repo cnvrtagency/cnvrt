@@ -1,0 +1,47 @@
+---
+import { Image, getImage } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  portraitSrc?: ImageMetadata | undefined;
+  alt: string;
+  widths: number[];
+  sizes: string;
+  loading?: 'eager' | 'lazy';
+  decorative?: boolean;
+}
+
+const {
+  src,
+  portraitSrc,
+  alt,
+  widths,
+  sizes,
+  loading = 'lazy',
+  decorative = false,
+} = Astro.props;
+
+const portrait = portraitSrc
+  ? await getImage({ src: portraitSrc, width: 900, height: 1125, fit: 'cover', format: 'webp', quality: 84 })
+  : undefined;
+---
+
+<picture class="responsive-project-image">
+  {portrait && <source media="(max-width: 47.99rem)" srcset={portrait.src} width="900" height="1125" />}
+  <Image src={src} alt={decorative ? '' : alt} widths={widths} sizes={sizes} loading={loading} />
+</picture>
+
+<style>
+  .responsive-project-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .responsive-project-image :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

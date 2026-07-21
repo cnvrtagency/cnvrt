@@ -1,0 +1,28 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+const configured = Boolean(import.meta.env.PUBLIC_SUPABASE_URL?.trim() && import.meta.env.PUBLIC_SUPABASE_ANON_KEY?.trim());
+---
+
+<AdminLayout title="Set up CNVRT workspace access" description="Secure first-time setup for the CNVRT private workspace." skipLabel="Skip to account setup">
+  <main class="admin-login" id="admin-main" data-admin-setup data-configured={String(configured)}>
+    <div class="admin-login__brand"><img class="admin-logo" src="/brand/cnvrt-logo.png" alt="CNVRT" width="800" height="200" /><small>Workspace access / Secure setup</small></div>
+    <div class="admin-login__panel">
+      <span class="admin-kicker">Administrator invitation</span>
+      <h1>Choose your secure<br />workspace password.</h1>
+      <p data-setup-intro>This invitation gives you access to CNVRT enquiries, clients and onboarding projects.</p>
+      <form class="admin-login__form" data-setup-form hidden>
+        <div class="admin-field"><label for="setup-password">New password</label><input id="setup-password" name="password" type="password" minlength="12" autocomplete="new-password" required /><small>Use at least 12 characters and a password you do not use elsewhere.</small></div>
+        <div class="admin-field"><label for="setup-confirm">Confirm password</label><input id="setup-confirm" name="confirm" type="password" minlength="12" autocomplete="new-password" required /></div>
+        <p class="admin-form-status" data-setup-status role="status" aria-live="polite">Checking your invitation…</p>
+        <button class="admin-button admin-button--primary" type="submit">Set password and enter workspace <span>↗</span></button>
+      </form>
+      <div class="admin-config-warning" data-setup-error hidden><strong>Invitation unavailable</strong><p data-setup-error-message>Open the complete invitation link from your email, or ask CNVRT to send a new one.</p></div>
+    </div>
+    <div class="admin-login__foot"><span>Protected by Supabase Auth</span><span>CNVRT / Manchester</span></div>
+  </main>
+</AdminLayout>
+
+<script>
+  import { initialiseAdminSetup } from '@/scripts/admin-setup';
+  initialiseAdminSetup();
+</script>

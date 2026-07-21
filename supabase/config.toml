@@ -1,0 +1,13 @@
+project_id = "cnvrt-local"
+
+[functions.submit-enquiry]
+verify_jwt = false
+
+[functions.client-portal]
+verify_jwt = false
+
+[functions.discovery-questionnaire-v2]
+verify_jwt = false
+
+[functions.invoice]
+verify_jwt = false

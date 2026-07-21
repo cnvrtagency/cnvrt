@@ -1,0 +1,29 @@
+---
+interface Props {
+  number?: string;
+  eyebrow: string;
+  context: string;
+  lines: string[];
+  intro: string[];
+}
+
+const { number = '01', eyebrow, context, lines, intro } = Astro.props;
+---
+
+<section class="foundation-hero">
+  <div class="foundation-hero__grid" aria-hidden="true"></div>
+  <div class="shell">
+    <div class="section-rail section-rail--inverse" data-reveal>
+      <span>{number}</span><span>{eyebrow}</span><span>{context}</span>
+    </div>
+    <div class="foundation-hero__layout">
+      <h1 class="hero-title foundation-hero__title" data-reveal="hero-title">
+        {lines.map((line) => <span class="hero-title__line"><span class="hero-title__inner">{line}</span></span>)}
+      </h1>
+      <div class="foundation-hero__support" data-reveal style="--reveal-index: 3">
+        <div class="foundation-hero__intro">{intro.map((paragraph) => <p>{paragraph}</p>)}</div>
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>

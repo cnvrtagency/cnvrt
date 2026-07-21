@@ -1,0 +1,46 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import FoundationHero from '@/components/FoundationHero.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import '@/styles/foundation-pages.css';
+
+const pageUrl = new URL('/contact/', Astro.site).href;
+const schema = [{
+  '@type': 'ContactPage',
+  '@id': `${pageUrl}#contact`,
+  url: pageUrl,
+  name: 'Contact CNVRT',
+  isPartOf: { '@id': `${Astro.site}#website` },
+}];
+---
+
+<BaseLayout title="Contact CNVRT | Manchester Digital Agency" description="Contact CNVRT about branding, web design, Shopify, paid media, ecommerce PPC, email, CRO, analytics, website support, SEO, AEO or a custom digital requirement." additionalSchema={schema}>
+  <SiteHeader />
+  <main id="main" class="foundation-page">
+    <FoundationHero eyebrow="Contact" context="Response within one working day" lines={['Tell us where', 'growth is stuck', 'or could go next.']} intro={[
+      'Share the goal, the current constraint and what useful progress would look like. CNVRT will respond with the most credible next step.',
+      'For a defined website, ecommerce or software requirement, the project form collects more useful detail. For a focused review, request an audit.',
+    ]}>
+      <div class="foundation-cta__actions"><a class="button button--paper" href="/submit-a-project/">Submit a project <span aria-hidden="true">↗</span></a><a class="text-link" href="/request-an-audit/">Request an audit <span aria-hidden="true">↗</span></a></div>
+    </FoundationHero>
+
+    <section class="foundation-form-section section-pad">
+      <div class="shell foundation-form-layout">
+        <div class="foundation-form-context" data-reveal>
+          <span class="menu-label">A clear first response</span>
+          <h2>Enough context to make the next conversation useful.</h2>
+          <p>CNVRT will review the enquiry, ask for anything essential that is missing and suggest a practical next step.</p>
+          <dl>
+            <div><dt>Email</dt><dd><a href="mailto:hello@cnvrtdigital.co.uk">hello@cnvrtdigital.co.uk</a></dd></div>
+            <div><dt>Location</dt><dd>Manchester, working across the UK</dd></div>
+            <div><dt>Projects</dt><dd>Focused work starts from £1,000</dd></div>
+          </dl>
+        </div>
+        <div data-reveal style="--reveal-index: 1"><InquiryForm variant="contact" /></div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

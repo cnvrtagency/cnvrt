@@ -1,0 +1,179 @@
+---
+type Variant = 'contact' | 'project' | 'audit';
+
+interface Props {
+  variant: Variant;
+}
+
+const { variant } = Astro.props;
+
+const formConfig = {
+  contact: {
+    name: 'contact-enquiry',
+    title: 'Start a conversation',
+    intro: 'Tell CNVRT what is happening now, what needs to change and what useful progress would look like.',
+    submit: 'Send enquiry',
+  },
+  project: {
+    name: 'project-enquiry',
+    title: 'Share the project',
+    intro: 'A complete specification is not required. The commercial goal, current position and essential requirements are enough to begin.',
+    submit: 'Submit project',
+  },
+  audit: {
+    name: 'audit-request',
+    title: 'Request an audit',
+    intro: 'Share the channel, website or commercial problem you want reviewed. Audits are free and offered where CNVRT can provide useful direction.',
+    submit: 'Request audit',
+  },
+}[variant];
+
+const prefix = `inquiry-${variant}`;
+const successUrl = `/thank-you/?form=${encodeURIComponent(formConfig.name)}`;
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL?.trim().replace(/\/$/, '') || '';
+const formEndpoint = import.meta.env.PUBLIC_FORM_ENDPOINT?.trim() || (supabaseUrl ? `${supabaseUrl}/functions/v1/submit-enquiry` : '');
+---
+
+<form
+  class="foundation-form"
+  name={formConfig.name}
+  method="POST"
+  action={successUrl}
+  data-enquiry-form
+  data-form-provider="supabase"
+  data-form-name={formConfig.name}
+  data-form-endpoint={formEndpoint || undefined}
+  data-success-url={successUrl}
+>
+  <input type="hidden" name="form-name" value={formConfig.name} />
+  <input type="hidden" name="enquiry-type" value={variant} />
+  <input type="hidden" name="source-page" value={Astro.url.pathname} />
+  <input type="hidden" name="started-at" value="" />
+  <input type="hidden" name="form-duration-ms" value="" />
+  <p class="foundation-form__honeypot" aria-hidden="true">
+    <label>Leave this field empty <input name="company-website-confirmation" tabindex="-1" autocomplete="off" /></label>
+  </p>
+  <div class="foundation-form__heading">
+    <span>{formConfig.title}</span>
+    <p>{formConfig.intro}</p>
+  </div>
+
+  <div class="foundation-form__grid">
+    <div class="foundation-field">
+      <label for={`${prefix}-name`}>Name</label>
+      <input id={`${prefix}-name`} name="name" type="text" autocomplete="name" required />
+    </div>
+    <div class="foundation-field">
+      <label for={`${prefix}-email`}>Work email</label>
+      <input id={`${prefix}-email`} name="email" type="email" autocomplete="email" inputmode="email" required />
+    </div>
+    <div class="foundation-field">
+      <label for={`${prefix}-company`}>Company</label>
+      <input id={`${prefix}-company`} name="company" type="text" autocomplete="organization" />
+    </div>
+    <div class="foundation-field">
+      <label for={`${prefix}-website`}>Website</label>
+      <input id={`${prefix}-website`} name="website" type="url" inputmode="url" autocomplete="url" placeholder="https://" required={variant === 'audit'} />
+    </div>
+
+    {variant === 'contact' && (
+      <div class="foundation-field foundation-field--wide">
+        <label for={`${prefix}-service`}>What would you like help with?</label>
+        <select id={`${prefix}-service`} name="service" required>
+          <option value="" selected disabled>Select a service</option>
+          <option value="web-design">Web design</option>
+          <option value="branding">Branding or brand identity</option>
+          <option value="shopify">Shopify or ecommerce</option>
+          <option value="paid-media">Google Ads or Meta Ads</option>
+          <option value="ecommerce-ppc">Ecommerce PPC and Shopping</option>
+          <option value="email-marketing">Email marketing</option>
+          <option value="conversion-optimisation">Conversion optimisation</option>
+          <option value="analytics-tracking">Analytics and conversion tracking</option>
+          <option value="website-support">Website support and maintenance</option>
+          <option value="seo-aeo">SEO or AEO</option>
+          <option value="custom-development">Custom development or tools</option>
+          <option value="not-sure">Not sure yet</option>
+        </select>
+      </div>
+    )}
+
+    {variant === 'project' && (
+      <>
+        <div class="foundation-field">
+          <label for={`${prefix}-type`}>Project type</label>
+          <select id={`${prefix}-type`} name="project-type" required>
+            <option value="" selected disabled>Select a project</option>
+            <option value="website">New website or redesign</option>
+            <option value="branding">Branding or rebrand</option>
+            <option value="shopify">Shopify store</option>
+            <option value="migration">Shopify migration</option>
+            <option value="custom-development">Custom development</option>
+            <option value="custom-tool">Custom business tool</option>
+            <option value="other">Something else</option>
+          </select>
+        </div>
+        <div class="foundation-field">
+          <label for={`${prefix}-budget`}>Indicative budget</label>
+          <select id={`${prefix}-budget`} name="budget" required>
+            <option value="" selected disabled>Select a range</option>
+            <option value="1000-3000">£1,000 to £3,000</option>
+            <option value="3000-7500">£3,000 to £7,500</option>
+            <option value="7500-15000">£7,500 to £15,000</option>
+            <option value="15000-plus">£15,000+</option>
+            <option value="not-sure">Not sure yet</option>
+          </select>
+        </div>
+        <div class="foundation-field foundation-field--wide">
+          <label for={`${prefix}-timing`}>Target timing</label>
+          <input id={`${prefix}-timing`} name="timing" type="text" placeholder="A date, deadline or flexible window" />
+        </div>
+      </>
+    )}
+
+    {variant === 'audit' && (
+      <>
+        <div class="foundation-field">
+          <label for={`${prefix}-area`}>Area to review</label>
+          <select id={`${prefix}-area`} name="audit-area" required>
+            <option value="" selected disabled>Select an area</option>
+            <option value="website">Website</option>
+            <option value="branding">Brand or visual identity</option>
+            <option value="shopify">Shopify store or migration</option>
+            <option value="google-ads">Google Ads</option>
+            <option value="ecommerce-ppc">Ecommerce PPC and Shopping</option>
+            <option value="meta-ads">Meta Ads</option>
+            <option value="email">Email marketing</option>
+            <option value="cro">Conversion optimisation</option>
+            <option value="analytics">Analytics and conversion tracking</option>
+            <option value="seo">SEO</option>
+            <option value="aeo">AEO and AI visibility</option>
+          </select>
+        </div>
+        <div class="foundation-field">
+          <label for={`${prefix}-access`}>Existing data or access</label>
+          <select id={`${prefix}-access`} name="data-access" required>
+            <option value="" selected disabled>Select an answer</option>
+            <option value="yes">Yes, access can be provided</option>
+            <option value="partial">Some data is available</option>
+            <option value="no">No access yet</option>
+            <option value="not-sure">Not sure</option>
+          </select>
+        </div>
+      </>
+    )}
+
+    <div class="foundation-field foundation-field--wide">
+      <label for={`${prefix}-brief`}>{variant === 'audit' ? 'What should the audit investigate?' : 'What needs to change?'}</label>
+      <textarea id={`${prefix}-brief`} name="brief" rows="7" maxlength="1200" required></textarea>
+      <small>Include the goal, current constraint and any deadline that matters.</small>
+    </div>
+  </div>
+
+  <div class="foundation-form__footer">
+    <div>
+      <p>CNVRT normally responds within one working day. Your details are used to assess and respond to this enquiry. Read the <a href="/privacy/">privacy policy</a>.</p>
+      <p class="foundation-form__status" data-form-status role="status" aria-live="polite" hidden></p>
+    </div>
+    <button class="button button--dark" type="submit">{formConfig.submit} <span aria-hidden="true">↗</span></button>
+  </div>
+</form>

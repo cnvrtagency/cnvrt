@@ -1,0 +1,229 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import FoundationHero from '@/components/FoundationHero.astro';
+import EditorialHeading from '@/components/EditorialHeading.astro';
+import EditorialImagePlaceholder from '@/components/EditorialImagePlaceholder.astro';
+import ResponsiveProjectImage from '@/components/ResponsiveProjectImage.astro';
+import buildDigitalRouteLandscape from '@/assets/services-build-digital-route-landscape.png';
+import buildDigitalRoutePortrait from '@/assets/services-build-digital-route-portrait.png';
+import acquireSignalNetworkLandscape from '@/assets/services-acquire-signal-network-landscape.png';
+import retainLifecycleLandscape from '@/assets/services-retain-lifecycle-landscape.png';
+import { services } from '@/data/services';
+import '@/styles/foundation-pages.css';
+
+const webDesign = {
+  navLabel: 'Web design',
+  description: 'Responsive websites shaped around the offer, customer journey and commercial action visitors need to take.',
+  slug: 'web-design',
+};
+
+const directoryDescriptions: Record<string, string> = {
+  'ecommerce-web-design': 'Ecommerce design improving product discovery, buying confidence, mobile usability and conversion journeys.',
+  shopify: 'Shopify stores built around daily trading, useful integrations, customer experience and scalable growth.',
+  'shopify-migrations': 'Controlled Shopify migrations covering catalogue data, redirects, integrations, testing and SEO continuity.',
+  'custom-web-development': 'Bespoke websites and customer platforms for requirements that standard themes and builders cannot meet cleanly.',
+  'custom-tools': 'Business software and web apps that reduce repeated work, connect information and simplify complex operations.',
+  seo: 'SEO strategy connecting technical foundations, useful content and authority to attract qualified organic demand.',
+  'local-seo': 'Local SEO connecting Business Profiles, location relevance, reviews and landing pages around qualified enquiries.',
+  'technical-seo': 'Technical SEO covering crawling, indexation, performance, structured data and organic visibility issues.',
+  'ecommerce-seo': 'Ecommerce SEO connecting catalogue architecture, technical control and commercially relevant collection content.',
+  aeo: 'Expertise, evidence and entities structured to improve how brands are understood across search and AI answers.',
+  'google-ads': 'Paid search managed around customer intent, reliable tracking, qualified demand and sensible budgets.',
+  'ecommerce-ppc': 'Ecommerce PPC connecting Merchant Center, product feeds, Shopping, retail Performance Max and transaction values.',
+  'meta-ads': 'Facebook and Instagram campaigns connecting strategy, creative testing, measurement and post-click experience.',
+  'email-marketing': 'Email campaigns and automated journeys designed to strengthen retention, repeat purchasing and customer value.',
+  'conversion-rate-optimisation': 'CRO using analytics, customer evidence, UX, design and focused testing to improve ecommerce and lead journeys.',
+  'analytics-conversion-tracking': 'Analytics and conversion tracking connecting GA4, GTM, advertising signals, ecommerce events and CRM outcomes.',
+  branding: 'Brand strategy and visual identity connecting positioning, logo systems, typography, colour and practical commercial rollout.',
+  'website-support-maintenance': 'Website support and maintenance combining technical care, retained development, Shopify support and continuous improvement.',
+};
+
+const serviceOrder = ['web-design', 'ecommerce-web-design', 'shopify', 'shopify-migrations', 'branding', 'custom-web-development', 'custom-tools', 'seo', 'local-seo', 'technical-seo', 'ecommerce-seo', 'aeo', 'google-ads', 'ecommerce-ppc', 'meta-ads', 'email-marketing', 'conversion-rate-optimisation', 'analytics-conversion-tracking', 'website-support-maintenance'];
+const serviceDirectory = [webDesign, ...services]
+  .map((service) => ({ ...service, description: directoryDescriptions[service.slug] ?? service.description }))
+  .sort((a, b) => serviceOrder.indexOf(a.slug) - serviceOrder.indexOf(b.slug));
+
+const groups = [
+  {
+    label: 'Build',
+    id: 'build',
+    description: 'Build or improve the brand, website, ecommerce experience and practical technology customers and operations rely on.',
+    slugs: ['web-design', 'ecommerce-web-design', 'shopify', 'shopify-migrations', 'branding', 'custom-web-development', 'custom-tools'],
+    work: [['Hear Better', '/work/hear-better/'], ['Heatons Furniture', '/work/heatons-furniture/'], ['TopDraw', '/work/topdraw/']],
+    image: ['Build in context', 'Website, ecommerce or platform experience in use', '1600 × 1000 px', 'warm'] as const,
+  },
+  {
+    label: 'Acquire',
+    id: 'acquire',
+    description: 'Create qualified visibility and demand through organic discovery, local search, AI-led answers and paid acquisition.',
+    slugs: ['seo', 'local-seo', 'technical-seo', 'ecommerce-seo', 'aeo', 'google-ads', 'ecommerce-ppc', 'meta-ads'],
+    work: [['Hear Better', '/work/hear-better/']],
+    image: ['Acquire in context', 'Search, campaign and customer-acquisition work in progress', '1600 × 1000 px', 'dark'] as const,
+  },
+  {
+    label: 'Retain and improve',
+    id: 'retain-and-improve',
+    description: 'Strengthen customer value and improve live websites through retention, research, measurement, technical support and focused change.',
+    slugs: ['email-marketing', 'conversion-rate-optimisation', 'analytics-conversion-tracking', 'website-support-maintenance'],
+    work: [['Heatons Furniture', '/work/heatons-furniture/']],
+    image: ['Retain in context', 'Email journey, customer data and retention workflow', '1600 × 1000 px', 'violet'] as const,
+    supporting: ['Retained development', 'Ecommerce improvement'],
+  },
+];
+
+const pageUrl = new URL('/services/', Astro.site).href;
+const schema = [{
+  '@type': 'CollectionPage',
+  '@id': `${pageUrl}#services`,
+  url: pageUrl,
+  name: 'Digital marketing services by CNVRT',
+  description: 'Branding, web design, ecommerce, Shopify, custom development, SEO, paid media, ecommerce PPC, email, conversion optimisation, analytics and website support connected around commercial growth.',
+  isPartOf: { '@id': `${Astro.site}#website` },
+  inLanguage: 'en-GB',
+}];
+---
+
+<BaseLayout title="Digital Marketing Services Manchester | CNVRT" description="Explore CNVRT services across branding, web design, ecommerce, Shopify, SEO, paid media, email, CRO, analytics, website support and custom development." additionalSchema={schema}>
+  <SiteHeader />
+  <main id="main" class="foundation-page services-page">
+    <FoundationHero eyebrow="Digital marketing services" context="Manchester + UK" lines={['Connected services,', 'designed around your', 'real growth constraint.']} intro={[
+      'CNVRT combines strategy, design, development and marketing around what a business needs to improve, rather than treating every channel as a separate assignment.',
+      'Start with one focused service or connect several disciplines through a wider growth programme shaped around the strongest commercial opportunity.',
+    ]}>
+      <div class="foundation-hero__actions">
+        <a class="button button--paper" href="/contact/">Discuss the right starting point <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="/request-an-audit/">Request an audit <span aria-hidden="true">↗</span></a>
+      </div>
+      <nav class="services-quick-nav" aria-label="Service groups">
+        {groups.map((group, index) => (
+          <a href={`#${group.id}`}>
+            <span>0{index + 1}</span>
+            <strong>{group.label}</strong>
+            <small>{String(group.slugs.length).padStart(2, '0')} services</small>
+          </a>
+        ))}
+      </nav>
+    </FoundationHero>
+
+    <section class="foundation-index services-index-intro">
+      <div class="shell">
+        <div class="section-rail" data-reveal><span>01</span><span>Service directory</span><span>Build, acquire + retain</span></div>
+        <div class="foundation-index__intro" data-reveal style="--reveal-index: 1">
+          <EditorialHeading lines={['The right combination', 'depends on what is', 'holding growth back.']} />
+          <p>Each service has a defined purpose. They are connected when doing so improves the customer journey, the quality of measurement or the business’s ability to act on what is learned.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="service-directory">
+      {groups.map((group, groupIndex) => (
+        <section id={group.id} class={`service-directory__section service-directory__section--${group.id}`} aria-labelledby={`service-group-${group.id}`}>
+          <div class="service-directory__texture" aria-hidden="true"></div>
+          <div class="shell service-directory__layout">
+            <header class="service-directory__header">
+              <span class="service-directory__position">0{groupIndex + 1} / {String(group.slugs.length).padStart(2, '0')}</span>
+              <h2 id={`service-group-${group.id}`}>{group.label}</h2>
+              <p>{group.description}</p>
+              <nav class="service-directory__proof" aria-label={`${group.label} relevant work`}>
+                <span>Relevant work</span>
+                <div>{group.work.map(([label, href]) => <a href={href}>{label} <b aria-hidden="true">↗</b></a>)}</div>
+              </nav>
+              {group.id === 'build' ? (
+                <figure class="service-directory__media service-directory__editorial-image" data-reveal="clip" style="--reveal-index: 2">
+                  <ResponsiveProjectImage
+                    src={buildDigitalRouteLandscape}
+                    portraitSrc={buildDigitalRoutePortrait}
+                    alt="Abstract high-tech digital system carrying a violet route from a product to a parcel"
+                    widths={[560, 840, 1200, 1600]}
+                    sizes="(max-width: 760px) 100vw, 32vw"
+                  />
+                  <figcaption>Representative editorial image</figcaption>
+                </figure>
+              ) : group.id === 'acquire' ? (
+                <figure class="service-directory__media service-directory__editorial-image service-directory__editorial-image--landscape-mobile" data-reveal="clip" style="--reveal-index: 2">
+                  <ResponsiveProjectImage
+                    src={acquireSignalNetworkLandscape}
+                    alt="Abstract high-tech system filtering many violet acquisition signals into one qualified output"
+                    widths={[560, 840, 1200, 1600]}
+                    sizes="(max-width: 760px) 100vw, 32vw"
+                  />
+                  <figcaption>Representative editorial image</figcaption>
+                </figure>
+              ) : group.id === 'retain-and-improve' ? (
+                <figure class="service-directory__media service-directory__editorial-image service-directory__editorial-image--landscape-mobile" data-reveal="clip" style="--reveal-index: 2">
+                  <ResponsiveProjectImage
+                    src={retainLifecycleLandscape}
+                    alt="Abstract high-tech circular lifecycle system carrying a continuous violet improvement signal"
+                    widths={[560, 840, 1200, 1600]}
+                    sizes="(max-width: 760px) 100vw, 32vw"
+                  />
+                  <figcaption>Representative editorial image</figcaption>
+                </figure>
+              ) : (
+                <EditorialImagePlaceholder
+                  className="service-directory__media"
+                  label={group.image[0]}
+                  title={group.image[1]}
+                  size={group.image[2]}
+                  tone={group.image[3] as 'warm' | 'dark' | 'violet'}
+                  aspect="landscape"
+                  revealIndex={2}
+                  compact
+                />
+              )}
+            </header>
+            <div class="service-directory__items">
+              {group.slugs.map((slug, index) => {
+                const service = serviceDirectory.find((item) => item.slug === slug)!;
+                return (
+                  <a class="service-directory__item" href={`/services/${service.slug}/`}>
+                    <span class="service-directory__number">{String(index + 1).padStart(2, '0')}</span>
+                    <h3>{service.navLabel}</h3>
+                    <p>{service.description}</p>
+                    <b class="service-directory__arrow" aria-hidden="true">↗</b>
+                  </a>
+                );
+              })}
+            </div>
+            {'supporting' in group && group.supporting && (
+              <div class="service-directory__supporting">
+                <span>Supporting capabilities</span>
+                <div>{group.supporting.map((item) => <strong>{item}</strong>)}</div>
+              </div>
+            )}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <section class="services-connection section-pad" aria-labelledby="services-connection-title">
+      <div class="shell">
+        <div class="section-rail" data-reveal><span>02</span><span>Connected engagements</span><span>One commercial system</span></div>
+        <div class="services-connection__layout">
+          <div data-reveal style="--reveal-index: 1">
+            <span class="menu-label">More than one constraint?</span>
+            <EditorialHeading id="services-connection-title" lines={['Connect the work', 'without creating', 'more complexity.']} />
+          </div>
+          <div class="services-connection__copy" data-reveal style="--reveal-index: 2">
+            <p>A weak landing page can restrict paid media. Poor tracking can hide good demand. Disconnected email can waste an expensive first purchase. CNVRT connects services where the relationship between them creates a stronger commercial result.</p>
+            <p>The programme remains focused. Channels are added because the evidence supports them, not to make the engagement larger.</p>
+            <div class="services-connection__actions">
+              <a class="button button--dark" href="/contact/">Start a conversation <span aria-hidden="true">↗</span></a>
+              <a class="text-link" href="/submit-a-project/">Submit a project <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="foundation-cta section-pad">
+      <div class="shell foundation-cta__layout">
+        <div><span class="menu-label">Not sure where to begin?</span><h2>Start with the problem, not a channel.</h2></div>
+        <div><p>Share the current position, the outcome you need and what has already been tried. CNVRT will recommend a focused service, a connected programme or an audit when more clarity is needed first.</p><div class="foundation-cta__actions"><a class="button button--paper" href="/request-an-audit/">Request an audit <span aria-hidden="true">↗</span></a><a class="text-link" href="/contact/">Contact CNVRT <span aria-hidden="true">↗</span></a></div></div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

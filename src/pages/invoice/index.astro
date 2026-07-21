@@ -1,0 +1,120 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import '@/styles/invoice.css';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL?.trim().replace(/\/$/, '') || '';
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY?.trim() || '';
+const endpoint = supabaseUrl ? `${supabaseUrl}/functions/v1/invoice` : '';
+---
+
+<AdminLayout title="Invoice | CNVRT" description="A private CNVRT client invoice." skipLabel="Skip to invoice" showMobileNav={false}>
+  <main class="invoice-page" id="admin-main" data-invoice-page data-endpoint={endpoint} data-supabase-url={supabaseUrl} data-supabase-key={supabaseKey}>
+    <header class="invoice-header"><a href="/" aria-label="CNVRT home"><img src="/brand/cnvrt-logo.png" alt="" width="800" height="200" /></a><span>Private client invoice</span></header>
+    <section class="invoice-state" data-invoice-loading><p>Loading invoice…</p></section>
+    <section class="invoice-state" data-invoice-error hidden><h1>Invoice unavailable</h1><p data-invoice-error-message>Check the complete private link supplied by CNVRT.</p></section>
+    <article class="invoice-sheet" data-invoice-sheet hidden>
+      <header class="invoice-sheet__top">
+        <div><img class="invoice-logo" src="/brand/cnvrt-logo.png" alt="CNVRT" width="800" height="200" /><small>Websites. Commerce. Growth.</small></div>
+        <div><p>Invoice</p><strong data-invoice-number></strong><i data-invoice-status></i></div>
+      </header>
+      <section class="invoice-addresses">
+        <div><span>From</span><strong>CNVRT</strong><p>Manchester, UK<br><a href="mailto:hello@cnvrtdigital.co.uk">hello@cnvrtdigital.co.uk</a></p></div>
+        <div><span>Bill to</span><strong data-invoice-client></strong><p data-invoice-company></p></div>
+        <div><span>Dates</span><p>Issued <b data-invoice-issued></b><br>Due <b data-invoice-due></b></p></div>
+      </section>
+      <table class="invoice-table"><thead><tr><th>Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead><tbody data-invoice-items></tbody></table>
+      <section class="invoice-summary"><div><p data-invoice-notes></p><aside data-invoice-bank hidden><span>Pay by bank transfer</span><dl><div><dt>Account name</dt><dd><b data-invoice-account-name></b><button type="button" data-copy-bank="account-name" aria-label="Copy account name">Copy</button></dd></div><div><dt>Sort code</dt><dd><b data-invoice-sort-code></b><button type="button" data-copy-bank="sort-code" aria-label="Copy sort code">Copy</button></dd></div><div><dt>Account number</dt><dd><b data-invoice-account-number></b><button type="button" data-copy-bank="account-number" aria-label="Copy account number">Copy</button></dd></div><div><dt>Reference</dt><dd><b data-invoice-reference></b><button type="button" data-copy-bank="reference" aria-label="Copy payment reference">Copy</button></dd></div></dl><p class="invoice-copy-status" data-copy-status role="status" aria-live="polite"></p></aside></div><dl><div><dt>Subtotal</dt><dd data-invoice-subtotal></dd></div><div data-invoice-vat-row><dt data-invoice-vat-label>VAT</dt><dd data-invoice-vat></dd></div><div><dt>Total</dt><dd data-invoice-total></dd></div></dl></section>
+      <footer class="invoice-actions"><p>Questions? Email <a href="mailto:hello@cnvrtdigital.co.uk">hello@cnvrtdigital.co.uk</a></p><div><button type="button" data-invoice-download>Download PDF</button><a data-invoice-payment hidden>Pay invoice</a></div></footer>
+    </article>
+  </main>
+  <script>
+    import { createClient } from '@supabase/supabase-js';
+    import { downloadInvoicePdf } from '@/scripts/invoice-pdf';
+    const root = document.querySelector<HTMLElement>('[data-invoice-page]');
+    if (root) {
+      const token = new URLSearchParams(window.location.search).get('token') || '';
+      const legacyId = new URLSearchParams(window.location.search).get('legacy') || '';
+      const adminId = new URLSearchParams(window.location.search).get('admin') || '';
+      const endpoint = root.dataset.endpoint || '';
+      const money = (pence: number) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(pence / 100);
+      const date = (value: string) => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${value}T12:00:00`));
+      const loadInvoice = async () => {
+        if (!legacyId && !adminId) {
+          const response = await fetch(`${endpoint}?token=${encodeURIComponent(token)}`);
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'The invoice could not be loaded.');
+          return result.invoice;
+        }
+        const url = root.dataset.supabaseUrl || ''; const key = root.dataset.supabaseKey || '';
+        if (!url || !key) throw new Error('The secure invoice archive is not configured.');
+        const adminClient = createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true } });
+        const session = await adminClient.auth.getSession();
+        if (!session.data.session) throw new Error('Sign in to the CNVRT admin workspace to view this invoice.');
+        if (adminId) {
+          const { data: invoice, error } = await adminClient.from('invoices').select('invoice_number,status,issue_date,due_date,client_name,client_company,line_items,subtotal_pence,vat_rate,vat_pence,total_pence,notes,payment_url,bank_details').eq('id', adminId).single();
+          if (error || !invoice) throw new Error(error?.message || 'The draft invoice could not be found.');
+          return invoice;
+        }
+        const { data: record, error } = await adminClient.from('finance_invoices').select('display_number,issue_date,status,subtotal_pence,tax_pence,total_pence,source_data,clients(company_name,billing_address)').eq('id', legacyId).single();
+        if (error || !record) throw new Error(error?.message || 'The archived invoice could not be found.');
+        const clientRecord = Array.isArray(record.clients) ? record.clients[0] : record.clients;
+        const issued = new Date(`${record.issue_date}T12:00:00`); issued.setDate(issued.getDate() + 7);
+        const dueDate = `${issued.getFullYear()}-${String(issued.getMonth() + 1).padStart(2, '0')}-${String(issued.getDate()).padStart(2, '0')}`;
+        return {
+          invoice_number: record.display_number,
+          status: record.status,
+          issue_date: record.issue_date,
+          due_date: dueDate,
+          client_name: clientRecord?.company_name || record.source_data?.Customer || 'Client',
+          client_company: clientRecord?.billing_address || '',
+          line_items: [{ description: `Professional services supplied to ${clientRecord?.company_name || record.source_data?.Customer || 'client'}`, quantity: 1, unit_pence: record.subtotal_pence }],
+          subtotal_pence: record.subtotal_pence,
+          vat_rate: record.subtotal_pence ? Math.round(record.tax_pence / record.subtotal_pence * 10000) / 100 : 0,
+          vat_pence: record.tax_pence,
+          total_pence: record.total_pence,
+          notes: 'Archived invoice imported from Brisk and presented in the current CNVRT invoice format.',
+          payment_url: null,
+          bank_details: record.status === 'paid' ? {} : { account_name: 'DCL Digital', sort_code: '040003', account_number: '55069367', reference: record.display_number },
+        };
+      };
+      loadInvoice().then(async (invoice) => {
+        const set = (selector: string, value: string) => { const element = root.querySelector<HTMLElement>(selector); if (element) element.textContent = value; };
+        set('[data-invoice-number]', invoice.invoice_number); set('[data-invoice-status]', invoice.status); set('[data-invoice-client]', invoice.client_name);
+        set('[data-invoice-company]', invoice.client_company || ''); set('[data-invoice-issued]', date(invoice.issue_date)); set('[data-invoice-due]', date(invoice.due_date));
+        set('[data-invoice-subtotal]', money(invoice.subtotal_pence)); set('[data-invoice-vat-label]', `VAT (${Number(invoice.vat_rate)}%)`); set('[data-invoice-vat]', money(invoice.vat_pence)); set('[data-invoice-total]', money(invoice.total_pence));
+        const items = root.querySelector<HTMLElement>('[data-invoice-items]');
+        if (items) items.innerHTML = invoice.line_items.map((item: { description: string; quantity: number; unit_pence: number }) => `<tr><td>${String(item.description).replace(/[&<>]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c] || c))}</td><td>${item.quantity}</td><td>${money(item.unit_pence)}</td><td>${money(item.quantity * item.unit_pence)}</td></tr>`).join('');
+        const notes = root.querySelector<HTMLElement>('[data-invoice-notes]'); if (notes) notes.textContent = invoice.notes || '';
+        const bank = invoice.bank_details || {};
+        const bankSection = root.querySelector<HTMLElement>('[data-invoice-bank]');
+        if (bankSection && (bank.account_name || bank.sort_code || bank.account_number)) {
+          bankSection.hidden = false;
+          set('[data-invoice-account-name]', bank.account_name || ''); set('[data-invoice-sort-code]', bank.sort_code || '');
+          set('[data-invoice-account-number]', bank.account_number || ''); set('[data-invoice-reference]', bank.reference || invoice.invoice_number);
+          bankSection.addEventListener('click', async (event) => {
+            const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-bank]');
+            if (!button) return;
+            const value = button.parentElement?.querySelector('b')?.textContent?.trim() || '';
+            if (!value) return;
+            try {
+              await navigator.clipboard.writeText(value);
+            } catch {
+              const input = document.createElement('textarea'); input.value = value; input.style.position = 'fixed'; input.style.opacity = '0'; document.body.appendChild(input); input.select(); document.execCommand('copy'); input.remove();
+            }
+            const status = bankSection.querySelector<HTMLElement>('[data-copy-status]');
+            if (status) status.textContent = `${button.dataset.copyBank?.replace('-', ' ')} copied`;
+            button.textContent = 'Copied';
+            window.setTimeout(() => { button.textContent = 'Copy'; if (status) status.textContent = ''; }, 1600);
+          });
+        }
+        const vatRow = root.querySelector<HTMLElement>('[data-invoice-vat-row]'); if (vatRow) vatRow.hidden = Number(invoice.vat_rate) === 0;
+        const payment = root.querySelector<HTMLAnchorElement>('[data-invoice-payment]'); if (payment && invoice.payment_url) { payment.href = invoice.payment_url; payment.hidden = false; payment.target = '_blank'; payment.rel = 'noreferrer'; }
+        root.querySelector<HTMLElement>('[data-invoice-loading]')!.hidden = true; root.querySelector<HTMLElement>('[data-invoice-sheet]')!.hidden = false;
+        const download = root.querySelector<HTMLButtonElement>('[data-invoice-download]');
+        download?.addEventListener('click', async () => {
+          if (!download) return; download.disabled = true; download.textContent = 'Preparing PDF…';
+          try { await downloadInvoicePdf(invoice); } finally { download.disabled = false; download.textContent = 'Download PDF'; }
+        });
+      }).catch((error) => { root.querySelector<HTMLElement>('[data-invoice-loading]')!.hidden = true; root.querySelector<HTMLElement>('[data-invoice-error]')!.hidden = false; setTimeout(() => { const message = root.querySelector<HTMLElement>('[data-invoice-error-message]'); if (message) message.textContent = error.message; }); });
+    }
+  </script>
+</AdminLayout>

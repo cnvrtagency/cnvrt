@@ -1,0 +1,33 @@
+---
+interface Props {
+  name: 'calendar' | 'duration' | 'relationship' | 'location';
+}
+
+const { name } = Astro.props;
+---
+
+<svg class="project-fact-icon" viewBox="0 0 24 24" aria-hidden="true">
+  {name === 'calendar' && (
+    <>
+      <rect x="3.5" y="5.5" width="17" height="15" rx="1.5" />
+      <path d="M7.5 3.5v4M16.5 3.5v4M3.5 10h17M7.5 14h3M13.5 14h3M7.5 17.5h3" />
+    </>
+  )}
+  {name === 'duration' && (
+    <>
+      <circle cx="12" cy="13" r="8" />
+      <path d="M9 3h6M12 5v2M12 13l3.5-2.5" />
+    </>
+  )}
+  {name === 'relationship' && (
+    <>
+      <path d="M8.3 15.7 5.6 18.4a2.8 2.8 0 0 1-4-4l4.2-4.2a2.8 2.8 0 0 1 4 0M15.7 8.3l2.7-2.7a2.8 2.8 0 0 1 4 4l-4.2 4.2a2.8 2.8 0 0 1-4 0M8.5 15.5l7-7" />
+    </>
+  )}
+  {name === 'location' && (
+    <>
+      <path d="M20 10c0 5.5-8 11-8 11S4 15.5 4 10a8 8 0 1 1 16 0Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </>
+  )}
+</svg>

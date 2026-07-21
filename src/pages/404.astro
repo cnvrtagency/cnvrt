@@ -1,0 +1,39 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import '@/styles/foundation-pages.css';
+---
+
+<BaseLayout
+  title="Page Not Found | CNVRT"
+  description="The requested page could not be found. Explore CNVRT services, selected work and practical digital growth guidance."
+  robots="noindex, follow"
+>
+  <SiteHeader />
+  <main id="main" class="not-found">
+    <div class="not-found__grid" aria-hidden="true"></div>
+    <div class="shell not-found__layout">
+      <div class="section-rail section-rail--inverse">
+        <span>404</span><span>Page not found</span><span>Return to a useful route</span>
+      </div>
+      <div class="not-found__content">
+        <p class="not-found__code" aria-hidden="true">404</p>
+        <div class="not-found__message">
+          <h1>This route has reached a dead end.</h1>
+          <p>The address may have changed, or the page may no longer exist. Start again from the homepage or continue through one of the main areas below.</p>
+          <div class="not-found__actions">
+            <a class="button button--paper" href="/">Return home <span aria-hidden="true">↗</span></a>
+            <a class="text-link" href="/contact/">Tell us about the broken link <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
+      <nav class="not-found__routes" aria-label="Useful pages">
+        <a href="/services/"><span>01</span><strong>Services</strong><i aria-hidden="true">↗</i></a>
+        <a href="/work/"><span>02</span><strong>Selected work</strong><i aria-hidden="true">↗</i></a>
+        <a href="/blog/"><span>03</span><strong>Guides and insight</strong><i aria-hidden="true">↗</i></a>
+      </nav>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

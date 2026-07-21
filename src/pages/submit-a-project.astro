@@ -1,0 +1,38 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import FoundationHero from '@/components/FoundationHero.astro';
+import InquiryForm from '@/components/InquiryForm.astro';
+import '@/styles/foundation-pages.css';
+
+const pageUrl = new URL('/submit-a-project/', Astro.site).href;
+const schema = [{ '@type': 'WebPage', '@id': `${pageUrl}#project-enquiry`, url: pageUrl, name: 'Submit a project to CNVRT', isPartOf: { '@id': `${Astro.site}#website` } }];
+---
+
+<BaseLayout title="Submit a Digital Project | CNVRT" description="Share a website, Shopify, migration, custom development or business software project with CNVRT. Focused projects start from £1,000." additionalSchema={schema}>
+  <SiteHeader />
+  <main id="main" class="foundation-page">
+    <FoundationHero eyebrow="Submit a project" context="Focused work from £1,000" lines={['A clear project,', 'properly understood', 'before it begins.']} intro={[
+      'Use this route for a website, Shopify store, migration, custom feature or business tool with a defined requirement or commercial objective.',
+      'A complete specification is not required. CNVRT can help shape the useful scope before design or development begins.',
+    ]} />
+
+    <section class="foundation-form-section section-pad">
+      <div class="shell foundation-form-layout">
+        <div class="foundation-form-context" data-reveal>
+          <span class="menu-label">What happens next</span>
+          <h2>Review, clarify and define the useful scope.</h2>
+          <p>The first response will confirm whether the project appears to fit, identify any important unknowns and suggest the next conversation.</p>
+          <dl>
+            <div><dt>Typical work</dt><dd>Websites, Shopify, migrations and custom tools</dd></div>
+            <div><dt>Timing</dt><dd>Often two to eight weeks, depending on scope</dd></div>
+            <div><dt>Starting point</dt><dd>Focused projects from £1,000</dd></div>
+          </dl>
+        </div>
+        <div data-reveal style="--reveal-index: 1"><InquiryForm variant="project" /></div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,581 @@
+---
+import { Image } from 'astro:assets';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import ProjectFactIcon from '@/components/ProjectFactIcon.astro';
+import { projects, type Project } from '@/data/projects';
+import hearBetterIdentity from '@/assets/hear-better-identity-board.png';
+import hearBetterPolo from '@/assets/hear-better-polo-application.png';
+import hearBetterDesktop from '@/assets/hear-better-desktop-service.png';
+import hearBetterBooking from '@/assets/hear-better-mobile-booking.png';
+import hearBetterDesktopHomepage from '@/assets/hear-better-desktop-homepage.png';
+import hearBetterMobileHomepage from '@/assets/hear-better-mobile-homepage-final.png';
+import hearBetterHomeTestLandscape from '@/assets/hear-better-home-test-landscape.png';
+import hearBetterHomeTestPortrait from '@/assets/hear-better-home-test-portrait.png';
+import heatonsOutcomeLandscape from '@/assets/heatons-outcome-landscape.png';
+import heatonsOutcomePortrait from '@/assets/heatons-outcome-portrait.png';
+import heatonsDesktopHomepage from '@/assets/heatons-desktop-homepage.png';
+import heatonsMobileHomepage from '@/assets/heatons-mobile-homepage-reconstruction.png';
+import rftRecruitmentOutcomeLandscape from '@/assets/rft-recruitment-outcome-landscape.png';
+import rftRecruitmentOutcomePortrait from '@/assets/rft-recruitment-outcome-portrait.png';
+import topDrawPrizeCarLandscape from '@/assets/topdraw-prize-car-landscape.png';
+import topDrawPrizeCarPortrait from '@/assets/topdraw-prize-car-portrait.png';
+import '@/styles/work-page.css';
+
+export const getStaticPaths = (() => projects.map((project, index) => ({
+  params: { slug: project.slug },
+  props: { project, nextProject: projects[(index + 1) % projects.length] },
+}))) satisfies GetStaticPaths;
+
+interface Props {
+  project: Project;
+  nextProject: Project;
+}
+
+const { project, nextProject } = Astro.props;
+const isHearBetter = project.slug === 'hear-better';
+const isHeatons = project.slug === 'heatons-furniture';
+const isUberKinky = project.slug === 'uberkinky';
+const isTopDraw = project.slug === 'topdraw';
+const isYaOmri = project.slug === 'ya-omri';
+const isRft = project.slug === 'rft-recruitment';
+const isDetailedCaseStudy = isHearBetter || isHeatons || isUberKinky || isTopDraw || isYaOmri || isRft;
+const pageUrl = new URL(`/work/${project.slug}/`, Astro.site).href;
+const schema = [{
+  '@type': 'CreativeWork',
+  '@id': `${pageUrl}#project`,
+  url: pageUrl,
+  name: `${project.name} digital project`,
+  description: project.summary,
+  creator: { '@id': `${Astro.site}#organization` },
+  inLanguage: 'en-GB',
+}];
+---
+
+<BaseLayout title={`${project.name} Case Study | CNVRT`} description={project.summary} additionalSchema={schema}>
+  <SiteHeader />
+  <main id="main" class="case-study">
+    <section class="case-study__hero">
+      <div class="shell">
+        <div class="section-rail section-rail--inverse" data-reveal><span>{project.number}</span><span>{project.sector}</span><span>{project.scope}</span></div>
+        <div class="case-study__hero-grid">
+          <div class="case-study__hero-primary">
+            <h1 data-reveal="hero-title"><span>{project.name}</span></h1>
+            {project.facts && (
+              <dl class="case-study__hero-facts" aria-label="Project facts">
+                {project.facts.map(([label, value, icon], index) => (
+                  <div data-reveal style={`--reveal-index: ${index + 2}`}>
+                    <ProjectFactIcon name={icon} />
+                    <div><dt>{label}</dt><dd>{value}</dd></div>
+                  </div>
+                ))}
+              </dl>
+            )}
+          </div>
+          <div class="case-study__summary" data-reveal style="--reveal-index: 2">
+            <p>{project.summary}</p>
+            <ul>{project.services.map((service) => <li>{service}</li>)}</ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {isHearBetter ? (
+      <figure class="case-study__lead case-study__lead--showcase" data-reveal="clip">
+        <div class="case-study__showcase shell" aria-label="Hear Better responsive homepage presentation">
+          <div class="case-study__showcase-stage">
+            <div class="case-study__showcase-note"><span>Website showcase</span><small>Layout preview</small></div>
+            <div class="case-study__showcase-desktop">
+              <div class="case-study__browser-bar" aria-hidden="true"><i></i><i></i><i></i><span>hearbetternow.co.uk</span></div>
+              <Image src={hearBetterDesktopHomepage} alt="Hear Better homepage displayed at desktop size" widths={[760, 1200, 1920]} sizes="(min-width: 48rem) 78vw, 90vw" loading="eager" />
+            </div>
+            <div class="case-study__showcase-mobile">
+              <div class="case-study__browser-bar" aria-hidden="true"><i></i><i></i><i></i><span>hearbetternow.co.uk</span></div>
+              <Image src={hearBetterMobileHomepage} alt="Hear Better homepage displayed at mobile size" widths={[320, 540, 760, 1080]} sizes="(min-width: 48rem) 20vw, 26vw" loading="eager" />
+            </div>
+          </div>
+        </div>
+        <figcaption class="shell"><span>Responsive website system</span><span>Desktop + mobile</span></figcaption>
+      </figure>
+    ) : isUberKinky ? (
+      <figure class="case-study__lead case-study__lead--showcase" data-reveal="clip">
+        <div class="case-study__showcase shell" aria-label="UberKinky responsive Shopify Plus presentation">
+          <div class="case-study__showcase-stage">
+            <div class="case-study__showcase-note"><span>Shopify Plus showcase</span><small>Final screenshots required</small></div>
+            <div class="case-study__showcase-desktop">
+              <div class="case-study__browser-bar" aria-hidden="true"><i></i><i></i><i></i><span>uberkinky.com</span></div>
+              <Image src={project.image} alt="UberKinky Shopify Plus storefront displayed at desktop size" widths={[760, 1200, 1800]} sizes="(min-width: 48rem) 78vw, 90vw" loading="eager" />
+            </div>
+            <div class="case-study__showcase-mobile case-study__showcase-mobile--placeholder" role="img" aria-label="Placeholder for UberKinky mobile collection screenshot, 1080 by 1920 pixels">
+              <div class="case-study__browser-bar" aria-hidden="true"><i></i><i></i><i></i><span>uberkinky.com</span></div>
+              <span>Mobile collection</span><small>1080 × 1920 px</small>
+            </div>
+          </div>
+        </div>
+        <figcaption class="shell"><span>Custom Shopify Plus store</span><span>Desktop + mobile</span></figcaption>
+      </figure>
+    ) : isHeatons || isTopDraw || isYaOmri || isRft ? (
+      <figure class="case-study__lead case-study__lead--showcase" data-reveal="clip">
+        <div class="case-study__showcase shell" aria-label={`${project.name} responsive platform presentation`}>
+          <div class="case-study__showcase-stage">
+            <div class="case-study__showcase-note"><span>{isTopDraw ? 'Custom platform showcase' : isYaOmri ? 'Luxury Shopify showcase' : isRft ? 'Recruitment platform showcase' : 'Shopify showcase'}</span><small>{isHeatons ? 'Desktop capture + reconstructed mobile view' : 'Final screenshots required'}</small></div>
+            <div class="case-study__showcase-desktop">
+              <div class="case-study__browser-bar" aria-hidden="true"><i></i><i></i><i></i><span>{isTopDraw ? 'topdrawcompetitions.co.uk' : isYaOmri ? 'yaomriswimwear.com' : isRft ? 'rftrecruitment.co.uk' : 'heatonsfurniture.co.uk'}</span></div>
+              <Image src={isHeatons ? heatonsDesktopHomepage : project.image} alt={`${project.name} platform displayed at desktop size`} widths={[760, 1200, 1800]} sizes="(min-width: 48rem) 78vw, 90vw" loading="eager" />
+            </div>
+            {isHeatons ? (
+              <div class="case-study__showcase-mobile">
+                <div class="case-study__browser-bar" aria-hidden="true"><i></i><i></i><i></i><span>heatonsfurniture.co.uk</span></div>
+                <Image src={heatonsMobileHomepage} alt="Reconstructed mobile view of the earlier Heatons Furniture homepage campaign" widths={[540, 810, 1080]} sizes="(min-width: 48rem) 22vw, 90vw" loading="eager" />
+              </div>
+            ) : (
+              <div class="case-study__showcase-mobile case-study__showcase-mobile--placeholder" role="img" aria-label={`Placeholder for ${project.name} mobile homepage screenshot, 1080 by 1920 pixels`}>
+                <div class="case-study__browser-bar" aria-hidden="true"><i></i><i></i><i></i><span>{isTopDraw ? 'topdrawcompetitions.co.uk' : isYaOmri ? 'yaomriswimwear.com' : 'rftrecruitment.co.uk'}</span></div>
+                <span>Mobile homepage</span><small>1080 × 1920 px</small>
+              </div>
+            )}
+          </div>
+        </div>
+        <figcaption class="shell"><span>{isTopDraw ? 'Custom competition platform' : isYaOmri ? 'Luxury Shopify experience' : isRft ? 'Recruitment website + CRM' : 'National ecommerce experience'}</span><span>{isHeatons ? 'Desktop capture + reconstructed mobile view' : 'Desktop + mobile'}</span></figcaption>
+      </figure>
+    ) : (
+      <figure class="case-study__lead" data-reveal="clip">
+        <Image src={project.image} alt={project.alt} widths={[760, 1200, 1800]} sizes="100vw" loading="eager" />
+        <figcaption class="shell"><span>{project.name}</span><span>{project.scope}</span></figcaption>
+      </figure>
+    )}
+
+    <section class="case-study__overview section-pad">
+      <div class="shell">
+        <div class="section-rail" data-reveal><span>01</span><span>Project overview</span><span>{project.situation ? 'Situation + challenge + direction' : 'Context + direction'}</span></div>
+        <div class:list={['case-study__overview-grid', project.situation && 'case-study__overview-grid--three']}>
+          {project.situation && <article data-reveal><span>The situation</span><h2>{(project.overviewHeadings?.situation ?? ['Where the project began.']).map((line) => <span>{line}</span>)}</h2><p>{project.situation}</p></article>}
+          <article data-reveal style={project.situation ? '--reveal-index: 1' : undefined}><span>The challenge</span><h2>{(project.overviewHeadings?.challenge ?? ['What needed to change.']).map((line) => <span>{line}</span>)}</h2><p>{project.challenge}</p></article>
+          <article data-reveal style={`--reveal-index: ${project.situation ? 2 : 1}`}><span>The direction</span><h2>{(project.overviewHeadings?.direction ?? ['How the work responded.']).map((line) => <span>{line}</span>)}</h2><p>{project.direction}</p></article>
+        </div>
+      </div>
+    </section>
+
+    {isHearBetter && (
+      <section class="case-study__identity section-pad">
+        <div class="shell">
+          <div class="section-rail" data-reveal><span>02</span><span>Brand identity</span><span>Built from a name</span></div>
+          <div class="case-study__chapter-heading">
+            <h2 data-reveal><span>A healthcare identity</span><span>built to feel calm,</span><span>clear and credible.</span></h2>
+            <p data-reveal style="--reveal-index: 1">The visual system needed enough warmth to reassure an older audience without feeling dated, clinical or disconnected from the modern hearing technology Hear Better provides.</p>
+          </div>
+          <div class="case-study__identity-grid" aria-label="Hear Better identity presentation">
+            <figure class="case-study__media-frame case-study__media-frame--identity" data-reveal="clip">
+              <Image src={hearBetterIdentity} alt="Hear Better identity presentation with printed brand guidelines, colour palette and stationery" widths={[760, 1200, 1600]} sizes="(min-width: 48rem) 68vw, 100vw" loading="lazy" />
+              <figcaption><span>Identity direction</span><small>Brand system</small></figcaption>
+            </figure>
+            <div class="case-study__identity-stack">
+              <div class="case-study__media-slot case-study__media-slot--logo case-study__logo-board" role="img" aria-label="Hear Better primary logo and brand colour palette" data-reveal="clip">
+                <img src="/logos/hb-logo.svg" alt="" width="1200" height="300" />
+                <div aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+                <small>Primary identity · Colour system</small>
+              </div>
+              <figure class="case-study__media-frame case-study__media-frame--application" data-reveal="clip">
+                <Image src={hearBetterPolo} alt="Hear Better embroidered identity applied to a white polo shirt" widths={[480, 760, 1024]} sizes="(min-width: 48rem) 28vw, 100vw" loading="lazy" />
+                <figcaption><span>Brand in use</span><small>Uniform application</small></figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    {isHearBetter && (
+      <figure id="care-at-home" class="case-study__care-visual" data-reveal="clip">
+        <div class="case-study__care-visual-media">
+          <Image
+            class="case-study__care-visual-landscape"
+            src={hearBetterHomeTestLandscape}
+            alt="Representative home hearing assessment with a Hear Better mobile audiologist and an older adult"
+            widths={[760, 1200, 1448]}
+            sizes="100vw"
+            loading="lazy"
+          />
+          <Image
+            class="case-study__care-visual-portrait"
+            src={hearBetterHomeTestPortrait}
+            alt="Representative home hearing assessment with a Hear Better mobile audiologist and an older adult"
+            widths={[390, 640, 900, 1122]}
+            sizes="100vw"
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="shell"><span>Hearing care at home</span><span>Representative editorial image</span></figcaption>
+      </figure>
+    )}
+
+    {isHeatons && (
+      <figure id="a-more-comfortable-home" class="case-study__care-visual" data-reveal="clip">
+        <div class="case-study__care-visual-media">
+          <Image
+            class="case-study__care-visual-landscape"
+            src={heatonsOutcomeLandscape}
+            alt="Representative couple relaxing together on a comfortable corner sofa in a warm living room"
+            widths={[760, 1200, 1448]}
+            sizes="100vw"
+            loading="lazy"
+          />
+          <Image
+            class="case-study__care-visual-portrait"
+            src={heatonsOutcomePortrait}
+            alt="Representative couple relaxing together on a comfortable corner sofa in a warm living room"
+            widths={[390, 640, 900, 1122]}
+            sizes="100vw"
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="shell"><span>A more comfortable home</span><span>Representative editorial image</span></figcaption>
+      </figure>
+    )}
+
+    {isRft && (
+      <figure id="a-stronger-first-connection" class="case-study__care-visual" data-reveal="clip">
+        <div class="case-study__care-visual-media">
+          <Image
+            class="case-study__care-visual-landscape"
+            src={rftRecruitmentOutcomeLandscape}
+            alt="Representative professional women greeting one another in a modern Manchester office"
+            widths={[760, 1200, 1448]}
+            sizes="100vw"
+            loading="lazy"
+          />
+          <Image
+            class="case-study__care-visual-portrait"
+            src={rftRecruitmentOutcomePortrait}
+            alt="Representative professional women greeting one another in a modern Manchester office"
+            widths={[390, 640, 900, 1003]}
+            sizes="100vw"
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="shell"><span>A stronger first connection</span><span>Representative editorial image</span></figcaption>
+      </figure>
+    )}
+
+    {isTopDraw && (
+      <figure id="a-prize-worth-entering-for" class="case-study__care-visual" data-reveal="clip">
+        <div class="case-study__care-visual-media">
+          <Image
+            class="case-study__care-visual-landscape"
+            src={topDrawPrizeCarLandscape}
+            alt="Representative blue sports car presented as a competition prize with a satin bow"
+            widths={[760, 1200, 1448]}
+            sizes="100vw"
+            loading="lazy"
+          />
+          <Image
+            class="case-study__care-visual-portrait"
+            src={topDrawPrizeCarPortrait}
+            alt="Representative blue sports car presented as a competition prize with a satin bow"
+            widths={[390, 640, 900, 1122]}
+            sizes="100vw"
+            loading="lazy"
+          />
+        </div>
+        <figcaption class="shell"><span>A prize worth entering for</span><span>Representative editorial image</span></figcaption>
+      </figure>
+    )}
+
+    <section class="case-study__results section-pad">
+      <div class="shell">
+        <div class="section-rail section-rail--inverse" data-reveal><span>{isHearBetter ? '03' : '02'}</span><span>Commercial outcomes</span><span>{project.metricsConfirmed ? 'Current performance' : 'Placeholder reporting'}</span></div>
+        <p class="case-study__placeholder" data-reveal>{project.resultsNote ?? 'Project outcomes and delivery details are shown from the currently approved evidence.'}</p>
+        {isHearBetter && (
+          <div class="case-study__results-story" data-reveal style="--reveal-index: 1">
+            <span>Commercial foundation</span>
+            <div class="case-study__results-story-copy">
+              <p>Hear Better began with strong audiology expertise but no established brand, website or digital acquisition capability. CNVRT provided the commercial and marketing direction needed to launch with confidence.</p>
+              <p>Specialist knowledge became a trusted customer proposition, lead-generating website and joined-up SEO, AEO and paid-search programme. The result is an independent startup now earning visibility alongside national providers and building a repeatable route from search to enquiry.</p>
+            </div>
+          </div>
+        )}
+        {isUberKinky && (
+          <div class="case-study__results-story" data-reveal style="--reveal-index: 1">
+            <span>Migration outcome</span>
+            <div class="case-study__results-story-copy">
+              <p>The new Shopify Plus store replaced a difficult legacy catalogue with a custom storefront, structured product data and two hundred useful collection paths.</p>
+              <p>Sales increased after launch and redirects helped limit avoidable ranking disruption. Exact commercial and search comparisons remain held from the page until their sources and measurement periods are confirmed.</p>
+            </div>
+          </div>
+        )}
+        {isHeatons && (
+          <div class="case-study__results-story" data-reveal style="--reveal-index: 1">
+            <span>Growth outcome</span>
+            <div class="case-study__results-story-copy">
+              <p>Within the first 12 months, the new ecommerce and marketing system generated £480,000 in online sales and contributed to £1.9 million in combined online and showroom revenue.</p>
+              <p>Monthly traffic grew from fewer than 1,000 visits to more than 60,000, ranking keywords increased from 232 to more than 6,000 and the email audience grew beyond 20,000 subscribers. Demand ultimately supported a move from the original shop into a 20,000 sq. ft. warehouse.</p>
+            </div>
+          </div>
+        )}
+        {isTopDraw && (
+          <div class="case-study__results-story" data-reveal style="--reveal-index: 1">
+            <span>Platform outcome</span>
+            <div class="case-study__results-story-copy">
+              <p>TopDraw launched in June 2026 with the brand, customer experience and operational technology required to run the business contained within one purpose-built platform.</p>
+              <p>The live product already supports capped competitions, multi-prize baskets, secure checkout, instant entry confirmation, published winners, proof links, free postal entry and responsible-play content. Commercial results will follow once the startup has completed a meaningful reporting period.</p>
+            </div>
+          </div>
+        )}
+        {isYaOmri && (
+          <div class="case-study__results-story" data-reveal style="--reveal-index: 1">
+            <span>Design outcome</span>
+            <div class="case-study__results-story-copy">
+              <p>The 2026 redesign gives Ya Omri a custom Shopify experience aligned with the luxury positioning, visual confidence and international direction of the active brand.</p>
+              <p>Collection storytelling, independent bikini sizing, detailed product information, UGC content and worldwide delivery messaging now operate within one coherent responsive theme. Commercial results will be added after an approved reporting period.</p>
+            </div>
+          </div>
+        )}
+        {isRft && (
+          <div class="case-study__results-story" data-reveal style="--reveal-index: 1">
+            <span>Platform outcome</span>
+            <div class="case-study__results-story-copy">
+              <p>RFT moved from having no website to a complete branded acquisition and recruitment platform delivered in May 2026.</p>
+              <p>Employer enquiries, booking routes, candidate forms, CV uploads and categorised database records now operate as parts of one connected system. Commercial and lead-generation results will follow after an approved reporting period.</p>
+            </div>
+          </div>
+        )}
+        <div class="case-study__metrics">
+          {project.metrics.map(([value, label], index) => {
+            const target = Number.parseFloat(value.replace(/[^0-9.]/g, ''));
+            const suffix = value.replace(/[0-9.]/g, '');
+            return <article data-reveal style={`--reveal-index: ${index}`}>
+              {isHearBetter ? <strong data-count-up data-count-target={target} data-count-suffix={suffix} aria-label={value}>{value}</strong> : <strong>{value}</strong>}
+              <span>{label}</span>
+            </article>;
+          })}
+        </div>
+      </div>
+    </section>
+
+    {isHearBetter && (
+      <section class="case-study__website section-pad">
+        <div class="shell">
+          <div class="section-rail" data-reveal><span>04</span><span>Lead-generation website</span><span>Desktop + mobile</span></div>
+          <div class="case-study__chapter-heading">
+            <h2 data-reveal><span>Turning local search</span><span>into confident decisions</span><span>and qualified enquiries.</span></h2>
+            <p data-reveal style="--reveal-index: 1">Service pages answer the questions patients and families ask before booking. Trust signals, local relevance and clear next steps turn intent into enquiries.</p>
+          </div>
+          <div class="case-study__website-grid" aria-label="Hear Better service and booking journeys">
+            <figure class="case-study__media-frame case-study__media-frame--desktop" data-reveal="clip">
+              <Image src={hearBetterDesktop} alt="Hear Better free home hearing test service page on desktop" widths={[760, 1200, 1920]} sizes="(min-width: 48rem) 65vw, 100vw" loading="lazy" />
+              <figcaption><span>Desktop experience</span><small>Service journey</small></figcaption>
+            </figure>
+            <div class="case-study__mobile-pair">
+              <figure class="case-study__media-frame case-study__media-frame--booking" data-reveal="clip">
+                <Image src={hearBetterMobileHomepage} alt="Hear Better mobile homepage" widths={[360, 540, 1080]} sizes="(min-width: 48rem) 16vw, 50vw" loading="lazy" />
+                <figcaption><span>Mobile homepage</span><small>Responsive experience</small></figcaption>
+              </figure>
+              <figure class="case-study__media-frame case-study__media-frame--booking" data-reveal="clip">
+                <Image src={hearBetterBooking} alt="Hear Better free home hearing test booking journey on mobile" widths={[360, 540, 1080]} sizes="(min-width: 48rem) 16vw, 50vw" loading="lazy" />
+                <figcaption><span>Booking journey</span><small>Mobile conversion flow</small></figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    {isUberKinky && (
+      <section class="case-study__website section-pad">
+        <div class="shell">
+          <div class="section-rail" data-reveal><span>03</span><span>Store experience</span><span>Desktop + mobile</span></div>
+          <div class="case-study__chapter-heading">
+            <h2 data-reveal><span>A custom storefront</span><span>built around catalogue</span><span>clarity and choice.</span></h2>
+            <p data-reveal style="--reveal-index: 1">The custom theme, product builders and collection structure turn a large specialist catalogue into clearer routes through discovery, consideration and purchase.</p>
+          </div>
+          <div class="case-study__website-grid" aria-label="Required UberKinky storefront screenshots">
+            <div class="case-study__media-slot case-study__media-slot--desktop case-study__asset-placeholder" role="img" aria-label="Placeholder for custom product builder screenshot, 1600 by 1200 pixels" data-reveal="clip"><span>Custom product builder</span><small>Desktop screenshot · 1600 × 1200 px</small></div>
+            <div class="case-study__mobile-pair">
+              <div class="case-study__media-slot case-study__media-slot--mobile-a case-study__asset-placeholder" role="img" aria-label="Placeholder for mobile collection screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Mobile collection</span><small>1080 × 1920 px</small></div>
+              <div class="case-study__media-slot case-study__media-slot--mobile-b case-study__asset-placeholder" role="img" aria-label="Placeholder for mobile product builder screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Mobile product builder</span><small>1080 × 1920 px</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    {isHeatons && (
+      <section class="case-study__website section-pad">
+        <div class="shell">
+          <div class="section-rail" data-reveal><span>03</span><span>Ecommerce experience</span><span>Desktop + mobile</span></div>
+          <div class="case-study__chapter-heading">
+            <h2 data-reveal><span>Making high-ticket</span><span>furniture feel valuable,</span><span>credible and buyable.</span></h2>
+            <p data-reveal style="--reveal-index: 1">The custom Shopify experience brought professional presentation, clearer product discovery and stronger conversion routes to purchases that often required more consideration than a typical online order.</p>
+          </div>
+          <div class="case-study__website-grid" aria-label="Required Heatons Furniture storefront screenshots">
+            <div class="case-study__media-slot case-study__media-slot--desktop case-study__asset-placeholder" role="img" aria-label="Placeholder for Heatons Furniture desktop collection screenshot, 1600 by 1200 pixels" data-reveal="clip"><span>Collection experience</span><small>Desktop screenshot · 1600 × 1200 px</small></div>
+            <div class="case-study__mobile-pair">
+              <div class="case-study__media-slot case-study__media-slot--mobile-a case-study__asset-placeholder" role="img" aria-label="Placeholder for Heatons Furniture mobile collection screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Mobile collection</span><small>1080 × 1920 px</small></div>
+              <div class="case-study__media-slot case-study__media-slot--mobile-b case-study__asset-placeholder" role="img" aria-label="Placeholder for Heatons Furniture mobile product screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Mobile product page</span><small>1080 × 1920 px</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    {isTopDraw && (
+      <section class="case-study__website section-pad">
+        <div class="shell">
+          <div class="section-rail" data-reveal><span>03</span><span>Customer platform</span><span>Competition + commerce</span></div>
+          <div class="case-study__chapter-heading">
+            <h2 data-reveal><span>Complex platform logic</span><span>made immediate for</span><span>every customer.</span></h2>
+            <p data-reveal style="--reveal-index: 1">Ticket selection, multi-competition baskets, payments, account balances and entry confirmation are reduced to a clear journey while the platform manages the rules and records underneath.</p>
+          </div>
+          <div class="case-study__website-grid" aria-label="Required TopDraw customer-platform screenshots">
+            <div class="case-study__media-slot case-study__media-slot--desktop case-study__asset-placeholder" role="img" aria-label="Placeholder for TopDraw bundle builder screenshot, 1600 by 1200 pixels" data-reveal="clip"><span>Bundle builder + basket</span><small>Desktop screenshot · 1600 × 1200 px</small></div>
+            <div class="case-study__mobile-pair">
+              <div class="case-study__media-slot case-study__media-slot--mobile-a case-study__asset-placeholder" role="img" aria-label="Placeholder for TopDraw mobile competition screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Competition entry</span><small>Mobile · 1080 × 1920 px</small></div>
+              <div class="case-study__media-slot case-study__media-slot--mobile-b case-study__asset-placeholder" role="img" aria-label="Placeholder for TopDraw mobile customer account screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Member account</span><small>Mobile · 1080 × 1920 px</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    {isYaOmri && (
+      <section class="case-study__website section-pad">
+        <div class="shell">
+          <div class="section-rail" data-reveal><span>03</span><span>Luxury storefront</span><span>Product + editorial</span></div>
+          <div class="case-study__chapter-heading">
+            <h2 data-reveal><span>Campaign confidence</span><span>carried through to</span><span>every product decision.</span></h2>
+            <p data-reveal style="--reveal-index: 1">The custom theme gives imagery room to establish desire, then introduces fit, fabric, sizing and delivery details with a quieter, more considered hierarchy.</p>
+          </div>
+          <div class="case-study__website-grid" aria-label="Required Ya Omri storefront screenshots">
+            <div class="case-study__media-slot case-study__media-slot--desktop case-study__asset-placeholder" role="img" aria-label="Placeholder for Ya Omri custom product page screenshot, 1600 by 1200 pixels" data-reveal="clip"><span>Custom product page</span><small>Desktop screenshot · 1600 × 1200 px</small></div>
+            <div class="case-study__mobile-pair">
+              <div class="case-study__media-slot case-study__media-slot--mobile-a case-study__asset-placeholder" role="img" aria-label="Placeholder for Ya Omri mobile collection screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Mobile collection</span><small>1080 × 1920 px</small></div>
+              <div class="case-study__media-slot case-study__media-slot--mobile-b case-study__asset-placeholder" role="img" aria-label="Placeholder for Ya Omri mobile product screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Mobile product page</span><small>1080 × 1920 px</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    {isRft && (
+      <section class="case-study__website section-pad">
+        <div class="shell">
+          <div class="section-rail" data-reveal><span>03</span><span>Recruitment platform</span><span>Website + CRM</span></div>
+          <div class="case-study__chapter-heading">
+            <h2 data-reveal><span>Two audiences in front.</span><span>One connected system</span><span>behind every enquiry.</span></h2>
+            <p data-reveal style="--reveal-index: 1">Clear client and candidate journeys keep the public experience focused, while forms, CV files, lead data and sector categories flow into the custom CRM behind it.</p>
+          </div>
+          <div class="case-study__website-grid" aria-label="Required RFT Recruitment platform screenshots">
+            <div class="case-study__media-slot case-study__media-slot--desktop case-study__asset-placeholder" role="img" aria-label="Placeholder for RFT Recruitment sector page screenshot, 1600 by 1200 pixels" data-reveal="clip"><span>Sector + lead journey</span><small>Desktop screenshot · 1600 × 1200 px</small></div>
+            <div class="case-study__mobile-pair">
+              <div class="case-study__media-slot case-study__media-slot--mobile-a case-study__asset-placeholder" role="img" aria-label="Placeholder for RFT Recruitment mobile client form screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Client enquiry</span><small>Mobile · 1080 × 1920 px</small></div>
+              <div class="case-study__media-slot case-study__media-slot--mobile-b case-study__asset-placeholder" role="img" aria-label="Placeholder for RFT Recruitment mobile CV upload screenshot, 1080 by 1920 pixels" data-reveal="clip"><span>Candidate CV upload</span><small>Mobile · 1080 × 1920 px</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    {isUberKinky && (
+      <section class="case-study__identity section-pad">
+        <div class="shell">
+          <div class="section-rail" data-reveal><span>04</span><span>Catalogue + brand</span><span>Structure + lifestyle</span></div>
+          <div class="case-study__chapter-heading">
+            <h2 data-reveal><span>Technical structure</span><span>with the character</span><span>of the brand intact.</span></h2>
+            <p data-reveal style="--reveal-index: 1">Collection architecture and product data make the store usable. Approved campaign and lifestyle imagery preserve the distinctive brand experience around that structure.</p>
+          </div>
+          <div class="case-study__identity-grid" aria-label="Required UberKinky catalogue and lifestyle imagery">
+            <div class="case-study__media-slot case-study__media-slot--identity case-study__asset-placeholder" role="img" aria-label="Placeholder for landscape brand lifestyle image, 2000 by 1400 pixels" data-reveal="clip"><span>Brand lifestyle image</span><small>Landscape · 2000 × 1400 px</small></div>
+            <div class="case-study__identity-stack">
+              <div class="case-study__media-slot case-study__media-slot--logo case-study__asset-placeholder" role="img" aria-label="Placeholder for collection navigation screenshot, 1600 by 1000 pixels" data-reveal="clip"><span>Navigation + collections</span><small>Screenshot · 1600 × 1000 px</small></div>
+              <div class="case-study__media-slot case-study__media-slot--application case-study__asset-placeholder" role="img" aria-label="Placeholder for portrait product lifestyle image, 1400 by 1800 pixels" data-reveal="clip"><span>Product lifestyle image</span><small>Portrait · 1400 × 1800 px</small></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="case-study__approach section-pad">
+      <div class="shell">
+        <div class="section-rail" data-reveal><span>{isHearBetter || isUberKinky ? '05' : isHeatons || isTopDraw || isYaOmri || isRft ? '04' : '03'}</span><span>What the work covered</span><span>Strategy through delivery</span></div>
+        <div class="case-study__approach-grid">
+          {(project.approach ?? project.services.map((title) => ({ title, description: 'This capability formed part of the agreed project scope and delivery.' }))).map((item, index) => <article data-reveal style={`--reveal-index: ${index}`}><span>0{index + 1}</span><h2>{item.title}</h2><p>{item.description}</p></article>)}
+        </div>
+      </div>
+    </section>
+
+    {project.testimonial && (
+      <section class="case-study__testimonial section-pad">
+        <div class="shell">
+          <div class="section-rail" data-reveal><span>{isHeatons || isTopDraw || isYaOmri || isRft ? '05' : isDetailedCaseStudy ? '06' : '04'}</span><span>Client perspective</span><span>{project.testimonial.placeholder ? 'Awaiting approval' : 'In their words'}</span></div>
+          <figure>
+            <blockquote data-reveal>
+              {project.testimonial.quote.map((paragraph, index) => (
+                <p>{index === 0 ? '“' : ''}{paragraph}{index === project.testimonial!.quote.length - 1 ? '”' : ''}</p>
+              ))}
+            </blockquote>
+            <figcaption data-reveal style="--reveal-index: 1"><strong>{project.testimonial.name}</strong><span>{project.testimonial.role}</span></figcaption>
+          </figure>
+        </div>
+      </section>
+    )}
+
+    <section class="case-study__next">
+      <a href={`/work/${nextProject.slug}/`} class="shell" data-reveal>
+        <span>Next project</span>
+        <strong>{nextProject.name}</strong>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </section>
+  </main>
+  <SiteFooter />
+  <script>
+    const counters = Array.from(document.querySelectorAll<HTMLElement>('[data-count-up]'));
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const setFinalValue = (counter: HTMLElement) => {
+      const target = Number(counter.dataset.countTarget ?? 0);
+      const suffix = counter.dataset.countSuffix ?? '';
+      counter.textContent = `${target}${suffix}`;
+    };
+
+    const animateCounter = (counter: HTMLElement, delay: number) => {
+      const target = Number(counter.dataset.countTarget ?? 0);
+      const suffix = counter.dataset.countSuffix ?? '';
+      const duration = 560;
+
+      window.setTimeout(() => {
+        const start = performance.now();
+        counter.textContent = `0${suffix}`;
+
+        const update = (now: number) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          counter.textContent = `${Math.round(target * eased)}${suffix}`;
+
+          if (progress < 1) requestAnimationFrame(update);
+          else setFinalValue(counter);
+        };
+
+        requestAnimationFrame(update);
+      }, delay);
+    };
+
+    if (counters.length && !reducedMotion && 'IntersectionObserver' in window) {
+      const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const counter = entry.target as HTMLElement;
+          const index = counters.indexOf(counter);
+          animateCounter(counter, Math.max(index, 0) * 50);
+          counterObserver.unobserve(counter);
+        });
+      }, { threshold: 0.6 });
+
+      counters.forEach((counter) => counterObserver.observe(counter));
+    } else {
+      counters.forEach(setFinalValue);
+    }
+  </script>
+</BaseLayout>

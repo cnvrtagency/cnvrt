@@ -1,0 +1,34 @@
+---
+import LegalPage from '@/components/LegalPage.astro';
+---
+
+<LegalPage title="Cookie policy" description="How CNVRT uses cookies and similar browser technologies, including the current essential-only setup.">
+  <p class="legal-page__summary">The public marketing site does not currently set analytics or advertising cookies. The only website cookie in the present private-preview setup is essential for remembering successful preview access.</p>
+
+  <h2>1. What cookies are</h2>
+  <p>Cookies are small text files stored by a website in a browser. Similar technologies include local browser storage and identifiers used by scripts or embedded services. They can be essential to a requested function or used for optional purposes such as analytics and advertising.</p>
+
+  <h2>2. Technologies currently used</h2>
+  <div class="legal-page__inventory" role="region" aria-label="Current cookie inventory" tabindex="0">
+    <table>
+      <thead><tr><th>Name or service</th><th>Purpose</th><th>Duration</th><th>Category</th></tr></thead>
+      <tbody>
+        <tr><td><code>cnvrt_preview</code></td><td>Remembers successful password access to the private website preview. It is HttpOnly, Secure and SameSite Strict.</td><td>24 hours</td><td>Strictly necessary</td></tr>
+        <tr><td>Supabase administrator authentication</td><td>Maintains the signed-in session for authorised users of the restricted enquiry admin. This does not apply to ordinary marketing-site visitors.</td><td>Session and token lifetime</td><td>Strictly necessary for administrators</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The preview cookie will be removed when the password gate is removed for public launch. Form rate limiting is performed on the server and does not require an advertising or analytics cookie.</p>
+
+  <h2>3. Analytics and advertising</h2>
+  <p>Google Analytics, advertising pixels and other non-essential tracking are not active in the current build. If they are introduced, they must remain disabled until a visitor has made the relevant choice. This policy and the on-site controls will then identify the provider, purpose, duration and category of each technology.</p>
+
+  <h2>4. Consent and essential cookies</h2>
+  <p>Strictly necessary cookies do not require consent when they are essential to provide a function the user requested, but we still explain them here. Optional analytics, advertising and personalisation technologies require the appropriate consent before they are stored or accessed.</p>
+
+  <h2>5. Browser controls</h2>
+  <p>You can view, block or delete cookies through your browser settings. Blocking a strictly necessary cookie may prevent the related function from working. Because no optional cookies are currently active, the site does not presently display a cookie-consent banner.</p>
+
+  <h2>6. Changes and questions</h2>
+  <p>We review this inventory when hosting, analytics, advertising, embedded content or form services change. Questions can be sent to <a href="mailto:hello@cnvrtdigital.co.uk">hello@cnvrtdigital.co.uk</a>.</p>
+</LegalPage>
