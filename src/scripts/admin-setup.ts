@@ -15,11 +15,11 @@ export const initialiseAdminSetup = () => {
 
   const showSession = async () => {
     const { data } = await client.auth.getSession();
-    if (data.session) { if (form) form.hidden = false; if (error) error.hidden = true; if (status) status.textContent = 'Invitation accepted. Choose your password to continue.'; return; }
+    if (data.session) { if (form) form.hidden = false; if (error) error.hidden = true; if (status) status.textContent = 'Secure link accepted. Choose your password to continue.'; return; }
     window.setTimeout(async () => {
       const refreshed = await client.auth.getSession();
-      if (refreshed.data.session) { if (form) form.hidden = false; if (status) status.textContent = 'Invitation accepted. Choose your password to continue.'; }
-      else { if (error) error.hidden = false; if (errorMessage) errorMessage.textContent = 'This invitation is invalid or has expired. Ask for a new invitation link.'; }
+      if (refreshed.data.session) { if (form) form.hidden = false; if (status) status.textContent = 'Secure link accepted. Choose your password to continue.'; }
+      else { if (error) error.hidden = false; if (errorMessage) errorMessage.textContent = 'This setup or recovery link is invalid or has expired. Request a new password-recovery email.'; }
     }, 600);
   };
 

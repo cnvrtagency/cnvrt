@@ -3,13 +3,13 @@ import AdminLayout from '@/layouts/AdminLayout.astro';
 const configured = Boolean(import.meta.env.PUBLIC_SUPABASE_URL?.trim() && import.meta.env.PUBLIC_SUPABASE_ANON_KEY?.trim());
 ---
 
-<AdminLayout title="Set up CNVRT workspace access" description="Secure first-time setup for the CNVRT private workspace." skipLabel="Skip to account setup">
+<AdminLayout title="Reset CNVRT workspace access" description="Secure password setup and recovery for the CNVRT private workspace." skipLabel="Skip to account setup" showMobileNav={false}>
   <main class="admin-login" id="admin-main" data-admin-setup data-configured={String(configured)}>
     <div class="admin-login__brand"><img class="admin-logo" src="/brand/cnvrt-logo.png" alt="CNVRT" width="800" height="200" /><small>Workspace access / Secure setup</small></div>
     <div class="admin-login__panel">
-      <span class="admin-kicker">Administrator invitation</span>
+      <span class="admin-kicker">Secure workspace access</span>
       <h1>Choose your secure<br />workspace password.</h1>
-      <p data-setup-intro>This invitation gives you access to CNVRT enquiries, clients and onboarding projects.</p>
+      <p data-setup-intro>Choose a new password for CNVRT enquiries, clients, finance and onboarding projects.</p>
       <form class="admin-login__form" data-setup-form hidden>
         <div class="admin-field"><label for="setup-password">New password</label><input id="setup-password" name="password" type="password" minlength="12" autocomplete="new-password" required /><small>Use at least 12 characters and a password you do not use elsewhere.</small></div>
         <div class="admin-field"><label for="setup-confirm">Confirm password</label><input id="setup-confirm" name="confirm" type="password" minlength="12" autocomplete="new-password" required /></div>

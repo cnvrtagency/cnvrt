@@ -106,7 +106,7 @@ const renderGate = (path: string, message = '') => `<!doctype html>
 
 export default async (request: Request, context: EdgeContext) => {
   const url = new URL(request.url);
-  const publicClientPaths = new Set(['/invoice', '/web-design-discovery', '/thank-you', '/client']);
+  const publicClientPaths = new Set(['/invoice', '/web-design-discovery', '/thank-you', '/client', '/admin/setup']);
   const normalisedPath = url.pathname.length > 1 ? url.pathname.replace(/\/$/, '') : url.pathname;
   if (publicClientPaths.has(normalisedPath)) return context.next();
   // Client-facing routes depend on the same compiled scripts, styles, fonts and
